@@ -175,7 +175,8 @@ main {
     gap: 10px;
     align-items: center;
     flex-wrap: wrap;
-    margin-bottom: 6px
+    margin-bottom: 6px;
+    justify-content: space-between
 }
 
 .bo-loc {

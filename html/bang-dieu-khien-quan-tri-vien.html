@@ -24,6 +24,7 @@
     <aside class="thanh-ben">
       <ul>
         <li><a href="#" class="active" data-page="tong-quan">Tổng quan</a></li>
+        <li><a href="#" data-page="danh-sach-thiet-bi">Danh sách thiết bị</a></li><!-- MỚI -->
         <li><a href="#" data-page="ql-nguoi-dung">Quản lý tài khoản</a></li>
         <li><a href="#" data-page="phan-quyen">Phân quyền truy cập</a></li>
         <li><a href="#" data-page="nhat-ky">Giám sát nhật ký hệ thống</a></li>
@@ -53,6 +54,71 @@
             <p>1</p><span class="icon">⚠️</span>
           </div>
         </div>
+      </section>
+
+      <!-- Danh sách thiết bị (READ-ONLY + Tìm kiếm) -->
+      <section id="danh-sach-thiet-bi" class="trang-an" style="display:none;">
+        <div class="hang-cta">
+          <h2>Danh sách thiết bị</h2>
+          <div class="bo-loc">
+            <input id="tk-ten" placeholder="Nhập tên thiết bị..." />
+            <select id="tk-danh-muc" title="Danh mục/Môn">
+              <option value="">-- Danh mục/Môn --</option>
+              <option value="ngu-van">Ngữ văn</option>
+              <option value="toan">Toán</option>
+              <option value="khtn">KHTN</option>
+              <option value="lsdl">Lịch sử &amp; Địa lý</option>
+              <option value="ngoai-ngu">Ngoại ngữ</option>
+              <option value="dung-chung">Dùng chung</option>
+            </select>
+            <select id="tk-tinh-trang" title="Tình trạng">
+              <option value="">-- Tình trạng --</option>
+              <option value="Tốt">Tốt</option>
+              <option value="Đang sửa">Đang sửa</option>
+              <option value="Hỏng">Hỏng</option>
+            </select>
+            <input id="tk-lop" placeholder="Lớp (VD: 6,7,8,9)" />
+            <button id="nut-loc-tb" class="btn-primary">Tìm</button>
+            <button id="nut-xoa-loc-tb" class="btn-secondary">Xóa lọc</button>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Số TT</th>
+              <th>Tên thiết bị</th>
+              <th>Nhóm/Danh mục</th>
+              <th>Đơn vị</th>
+              <th>Số lượng</th>
+              <th>Lớp</th>
+              <th>Tình trạng</th>
+              <th>Ghi chú</th>
+            </tr>
+          </thead>
+          <tbody id="bang-ds-thiet-bi">
+            <tr>
+              <td>1</td>
+              <td>Máy chiếu Epson</td>
+              <td>Vật liệu nghe nhìn</td>
+              <td>Chiếc</td>
+              <td>4</td>
+              <td>6,7,8,9</td>
+              <td>Tốt</td>
+              <td>Phòng đa năng</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Bộ vẽ trên bảng (Toán)</td>
+              <td>Dụng cụ thí nghiệm</td>
+              <td>Bộ</td>
+              <td>7</td>
+              <td>6,7,8,9</td>
+              <td>Tốt</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
       <!-- Quản lý tài khoản -->
@@ -121,29 +187,15 @@
                 <button class="nut-reset">Đặt lại mật khẩu</button>
               </td>
             </tr>
-            <tr>
-              <td>3</td>
-              <td>Phạm Đức Long</td>
-              <td>long@thcsxyz.edu.vn</td>
-              <td>Nhân viên thiết bị</td>
-              <td>Hoạt động</td>
-              <td>2025-08-07</td>
-              <td class="hanh-dong">
-                <button class="nut-sua">Sửa</button>
-                <button class="nut-khoa">Vô hiệu</button>
-                <button class="nut-xoa">Xóa</button>
-                <button class="nut-reset">Đặt lại mật khẩu</button>
-              </td>
-            </tr>
           </tbody>
         </table>
 
         <!-- Modal: Thêm/Sửa người dùng -->
-        <div id="modal-nguoi-dung" class="modal">
+        <div id="modal-nguoi-dung" class="modal" aria-hidden="true">
           <div class="noi-dung-modal" role="dialog" aria-modal="true" tabindex="-1">
             <button id="dong-modal-nd" class="dong-x" aria-label="Đóng">&times;</button>
             <h3 id="tieu-de-nd">Thêm tài khoản</h3>
-            <form id="form-nguoi-dung">
+            <form id="form-nguoi-dung" novalidate>
               <input type="hidden" id="id-nd" />
               <div class="form-grid">
                 <div class="field">
@@ -210,7 +262,6 @@
           <button id="luu-phan-quyen" class="nut-them">Lưu phân quyền</button>
         </div>
 
-        <!-- Ma trận quyền theo Word: các mô-đun chính -->
         <div class="bang-quyen-wrapper">
           <table class="bang-quyen">
             <thead>
@@ -225,7 +276,6 @@
               </tr>
             </thead>
             <tbody id="tbody-quyen">
-              <!-- Hệ thiết bị -->
               <tr data-module="Danh mục thiết bị">
                 <td>Danh mục thiết bị</td>
                 <td><input type="checkbox" class="quyen"></td>
@@ -280,7 +330,6 @@
                 <td><input type="checkbox" class="quyen" disabled></td>
                 <td><input type="checkbox" class="quyen"></td>
               </tr>
-              <!-- Quy trình duyệt theo Word -->
               <tr data-module="Kế hoạch mua sắm">
                 <td>Kế hoạch mua sắm</td>
                 <td><input type="checkbox" class="quyen"></td>
@@ -299,7 +348,6 @@
                 <td><input type="checkbox" class="quyen"></td>
                 <td><input type="checkbox" class="quyen"></td>
               </tr>
-              <!-- Quản trị -->
               <tr data-module="Quản trị người dùng">
                 <td>Quản trị người dùng</td>
                 <td><input type="checkbox" class="quyen"></td>
@@ -331,7 +379,7 @@
           </table>
         </div>
         <div class="ghi-chu-quyen">
-          <p><strong>Gợi ý:</strong> Theo Word, Hiệu trưởng có thể <em>Duyệt kế hoạch</em> &amp; <em>Duyệt thanh lý</em>. Nhân viên thiết bị không có quyền duyệt, nhưng có quyền tạo/cập nhật danh mục, tình trạng, mượn-trả, bảo trì, kiểm kê.</p>
+          <p><strong>Gợi ý:</strong> Hiệu trưởng có thể <em>Duyệt kế hoạch</em> &amp; <em>Duyệt thanh lý</em>. Nhân viên thiết bị không có quyền duyệt, nhưng có quyền tạo/cập nhật danh mục, mượn-trả, bảo trì, kiểm kê.</p>
         </div>
       </section>
 
@@ -376,7 +424,6 @@
               <th>Hành động</th>
               <th>Đối tượng</th>
               <th>Kết quả</th>
-              <th>IP/Thiết bị</th>
             </tr>
           </thead>
           <tbody id="bang-nhat-ky">
@@ -387,7 +434,6 @@
               <td>Sửa</td>
               <td>Thiết bị: Máy chiếu Epson</td>
               <td>Thành công</td>
-              <td>10.10.1.23/Chrome</td>
             </tr>
             <tr>
               <td>2025-09-20 09:05</td>
@@ -396,16 +442,6 @@
               <td>Duyệt</td>
               <td>Kế hoạch mua sắm #12</td>
               <td>Thành công</td>
-              <td>10.10.1.4/Edge</td>
-            </tr>
-            <tr>
-              <td>2025-09-20 09:42</td>
-              <td>minh@thcsxyz.edu.vn</td>
-              <td>Admin</td>
-              <td>Phân quyền</td>
-              <td>Nhân viên thiết bị</td>
-              <td>Thành công</td>
-              <td>10.10.1.2/Chrome</td>
             </tr>
           </tbody>
         </table>
@@ -427,7 +463,6 @@
           </div>
         </div>
       </div>
-
     </main>
   </div>
 

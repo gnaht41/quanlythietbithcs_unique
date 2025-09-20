@@ -60,7 +60,7 @@
     $('#dong-modal-nd')?.addEventListener('click', () => closeModal(modalND));
     $('#huy-nd')?.addEventListener('click', () => closeModal(modalND));
 
-    // Sửa/Xóa/Khoá/Reset PW (ủy quyền sự kiện)
+    // Sửa/Xóa/Khoá/Reset PW
     tbodyND?.addEventListener('click', (e) => {
         const btn = e.target.closest('button'); if (!btn) return;
         const row = btn.closest('tr');
@@ -105,9 +105,12 @@
         const ngay = $('#ngay-tao').value || new Date().toISOString().split('T')[0];
 
         if (!hoten || !email || !vtro || !tt) { alert('Vui lòng nhập đủ các trường bắt buộc!'); return; }
-        if (!id) { // thêm
+
+        if (!id) {
+            const nextId = tbodyND.rows.length
+                ? Math.max(...Array.from(tbodyND.rows).map(r => parseInt(r.cells[0].textContent, 10))) + 1
+                : 1;
             const newRow = tbodyND.insertRow(-1);
-            const nextId = tbodyND.rows.length ? Math.max(...Array.from(tbodyND.rows).map(r => parseInt(r.cells[0].textContent, 10))) + 1 : 1;
             newRow.innerHTML = `
         <td>${nextId}</td>
         <td>${hoten}</td>
@@ -122,8 +125,8 @@
           <button class="nut-reset">Đặt lại mật khẩu</button>
         </td>
       `;
-            if (mk && mk.length < 6) { alert('Mật khẩu khởi tạo nên từ 6 ký tự trở lên.'); }
-        } else { // cập nhật
+            if (mk && mk.length < 6) alert('Mật khẩu khởi tạo nên từ 6 ký tự trở lên.');
+        } else {
             const row = Array.from(tbodyND.rows).find(r => r.cells[0].textContent.trim() === id);
             if (row) {
                 row.cells[1].textContent = hoten;
@@ -132,14 +135,14 @@
                 row.cells[4].textContent = tt;
                 row.cells[5].textContent = ngay;
                 const btnKhoa = row.querySelector('.nut-khoa');
-                if (btnKhoa) { btnKhoa.textContent = (tt === 'Hoạt động') ? 'Vô hiệu' : 'Kích hoạt'; }
+                if (btnKhoa) btnKhoa.textContent = (tt === 'Hoạt động') ? 'Vô hiệu' : 'Kích hoạt';
             }
         }
         closeModal(modalND);
         alert('Lưu tài khoản thành công!');
     });
 
-    // Lọc người dùng (demo client-side)
+    // Lọc người dùng (demo)
     $('#nut-ap-dung-loc')?.addEventListener('click', () => {
         const kw = ($('#loc-tu-khoa')?.value || '').toLowerCase();
         const vr = $('#loc-vai-tro')?.value || '';
@@ -158,11 +161,8 @@
 
     // ===== Phân quyền =====
     const defaultPolicies = {
-        'Admin': '111111|111110|111111|111110|111111|101111|111111|111100|100101',
-        // Mỗi module 6-7 quyền (Xem,Tạo,Sửa,Xóa,Duyệt,Xuất), dùng chuỗi 6/7 bit; ghép bằng |
-        // mapping theo thứ tự tbody-quyen (11 hàng):
-        // Danh mục, Tình trạng, Mượn-Trả, Bảo trì, Kiểm kê, Báo cáo, Kế hoạch, Thanh lý, Quản trị ND, Phân quyền, Nhật ký
-        // Để đơn giản, dùng 6 quyền (Xem,Tạo,Sửa,Xóa,Duyệt,Xuất); với hàng không hỗ trợ 1 số quyền, input đã disabled.
+        // 11 dòng module, mỗi dòng là 6 bit (Xem,Tạo,Sửa,Xóa,Duyệt,Xuất), nối bằng |
+        'Admin': '111111|111110|111111|111110|111111|101111|111111|111111|111100|100101|100101',
         'Hiệu trưởng': '100011|100011|100111|100011|100111|100001|100111|100111|100000|100001|100001',
         'Tổ trưởng chuyên môn': '100001|100001|100101|100001|100101|100001|100001|100001|100000|100000|100001',
         'Giáo viên': '100000|100000|100100|100000|100000|100001|100000|100000|100000|100000|100001',
@@ -171,31 +171,22 @@
 
     const applyPolicyBits = (bits) => {
         const rows = $$('#tbody-quyen tr');
-        let i = 0;
-        rows.forEach(row => {
+        const segs = bits.split('|');
+        rows.forEach((row, i) => {
             const checks = $$('.quyen', row);
-            // Lấy 6 bit (thiếu thì coi như 0)
-            const segment = bits.split('|')[i] || '000000';
-            for (let j = 0; j < checks.length; j++) {
-                const c = checks[j];
-                if (c.disabled) { c.checked = false; continue; }
+            const segment = segs[i] || '000000';
+            checks.forEach((c, j) => {
+                if (c.disabled) { c.checked = false; return; }
                 c.checked = segment[j] === '1';
-            }
-            i++;
+            });
         });
     };
 
     const readPolicyBits = () => {
         const rows = $$('#tbody-quyen tr');
-        const segments = rows.map(row => {
-            const checks = $$('.quyen', row);
-            let seg = '';
-            checks.forEach(c => {
-                seg += c.disabled ? '0' : (c.checked ? '1' : '0');
-            });
-            return seg;
-        });
-        return segments.join('|');
+        return rows.map(row => {
+            return $$('.quyen', row).map(c => c.disabled ? '0' : (c.checked ? '1' : '0')).join('');
+        }).join('|');
     };
 
     $('#nap-mac-dinh')?.addEventListener('click', () => {
@@ -208,19 +199,17 @@
     $('#luu-phan-quyen')?.addEventListener('click', () => {
         const role = $('#chon-vai-tro').value;
         const bits = readPolicyBits();
-        // demo lưu localStorage
         localStorage.setItem('perm_' + role, bits);
         alert('Đã lưu phân quyền cho vai trò: ' + role);
     });
 
-    // Tải quyền đã lưu (nếu có)
     (function initPerm() {
         const role = $('#chon-vai-tro').value;
         const saved = localStorage.getItem('perm_' + role);
         applyPolicyBits(saved || defaultPolicies[role] || defaultPolicies['Giáo viên']);
     })();
 
-    // ===== Nhật ký hệ thống =====
+    // ===== Nhật ký: lọc & xuất =====
     const tbodyNK = $('#bang-nhat-ky');
     $('#loc-nhat-ky')?.addEventListener('click', () => {
         const kw = ($('#nk-tu-khoa')?.value || '').toLowerCase();
@@ -243,16 +232,14 @@
             if (act) ok = ok && (ac === act);
 
             if (d1 || d2) {
-                const d = new Date(time.replace(' ', 'T')); // 2025-09-20 09:05 -> parse
+                const d = new Date(time.replace(' ', 'T'));
                 if (d1) ok = ok && (d >= d1);
                 if (d2) ok = ok && (d <= new Date(d2.getTime() + 24 * 60 * 60 * 1000 - 1));
             }
-
             r.style.display = ok ? '' : 'none';
         });
     });
 
-    // Xuất CSV (demo)
     $('#xuat-nhat-ky')?.addEventListener('click', () => {
         const visibleRows = Array.from(tbodyNK.rows).filter(r => r.style.display !== 'none');
         const headers = ['Thời gian', 'Người dùng', 'Vai trò', 'Hành động', 'Đối tượng', 'Kết quả', 'IP/Thiết bị'];
@@ -267,6 +254,30 @@
         a.href = url; a.download = 'nhat-ky-he-thong.csv';
         document.body.appendChild(a); a.click(); a.remove();
         URL.revokeObjectURL(url);
+    });
+
+    // ===== Danh sách thiết bị: demo lọc UI =====
+    const tbListBody = $('#bang-ds-thiet-bi');
+    $('#nut-loc-tb')?.addEventListener('click', () => {
+        const kw = ($('#tk-ten')?.value || '').toLowerCase();
+        const dm = $('#tk-danh-muc')?.value || '';
+        const tt = $('#tk-tinh-trang')?.value || '';
+        const lop = ($('#tk-lop')?.value || '').replace(/\s/g, '');
+        Array.from(tbListBody?.rows || []).forEach(r => {
+            const ten = (r.cells[1].textContent || '').toLowerCase();
+            const _dm = (r.cells[2].textContent || '');
+            const _tt = (r.cells[6].textContent || '');
+            const _lop = (r.cells[5].textContent || '').replace(/\s/g, '');
+            const okKW = kw ? ten.includes(kw) : true;
+            const okDM = dm ? _dm.toLowerCase().includes(dm) : true;
+            const okTT = tt ? _tt === tt : true;
+            const okLop = lop ? _lop.includes(lop) : true;
+            r.style.display = (okKW && okDM && okTT && okLop) ? '' : 'none';
+        });
+    });
+    $('#nut-xoa-loc-tb')?.addEventListener('click', () => {
+        $('#tk-ten').value = ''; $('#tk-danh-muc').value = ''; $('#tk-tinh-trang').value = ''; $('#tk-lop').value = '';
+        Array.from(tbListBody?.rows || []).forEach(r => r.style.display = '');
     });
 
 })();
