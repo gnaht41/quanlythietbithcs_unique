@@ -2,250 +2,435 @@
 <html lang="vi">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bảng điều khiển Quản trị viên - Quản lý Thiết bị</title>
-  <link rel="stylesheet" href="../css/bang-dieu-khien-quan-tri-vien.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bảng điều khiển Quản trị viên</title>
+  <link rel="stylesheet" href="../css/bang-dieu-khien-quan-tri-vien.css" />
 </head>
 
 <body>
   <header>
-    <div class="logo">Quản lý thiết bị UNIQUE</div>
+    <div class="logo">Trường THCS XYZ</div>
     <div class="user-info">
-      Xin chào, Quản trị viên!
+      <span>Xin chào, Quản trị viên!</span>
       <button id="nut-dang-xuat">Đăng xuất</button>
-      <button id="nut-thong-bao" class="nut-chuong">🔔<span id="so-luong-thong-bao">2</span></button>
+      <button id="nut-thong-bao" class="nut-chuong" aria-label="Thông báo" aria-haspopup="dialog" aria-expanded="false" title="Thông báo">
+        🔔 <span id="so-luong-thong-bao">5</span>
+      </button>
     </div>
   </header>
+
   <div class="khoi-chua">
     <aside class="thanh-ben">
       <ul>
-        <li><a href="#" data-page="tong-quan">Tổng quan</a></li>
-        <li><a href="#" data-page="quan-ly-nguoi-dung">Quản lý người dùng</a></li>
-        <li><a href="#" data-page="phan-quyen-truy-cap">Phân quyền truy cập</a></li>
-        <li><a href="#" data-page="giam-sat-he-thong">Giám sát hệ thống</a></li>
+        <li><a href="#" class="active" data-page="tong-quan">Tổng quan</a></li>
+        <li><a href="#" data-page="ql-nguoi-dung">Quản lý tài khoản</a></li>
+        <li><a href="#" data-page="phan-quyen">Phân quyền truy cập</a></li>
+        <li><a href="#" data-page="nhat-ky">Giám sát nhật ký hệ thống</a></li>
       </ul>
     </aside>
+
     <main>
       <h1>Bảng điều khiển Quản trị viên</h1>
-      <div id="tong-quan" class="trang-an">
+
+      <!-- Tổng quan -->
+      <section id="tong-quan" class="trang-an">
         <div class="the-container">
           <div class="the">
-            <h3>Tổng thiết bị</h3>
-            <p>127</p>
-            <span class="icon">📦</span>
+            <h3>Tài khoản hoạt động</h3>
+            <p>36</p><span class="icon">👥</span>
           </div>
           <div class="the">
-            <h3>Người dùng</h3>
-            <p>45</p>
-            <span class="icon">👤</span>
+            <h3>Yêu cầu đang chờ</h3>
+            <p>7</p><span class="icon">⏳</span>
           </div>
           <div class="the">
-            <h3>Yêu cầu chờ</h3>
-            <p>8</p>
-            <span class="icon">⏳</span>
+            <h3>Sự kiện nhật ký hôm nay</h3>
+            <p>128</p><span class="icon">📝</span>
           </div>
           <div class="the">
-            <h3>Thiết bị hỏng</h3>
-            <p>3</p>
-            <span class="icon">⚠️</span>
+            <h3>Cảnh báo</h3>
+            <p>1</p><span class="icon">⚠️</span>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- Quản lý người dùng -->
-      <div id="quan-ly-nguoi-dung" class="trang-an" style="display: none;">
-        <h2>Quản lý người dùng</h2>
-        <button id="nut-them-nguoi-dung" class="nut-them-nguoi-dung">Thêm người dùng</button>
+      <!-- Quản lý tài khoản -->
+      <section id="ql-nguoi-dung" class="trang-an" style="display:none;">
+        <div class="hang-cta">
+          <h2>Quản lý tài khoản người dùng</h2>
+          <button id="nut-them-nguoi-dung" class="nut-them">Thêm tài khoản</button>
+        </div>
+
+        <div class="bo-loc">
+          <input id="loc-tu-khoa" placeholder="Tìm theo tên/email..." />
+          <select id="loc-vai-tro">
+            <option value="">-- Vai trò --</option>
+            <option>Admin</option>
+            <option>Hiệu trưởng</option>
+            <option>Tổ trưởng chuyên môn</option>
+            <option>Giáo viên</option>
+            <option>Nhân viên thiết bị</option>
+          </select>
+          <select id="loc-trang-thai">
+            <option value="">-- Trạng thái --</option>
+            <option>Hoạt động</option>
+            <option>Vô hiệu hóa</option>
+          </select>
+          <button id="nut-ap-dung-loc" class="nut-in">Lọc</button>
+        </div>
+
         <table>
           <thead>
             <tr>
               <th>ID</th>
-              <th>Tên đăng nhập</th>
               <th>Họ tên</th>
+              <th>Email</th>
               <th>Vai trò</th>
               <th>Trạng thái</th>
+              <th>Ngày tạo</th>
               <th>Hành động</th>
             </tr>
           </thead>
           <tbody id="bang-nguoi-dung">
             <tr>
               <td>1</td>
-              <td>admin</td>
-              <td>Nguyễn Văn A</td>
-              <td>Quản trị viên</td>
+              <td>Nguyễn Quang Minh</td>
+              <td>minh@thcsxyz.edu.vn</td>
+              <td>Admin</td>
               <td>Hoạt động</td>
-              <td>
+              <td>2025-08-01</td>
+              <td class="hanh-dong">
                 <button class="nut-sua">Sửa</button>
+                <button class="nut-khoa">Vô hiệu</button>
                 <button class="nut-xoa">Xóa</button>
-                <button class="nut-vo-hieu-hoa">Vô hiệu hóa</button>
+                <button class="nut-reset">Đặt lại mật khẩu</button>
               </td>
             </tr>
             <tr>
               <td>2</td>
-              <td>hieutruong</td>
-              <td>Trần Thị B</td>
+              <td>Trần Thị Hạnh</td>
+              <td>hanh@thcsxyz.edu.vn</td>
               <td>Hiệu trưởng</td>
               <td>Hoạt động</td>
-              <td>
+              <td>2025-08-05</td>
+              <td class="hanh-dong">
                 <button class="nut-sua">Sửa</button>
+                <button class="nut-khoa">Vô hiệu</button>
                 <button class="nut-xoa">Xóa</button>
-                <button class="nut-vo-hieu-hoa">Vô hiệu hóa</button>
+                <button class="nut-reset">Đặt lại mật khẩu</button>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Phạm Đức Long</td>
+              <td>long@thcsxyz.edu.vn</td>
+              <td>Nhân viên thiết bị</td>
+              <td>Hoạt động</td>
+              <td>2025-08-07</td>
+              <td class="hanh-dong">
+                <button class="nut-sua">Sửa</button>
+                <button class="nut-khoa">Vô hiệu</button>
+                <button class="nut-xoa">Xóa</button>
+                <button class="nut-reset">Đặt lại mật khẩu</button>
               </td>
             </tr>
           </tbody>
         </table>
 
-        <!-- Modal thêm người dùng -->
-        <div id="modal-them-nguoi-dung" class="modal" style="display: none;">
-          <div class="noi-dung-modal">
-            <span class="dong-modal" id="dong-modal">&times;</span>
-            <h3>Thêm người dùng mới</h3>
-            <form id="form-them-nguoi-dung">
-              <label for="ten-dang-nhap">Tên đăng nhập:</label>
-              <input type="text" id="ten-dang-nhap" required>
-              <label for="mat-khau">Mật khẩu:</label>
-              <input type="password" id="mat-khau" required>
-              <label for="ho-ten">Họ tên:</label>
-              <input type="text" id="ho-ten" required>
-              <label for="vai-tro">Vai trò:</label>
-              <select id="vai-tro" required>
-                <option value="">Chọn vai trò</option>
-                <option value="quan-tri-vien">Quản trị viên</option>
-                <option value="hieu-truong">Hiệu trưởng</option>
-                <option value="to-truong">Tổ trưởng chuyên môn</option>
-                <option value="giao-vien">Giáo viên</option>
-                <option value="nhan-vien-thiet-bi">Nhân viên thiết bị</option>
-              </select>
-              <label for="trang-thai">Trạng thái:</label>
-              <select id="trang-thai" required>
-                <option value="hoat-dong">Hoạt động</option>
-                <option value="vo-hieu-hoa">Vô hiệu hóa</option>
-              </select>
+        <!-- Modal: Thêm/Sửa người dùng -->
+        <div id="modal-nguoi-dung" class="modal">
+          <div class="noi-dung-modal" role="dialog" aria-modal="true" tabindex="-1">
+            <button id="dong-modal-nd" class="dong-x" aria-label="Đóng">&times;</button>
+            <h3 id="tieu-de-nd">Thêm tài khoản</h3>
+            <form id="form-nguoi-dung">
+              <input type="hidden" id="id-nd" />
+              <div class="form-grid">
+                <div class="field">
+                  <label for="ho-ten">Họ tên</label>
+                  <input id="ho-ten" required />
+                </div>
+                <div class="field">
+                  <label for="email">Email</label>
+                  <input id="email" type="email" required />
+                </div>
+                <div class="field">
+                  <label for="vai-tro">Vai trò</label>
+                  <select id="vai-tro" required>
+                    <option value="">Chọn vai trò</option>
+                    <option>Admin</option>
+                    <option>Hiệu trưởng</option>
+                    <option>Tổ trưởng chuyên môn</option>
+                    <option>Giáo viên</option>
+                    <option>Nhân viên thiết bị</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="trang-thai">Trạng thái</label>
+                  <select id="trang-thai" required>
+                    <option>Hoạt động</option>
+                    <option>Vô hiệu hóa</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="mat-khau">Mật khẩu khởi tạo</label>
+                  <input id="mat-khau" type="password" placeholder="Ít nhất 6 ký tự" />
+                </div>
+                <div class="field">
+                  <label for="ngay-tao">Ngày tạo</label>
+                  <input id="ngay-tao" type="date" />
+                </div>
+              </div>
               <div class="nut-modal">
-                <button type="submit">Lưu</button>
-                <button type="button" id="huy-modal">Hủy</button>
+                <button type="submit" class="btn-primary">Lưu</button>
+                <button type="button" id="huy-nd" class="btn-secondary">Hủy</button>
               </div>
             </form>
           </div>
         </div>
-
-        <!-- Modal sửa người dùng -->
-        <div id="modal-sua-nguoi-dung" class="modal" style="display: none;">
-          <div class="noi-dung-modal">
-            <span class="dong-modal" id="dong-sua-modal">&times;</span>
-            <h3>Cập nhật thông tin người dùng</h3>
-            <form id="form-sua-nguoi-dung">
-              <input type="hidden" id="id-sua">
-              <label for="ten-dang-nhap-sua">Tên đăng nhập:</label>
-              <input type="text" id="ten-dang-nhap-sua" required>
-              <label for="mat-khau-sua">Mật khẩu:</label>
-              <input type="password" id="mat-khau-sua" required>
-              <label for="ho-ten-sua">Họ tên:</label>
-              <input type="text" id="ho-ten-sua" required>
-              <label for="vai-tro-sua">Vai trò:</label>
-              <select id="vai-tro-sua" required>
-                <option value="">Chọn vai trò</option>
-                <option value="quan-tri-vien">Quản trị viên</option>
-                <option value="hieu-truong">Hiệu trưởng</option>
-                <option value="to-truong">Tổ trưởng chuyên môn</option>
-                <option value="giao-vien">Giáo viên</option>
-                <option value="nhan-vien-thiet-bi">Nhân viên thiết bị</option>
-              </select>
-              <label for="trang-thai-sua">Trạng thái:</label>
-              <select id="trang-thai-sua" required>
-                <option value="hoat-dong">Hoạt động</option>
-                <option value="vo-hieu-hoa">Vô hiệu hóa</option>
-              </select>
-              <div class="nut-modal">
-                <button type="submit">Cập nhật</button>
-                <button type="button" id="huy-sua-modal">Hủy</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+      </section>
 
       <!-- Phân quyền truy cập -->
-      <div id="phan-quyen-truy-cap" class="trang-an" style="display: none;">
-        <h2>Phân quyền truy cập</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Tên đăng nhập</th>
-              <th>Vai trò</th>
-              <th>Quyền</th>
-              <th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody id="bang-phan-quyen">
-            <tr>
-              <td>admin</td>
-              <td>Quản trị viên</td>
-              <td>
-                <label><input type="checkbox" class="quyen" data-quyen="quan-ly-tai-khoan" checked> Quản lý tài khoản</label><br>
-                <label><input type="checkbox" class="quyen" data-quyen="phan-quyen" checked> Phân quyền</label><br>
-                <label><input type="checkbox" class="quyen" data-quyen="giam-sat" checked> Giám sát</label>
-              </td>
-              <td><button class="nut-cap-nhat-quyen">Cập nhật</button></td>
-            </tr>
-            <tr>
-              <td>hieutruong</td>
-              <td>Hiệu trưởng</td>
-              <td>
-                <label><input type="checkbox" class="quyen" data-quyen="duyet-ke-hoach"> Duyệt kế hoạch</label><br>
-                <label><input type="checkbox" class="quyen" data-quyen="xem-bao-cao" checked> Xem báo cáo</label>
-              </td>
-              <td><button class="nut-cap-nhat-quyen">Cập nhật</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <section id="phan-quyen" class="trang-an" style="display:none;">
+        <div class="hang-cta">
+          <h2>Phân quyền truy cập</h2>
+        </div>
 
-      <!-- Giám sát hệ thống -->
-      <div id="giam-sat-he-thong" class="trang-an" style="display: none;">
-        <h2>Giám sát hệ thống</h2>
-        <input type="date" id="loc-ngay">
-        <button id="nut-tim-kiem">Tìm kiếm</button>
+        <div class="bo-loc">
+          <label>Vai trò:&nbsp;
+            <select id="chon-vai-tro">
+              <option>Admin</option>
+              <option>Hiệu trưởng</option>
+              <option>Tổ trưởng chuyên môn</option>
+              <option>Giáo viên</option>
+              <option>Nhân viên thiết bị</option>
+            </select>
+          </label>
+          <button id="nap-mac-dinh" class="nut-in">Nạp quyền mặc định</button>
+          <button id="luu-phan-quyen" class="nut-them">Lưu phân quyền</button>
+        </div>
+
+        <!-- Ma trận quyền theo Word: các mô-đun chính -->
+        <div class="bang-quyen-wrapper">
+          <table class="bang-quyen">
+            <thead>
+              <tr>
+                <th>Module</th>
+                <th>Xem</th>
+                <th>Tạo</th>
+                <th>Sửa</th>
+                <th>Xóa</th>
+                <th>Duyệt</th>
+                <th>Xuất</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-quyen">
+              <!-- Hệ thiết bị -->
+              <tr data-module="Danh mục thiết bị">
+                <td>Danh mục thiết bị</td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+                <td><input type="checkbox" class="quyen"></td>
+              </tr>
+              <tr data-module="Tình trạng thiết bị">
+                <td>Tình trạng thiết bị</td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+                <td><input type="checkbox" class="quyen"></td>
+              </tr>
+              <tr data-module="Mượn - Trả">
+                <td>Mượn - Trả</td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+              </tr>
+              <tr data-module="Bảo trì/Sửa chữa">
+                <td>Bảo trì/Sửa chữa</td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+                <td><input type="checkbox" class="quyen"></td>
+              </tr>
+              <tr data-module="Kiểm kê">
+                <td>Kiểm kê</td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+              </tr>
+              <tr data-module="Báo cáo">
+                <td>Báo cáo</td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+                <td><input type="checkbox" class="quyen"></td>
+              </tr>
+              <!-- Quy trình duyệt theo Word -->
+              <tr data-module="Kế hoạch mua sắm">
+                <td>Kế hoạch mua sắm</td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+              </tr>
+              <tr data-module="Thanh lý/tiêu hủy">
+                <td>Thanh lý/tiêu hủy</td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+              </tr>
+              <!-- Quản trị -->
+              <tr data-module="Quản trị người dùng">
+                <td>Quản trị người dùng</td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+              </tr>
+              <tr data-module="Phân quyền">
+                <td>Phân quyền</td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+              </tr>
+              <tr data-module="Nhật ký hệ thống">
+                <td>Nhật ký hệ thống</td>
+                <td><input type="checkbox" class="quyen"></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+                <td><input type="checkbox" class="quyen" disabled></td>
+                <td><input type="checkbox" class="quyen"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="ghi-chu-quyen">
+          <p><strong>Gợi ý:</strong> Theo Word, Hiệu trưởng có thể <em>Duyệt kế hoạch</em> &amp; <em>Duyệt thanh lý</em>. Nhân viên thiết bị không có quyền duyệt, nhưng có quyền tạo/cập nhật danh mục, tình trạng, mượn-trả, bảo trì, kiểm kê.</p>
+        </div>
+      </section>
+
+      <!-- Nhật ký hệ thống -->
+      <section id="nhat-ky" class="trang-an" style="display:none;">
+        <div class="hang-cta">
+          <h2>Nhật ký hệ thống</h2>
+          <button id="xuat-nhat-ky" class="nut-in">Xuất CSV</button>
+        </div>
+
+        <div class="bo-loc">
+          <input id="nk-tu-khoa" placeholder="Từ khóa (email, hành động, thiết bị...)" />
+          <input id="nk-tu-ngay" type="date" />
+          <input id="nk-den-ngay" type="date" />
+          <select id="nk-vai-tro">
+            <option value="">-- Vai trò --</option>
+            <option>Admin</option>
+            <option>Hiệu trưởng</option>
+            <option>Tổ trưởng chuyên môn</option>
+            <option>Giáo viên</option>
+            <option>Nhân viên thiết bị</option>
+          </select>
+          <select id="nk-hanh-dong">
+            <option value="">-- Hành động --</option>
+            <option>Đăng nhập</option>
+            <option>Tạo</option>
+            <option>Sửa</option>
+            <option>Xóa</option>
+            <option>Duyệt</option>
+            <option>Từ chối</option>
+            <option>Xuất</option>
+          </select>
+          <button id="loc-nhat-ky" class="nut-in">Lọc</button>
+        </div>
+
         <table>
           <thead>
             <tr>
               <th>Thời gian</th>
               <th>Người dùng</th>
+              <th>Vai trò</th>
               <th>Hành động</th>
-              <th>Chi tiết</th>
+              <th>Đối tượng</th>
+              <th>Kết quả</th>
+              <th>IP/Thiết bị</th>
             </tr>
           </thead>
           <tbody id="bang-nhat-ky">
             <tr>
-              <td>2025-09-20 19:18</td>
-              <td>admin</td>
-              <td>Đăng nhập</td>
-              <td>IP: 192.168.1.1</td>
+              <td>2025-09-20 08:41</td>
+              <td>long@thcsxyz.edu.vn</td>
+              <td>Nhân viên thiết bị</td>
+              <td>Sửa</td>
+              <td>Thiết bị: Máy chiếu Epson</td>
+              <td>Thành công</td>
+              <td>10.10.1.23/Chrome</td>
             </tr>
             <tr>
-              <td>2025-09-20 19:00</td>
-              <td>hieutruong</td>
-              <td>Thêm thiết bị</td>
-              <td>Máy chiếu mới</td>
+              <td>2025-09-20 09:05</td>
+              <td>hanh@thcsxyz.edu.vn</td>
+              <td>Hiệu trưởng</td>
+              <td>Duyệt</td>
+              <td>Kế hoạch mua sắm #12</td>
+              <td>Thành công</td>
+              <td>10.10.1.4/Edge</td>
+            </tr>
+            <tr>
+              <td>2025-09-20 09:42</td>
+              <td>minh@thcsxyz.edu.vn</td>
+              <td>Admin</td>
+              <td>Phân quyền</td>
+              <td>Nhân viên thiết bị</td>
+              <td>Thành công</td>
+              <td>10.10.1.2/Chrome</td>
             </tr>
           </tbody>
         </table>
-      </div>
+      </section>
 
-      <!-- Modal thông báo -->
-      <div id="modal-thong-bao" class="modal-thong-bao" style="display: none;">
-        <div class="noi-dung-thong-bao">
+      <!-- Modal: Thông báo -->
+      <div id="modal-thong-bao" class="modal" aria-hidden="true">
+        <div class="noi-dung-modal tb-dialog" role="dialog" aria-modal="true" tabindex="-1">
+          <button id="dong-thong-bao-x" class="dong-x" aria-label="Đóng">&times;</button>
           <h3>Thông báo</h3>
-          <ul>
-            <li>Yêu cầu mượn máy chiếu từ Giáo viên A - 1 giờ trước</li>
-            <li>Thiết bị Micro Shure hỏng, cần kiểm tra - 2 giờ trước</li>
+          <ul class="tb-list">
+            <li>Yêu cầu phân quyền mới cho Nhân viên thiết bị - 10 phút trước</li>
+            <li>Đăng nhập lạ từ IP 10.10.2.9 - 35 phút trước</li>
+            <li>Kế hoạch mua sắm mới từ Tổ trưởng - 1 giờ trước</li>
           </ul>
-          <button id="dong-thong-bao">Đóng</button>
+          <div class="tb-footer">
+            <button id="danh-dau-doc" class="btn-primary">Đánh dấu tất cả đã đọc</button>
+            <button id="dong-thong-bao" class="btn-secondary">Đóng</button>
+          </div>
         </div>
       </div>
+
     </main>
   </div>
+
   <footer>© 2025 Hệ thống Quản lý Thiết bị</footer>
   <script src="../js/bang-dieu-khien-quan-tri-vien.js"></script>
 </body>

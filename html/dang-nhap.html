@@ -2,28 +2,79 @@
 <html lang="vi">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Đăng nhập - Quản lý Thiết bị Trường THCS</title>
-  <link rel="stylesheet" href="../css/dang-nhap.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Đăng nhập - Hệ thống Quản lý Thiết bị THCS</title>
+  <link rel="stylesheet" href="../css/dang-nhap.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <div class="login-container animate__animated animate__fadeIn">
-    <div class="logo">Quản lý thiết bị UNIQUE</div>
-    <h2>Đăng nhập hệ thống</h2>
-    <form id="login-form" method="post">
-      <label for="username">Tài khoản:</label>
-      <input type="text" id="username" name="username" required>
-      <label for="password">Mật khẩu:</label>
-      <input type="password" id="password" name="password" required>
-      <button type="submit">Đăng nhập</button>
-    </form>
-    <p>Quên mật khẩu? <a href="#">Liên hệ Admin</a></p>
-    <p class="demo-note">* Tài khoản demo: <br> - Admin: admin/123 <br> - Hiệu trưởng: hieutruong/123 <br> - Tổ trưởng: totruong/123 <br> - Giáo viên: giaovien/123 <br> - Nhân viên thiết bị: nhanvien/123</p>
+  <div class="shell">
+    <!-- Panel trái -->
+    <aside class="brand-panel">
+      <div class="brand">
+        <div class="logo">Trường THCS XYZ</div>
+        <p class="tagline">Hệ thống Quản lý Thiết bị</p>
+      </div>
+      <ul class="bullets">
+        <li>Quản lý mượn – trả</li>
+        <li>Theo dõi tình trạng</li>
+        <li>Kế hoạch mua sắm</li>
+        <li>Báo cáo – kiểm kê</li>
+      </ul>
+      <div class="footer-note">© 2025 THCS XYZ</div>
+    </aside>
+
+    <!-- Panel phải -->
+    <main class="login-panel">
+      <section class="card">
+        <h1>Đăng nhập</h1>
+
+        <form id="login-form" novalidate>
+          <div class="field">
+            <label for="username">Tài khoản</label>
+            <input id="username" name="username" type="text" autocomplete="username" required placeholder="VD: admin, giaovien..." />
+          </div>
+
+          <div class="field">
+            <label for="password">Mật khẩu</label>
+            <div class="password-wrap">
+              <input id="password" name="password" type="password" autocomplete="current-password" required placeholder="••••••" />
+              <button type="button" id="toggle-pass" class="toggle-pass" aria-label="Hiện/ẩn mật khẩu">
+                <!-- icon SVG -->
+                <svg id="icon-eye" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
+            </div>
+            <div id="caps-hint" class="caps-hint" aria-live="polite" hidden>⚠️ Caps Lock đang bật</div>
+          </div>
+
+          <button type="submit" id="btn-login" class="btn-primary">Đăng nhập</button>
+          <p id="error" class="error" role="alert" aria-live="assertive" hidden></p>
+
+          <p class="sub">Quên mật khẩu? <a href="#" id="contact-admin">Liên hệ Quản trị viên</a></p>
+
+          <details class="demo">
+            <summary>Tài khoản demo</summary>
+            <div class="demo-box">
+              <ul>
+                <li>Admin: <code>admin / 123</code></li>
+                <li>Hiệu trưởng: <code>hieutruong / 123</code></li>
+                <li>Tổ trưởng: <code>totruong / 123</code></li>
+                <li>Giáo viên: <code>giaovien / 123</code></li>
+                <li>Nhân viên thiết bị: <code>nhanvien / 123</code></li>
+              </ul>
+            </div>
+          </details>
+        </form>
+      </section>
+    </main>
   </div>
+
   <script src="../js/dang-nhap.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.js"></script>
 </body>
 
 </html>

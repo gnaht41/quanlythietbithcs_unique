@@ -2,35 +2,39 @@
 <html lang="vi">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Bảng điều khiển Hiệu trưởng - Quản lý Thiết bị</title>
-  <link rel="stylesheet" href="../css/bang-dieu-khien-hieu-truong.css">
+  <link rel="stylesheet" href="../css/bang-dieu-khien-hieu-truong.css" />
 </head>
 
 <body>
   <header>
     <div class="logo">Trường THCS XYZ</div>
     <div class="user-info">
-      Xin chào, Hiệu trưởng!
+      <span>Xin chào, Hiệu trưởng!</span>
       <button id="nut-dang-xuat">Đăng xuất</button>
-      <button id="nut-thong-bao" class="nut-chuong">🔔<span id="so-luong-thong-bao">3</span></button>
+      <button id="nut-thong-bao" class="nut-chuong" aria-label="Thông báo" aria-haspopup="dialog" aria-expanded="false" title="Thông báo">🔔
+        <span id="so-luong-thong-bao">3</span>
+      </button>
     </div>
   </header>
+
   <div class="khoi-chua">
     <aside class="thanh-ben">
       <ul>
-        <li><a href="#" data-page="tong-quan">Tổng quan</a></li>
-        <li><a href="#" data-page="duyet-ke-hoach-mua-sam">Duyệt kế hoạch mua sắm</a></li>
+        <li><a href="#" class="active" data-page="tong-quan">Tổng quan</a></li>
+        <li><a href="#" data-page="duyet-mua-sam">Duyệt kế hoạch mua sắm</a></li>
         <li><a href="#" data-page="duyet-thanh-ly">Duyệt thanh lý</a></li>
-        <li><a href="#" data-page="xem-bao-cao">Xem báo cáo</a></li>
-        <li><a href="#" data-page="giam-sat-thiet-bi">Giám sát thiết bị</a></li>
-        <li><a href="#" data-page="quan-ly-kiem-ke">Quản lý kiểm kê</a></li>
+        <li><a href="#" data-page="xem-bao-cao">Xem & xuất báo cáo</a></li>
       </ul>
     </aside>
+
     <main>
       <h1>Bảng điều khiển Hiệu trưởng</h1>
-      <div id="tong-quan" class="trang-an">
+
+      <!-- Tổng quan -->
+      <section id="tong-quan" class="trang-an">
         <div class="the-container">
           <div class="the">
             <h3>Tổng thiết bị</h3>
@@ -38,14 +42,14 @@
             <span class="icon">📦</span>
           </div>
           <div class="the">
-            <h3>Người dùng</h3>
-            <p>45</p>
-            <span class="icon">👤</span>
-          </div>
-          <div class="the">
             <h3>Kế hoạch chờ duyệt</h3>
             <p>5</p>
             <span class="icon">📄</span>
+          </div>
+          <div class="the">
+            <h3>Thanh lý chờ duyệt</h3>
+            <p>2</p>
+            <span class="icon">🗑️</span>
           </div>
           <div class="the">
             <h3>Thiết bị hỏng</h3>
@@ -53,31 +57,37 @@
             <span class="icon">⚠️</span>
           </div>
         </div>
-      </div>
+      </section>
 
       <!-- Duyệt kế hoạch mua sắm -->
-      <div id="duyet-ke-hoach-mua-sam" class="trang-an" style="display: none;">
+      <section id="duyet-mua-sam" class="trang-an" style="display:none;">
         <h2>Duyệt kế hoạch mua sắm</h2>
         <table>
           <thead>
             <tr>
               <th>ID</th>
-              <th>Thiết bị</th>
+              <th>Tên thiết bị</th>
               <th>Số lượng</th>
+              <th>Đơn vị</th>
+              <th>Lớp</th>
               <th>Lý do</th>
               <th>Trạng thái</th>
+              <th>Ghi chú</th>
               <th>Hành động</th>
             </tr>
           </thead>
-          <tbody id="bang-ke-hoach-mua-sam">
+          <tbody id="bang-mua-sam">
             <tr>
               <td>1</td>
               <td>Máy chiếu Epson</td>
               <td>5</td>
+              <td>Chiếc</td>
+              <td>8,9</td>
               <td>Bổ sung cho lớp học</td>
               <td>Chờ duyệt</td>
-              <td>
-                <button class="nut-phe-duyet">Phê duyệt</button>
+              <td></td>
+              <td class="hanh-dong">
+                <button class="nut-duyet">Phê duyệt</button>
                 <button class="nut-tu-choi">Từ chối</button>
               </td>
             </tr>
@@ -85,28 +95,32 @@
               <td>2</td>
               <td>Laptop Dell</td>
               <td>10</td>
+              <td>Chiếc</td>
+              <td>6,7,8,9</td>
               <td>Thay thế thiết bị cũ</td>
               <td>Chờ duyệt</td>
-              <td>
-                <button class="nut-phe-duyet">Phê duyệt</button>
+              <td></td>
+              <td class="hanh-dong">
+                <button class="nut-duyet">Phê duyệt</button>
                 <button class="nut-tu-choi">Từ chối</button>
               </td>
             </tr>
           </tbody>
         </table>
-      </div>
+      </section>
 
-      <!-- Duyệt thanh lý thiết bị -->
-      <div id="duyet-thanh-ly" class="trang-an" style="display: none;">
+      <!-- Duyệt thanh lý -->
+      <section id="duyet-thanh-ly" class="trang-an" style="display:none;">
         <h2>Duyệt thanh lý thiết bị</h2>
         <table>
           <thead>
             <tr>
               <th>ID</th>
-              <th>Thiết bị</th>
+              <th>Tên thiết bị</th>
               <th>Tình trạng</th>
-              <th>Lý do</th>
+              <th>Lý do thanh lý</th>
               <th>Trạng thái</th>
+              <th>Ghi chú</th>
               <th>Hành động</th>
             </tr>
           </thead>
@@ -114,11 +128,12 @@
             <tr>
               <td>1</td>
               <td>Micro Shure</td>
-              <td>Hỏng</td>
-              <td>Hỏng nặng, không sửa được</td>
+              <td>Hỏng nặng</td>
+              <td>Không sửa được</td>
               <td>Chờ duyệt</td>
-              <td>
-                <button class="nut-phe-duyet">Phê duyệt</button>
+              <td></td>
+              <td class="hanh-dong">
+                <button class="nut-duyet">Phê duyệt</button>
                 <button class="nut-tu-choi">Từ chối</button>
               </td>
             </tr>
@@ -128,27 +143,31 @@
               <td>Hỏng</td>
               <td>Hết hạn sử dụng</td>
               <td>Chờ duyệt</td>
-              <td>
-                <button class="nut-phe-duyet">Phê duyệt</button>
+              <td></td>
+              <td class="hanh-dong">
+                <button class="nut-duyet">Phê duyệt</button>
                 <button class="nut-tu-choi">Từ chối</button>
               </td>
             </tr>
           </tbody>
         </table>
-      </div>
+      </section>
 
-      <!-- Xem báo cáo -->
-      <div id="xem-bao-cao" class="trang-an" style="display: none;">
-        <h2>Xem báo cáo</h2>
-        <div>
+      <!-- Xem & xuất báo cáo -->
+      <section id="xem-bao-cao" class="trang-an" style="display:none;">
+        <h2>Xem & xuất báo cáo</h2>
+        <div class="hang-cta">
           <button id="nut-xuat-pdf" class="nut-xuat">Xuất PDF</button>
           <button id="nut-xuat-excel" class="nut-xuat">Xuất Excel</button>
         </div>
+
         <h3>Tình hình thiết bị</h3>
         <table>
           <thead>
             <tr>
               <th>Danh mục</th>
+              <th>Số lượng tổng</th>
+              <th>Lớp</th>
               <th>Tốt</th>
               <th>Hỏng</th>
               <th>Đang sửa</th>
@@ -157,100 +176,62 @@
           <tbody>
             <tr>
               <td>Máy chiếu</td>
+              <td>23</td>
+              <td>6,7,8,9</td>
               <td>20</td>
               <td>2</td>
               <td>1</td>
             </tr>
             <tr>
               <td>Laptop</td>
+              <td>33</td>
+              <td>6,7,8,9</td>
               <td>30</td>
               <td>3</td>
               <td>0</td>
             </tr>
           </tbody>
         </table>
+
         <h3>Thống kê mượn/trả</h3>
         <table>
           <thead>
             <tr>
               <th>Thiết bị</th>
-              <th>Mượn</th>
-              <th>Trả</th>
+              <th>Giáo viên</th>
+              <th>Ngày mượn</th>
+              <th>Ngày trả</th>
+              <th>Số lượt mượn</th>
+              <th>Số lượt trả</th>
               <th>Trễ hạn</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Máy chiếu</td>
-              <td>15</td>
-              <td>12</td>
-              <td>1</td>
-            </tr>
-            <tr>
-              <td>Laptop</td>
-              <td>25</td>
-              <td>20</td>
-              <td>2</td>
-            </tr>
-          </tbody>
-        </table>
-        <h3>Báo cáo kiểm kê</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Đợt kiểm kê</th>
-              <th>Thiết bị có sẵn</th>
-              <th>Chênh lệch</th>
               <th>Ghi chú</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Cuối kỳ 1</td>
-              <td>100</td>
-              <td>-2</td>
-              <td>Mất máy chiếu</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Giám sát thiết bị -->
-      <div id="giam-sat-thiet-bi" class="trang-an" style="display: none;">
-        <h2>Giám sát thiết bị</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Tên thiết bị</th>
-              <th>Nhóm</th>
-              <th>Số lượng</th>
-              <th>Tình trạng</th>
-            </tr>
-          </thead>
-          <tbody id="bang-giam-sat">
-            <tr>
+              <td>Máy chiếu</td>
+              <td>Nguyễn Văn A</td>
+              <td>2025-09-15</td>
+              <td>2025-09-18</td>
+              <td>15</td>
+              <td>12</td>
               <td>1</td>
-              <td>Máy chiếu Epson</td>
-              <td>Nghe nhìn</td>
-              <td>20</td>
-              <td>Tốt</td>
+              <td>Trễ 1 ngày</td>
             </tr>
             <tr>
+              <td>Laptop</td>
+              <td>Trần Thị B</td>
+              <td>2025-09-10</td>
+              <td>2025-09-17</td>
+              <td>25</td>
+              <td>20</td>
               <td>2</td>
-              <td>Laptop Dell</td>
-              <td>Phương tiện hỗ trợ</td>
-              <td>30</td>
-              <td>Tốt</td>
+              <td>Trễ 2 ngày</td>
             </tr>
           </tbody>
         </table>
-      </div>
 
-      <!-- Quản lý kiểm kê -->
-      <div id="quan-ly-kiem-ke" class="trang-an" style="display: none;">
-        <h2>Quản lý kiểm kê</h2>
-        <button id="nut-tao-dot-kiem-ke" class="nut-phe-duyet">Tạo đợt kiểm kê</button>
+        <h3>Báo cáo kiểm kê</h3>
         <table>
           <thead>
             <tr>
@@ -259,38 +240,57 @@
               <th>Số lượng dự kiến</th>
               <th>Số lượng thực tế</th>
               <th>Chênh lệch</th>
+              <th>Ban kiểm kê</th>
+              <th>Đề xuất giải pháp</th>
               <th>Ghi chú</th>
-              <th>Hành động</th>
             </tr>
           </thead>
-          <tbody id="bang-kiem-ke">
+          <tbody>
             <tr>
-              <td>Cuối năm 2025</td>
-              <td>Máy chiếu Epson</td>
-              <td>20</td>
-              <td><input type="number" class="so-luong-thuc-te" value="19"></td>
-              <td>-1</td>
-              <td>Mất 1 cái</td>
-              <td><button class="nut-phe-duyet">Cập nhật</button></td>
+              <td>Cuối kỳ 1 (2025)</td>
+              <td>Máy chiếu</td>
+              <td>100</td>
+              <td>98</td>
+              <td>-2</td>
+              <td>Nguyễn Văn C; Trần Thị D</td>
+              <td>Mua bổ sung 2 máy</td>
+              <td>Mất 2 máy</td>
             </tr>
           </tbody>
         </table>
-        <button id="nut-in-bien-ban" class="nut-xuat">In biên bản</button>
+      </section>
+
+      <!-- Modal: Chuông thông báo -->
+      <div id="modal-thong-bao" class="modal" aria-hidden="true">
+        <div class="noi-dung-modal tb-dialog" role="dialog" aria-modal="true" tabindex="-1">
+          <button id="dong-thong-bao-x" class="dong-x" aria-label="Đóng" title="Đóng">&times;</button>
+          <h3>Thông báo</h3>
+          <ul class="tb-list">
+            <li>Kế hoạch mua sắm mới từ Tổ trưởng - 1 giờ trước</li>
+            <li>Đề xuất thanh lý từ Nhân viên thiết bị - 2 giờ trước</li>
+          </ul>
+          <div class="tb-footer">
+            <button id="danh-dau-doc" class="btn-primary">Đánh dấu tất cả đã đọc</button>
+            <button id="dong-thong-bao" class="btn-secondary">Đóng</button>
+          </div>
+        </div>
       </div>
 
-      <!-- Modal thông báo -->
-      <div id="modal-thong-bao" class="modal-thong-bao" style="display: none;">
-        <div class="noi-dung-thong-bao">
-          <h3>Thông báo</h3>
-          <ul>
-            <li>Kế hoạch mua sắm mới từ Tổ trưởng - 1 giờ trước</li>
-            <li>Kế hoạch thanh lý từ Nhân viên thiết bị - 2 giờ trước</li>
-          </ul>
-          <button id="dong-thong-bao">Đóng</button>
+      <!-- Modal: Nhập lý do từ chối -->
+      <div id="modal-tu-choi" class="modal" aria-hidden="true">
+        <div class="noi-dung-modal" role="dialog" aria-modal="true" tabindex="-1">
+          <button id="dong-tu-choi-x" class="dong-x" aria-label="Đóng" title="Đóng">&times;</button>
+          <h3>Lý do từ chối</h3>
+          <textarea id="ghi-chu-tu-choi" rows="4" class="textarea" placeholder="Nhập lý do..."></textarea>
+          <div class="nut-modal">
+            <button id="xac-nhan-tu-choi" class="btn-primary">Xác nhận</button>
+            <button id="huy-tu-choi" class="btn-secondary">Hủy</button>
+          </div>
         </div>
       </div>
     </main>
   </div>
+
   <footer>© 2025 Hệ thống Quản lý Thiết bị</footer>
   <script src="../js/bang-dieu-khien-hieu-truong.js"></script>
 </body>

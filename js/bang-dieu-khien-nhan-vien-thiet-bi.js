@@ -1,255 +1,282 @@
-// --- Đăng xuất ---
-document.getElementById('nut-dang-xuat').addEventListener('click', () => {
-    if (confirm('Bạn có chắc muốn đăng xuất?')) {
-        alert('Đăng xuất thành công!');
-        window.location.href = '../html/dang-nhap.html';
-    }
-});
+(function () {
+    // ===== Helpers =====
+    const $ = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+    const openModal = (el) => { if (el) { el.classList.add('open'); document.body.classList.add('no-scroll'); } };
+    const closeModal = (el) => { if (el) { el.classList.remove('open'); document.body.classList.remove('no-scroll'); } };
 
-// --- Điều hướng ---
-document.querySelectorAll('.thanh-ben a').forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const pageId = link.dataset.page;
-        document.querySelectorAll('.thanh-ben a').forEach(a => a.classList.remove('active'));
-        link.classList.add('active');
-        document.querySelectorAll('.trang-an').forEach(page => page.style.display = 'none');
-        document.getElementById(pageId).style.display = 'block';
+    // ===== Logout =====
+    $('#nut-dang-xuat')?.addEventListener('click', () => {
+        if (confirm('Bạn có chắc muốn đăng xuất?')) {
+            alert('Đăng xuất thành công!');
+            window.location.href = '../html/dang-nhap.html';
+        }
     });
-});
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('.thanh-ben a[data-page="tong-quan"]').classList.add('active');
-});
 
-// --- Quản lý danh mục thiết bị ---
-const modalThietBi = document.getElementById('modal-thiet-bi');
-const formThietBi = document.getElementById('form-thiet-bi');
-const bangDanhMuc = document.getElementById('bang-danh-muc');
+    // ===== Navigation =====
+    $$('.thanh-ben a').forEach(a => {
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const pageId = a.dataset.page;
+            $$('.thanh-ben a').forEach(x => x.classList.remove('active'));
+            a.classList.add('active');
+            $$('main > div.trang-an').forEach(p => p.style.display = 'none');
+            const pageEl = document.getElementById(pageId);
+            if (pageEl) pageEl.style.display = 'block';
+        });
+    });
 
-document.getElementById('nut-them-thiet-bi').addEventListener('click', () => {
-    formThietBi.reset();
-    document.getElementById('id-thiet-bi').value = '';
-    document.getElementById('tieu-de-modal').textContent = 'Thêm thiết bị';
-    modalThietBi.style.display = 'flex';
-});
+    // ===== Notification (bell) =====
+    const nutTB = $('#nut-thong-bao');
+    const modalTB = $('#modal-thong-bao');
+    const dongTB = $('#dong-thong-bao');
+    const dongTBX = $('#dong-thong-bao-x');
+    const badgeTB = $('#so-luong-thong-bao');
+    const markRead = $('#danh-dau-doc');
 
-document.getElementById('dong-modal').addEventListener('click', () => modalThietBi.style.display = 'none');
-document.getElementById('huy-modal').addEventListener('click', () => modalThietBi.style.display = 'none');
+    const setBadge = (n) => {
+        if (!badgeTB) return;
+        if (n > 0) { badgeTB.textContent = n; badgeTB.style.display = 'inline-block'; }
+        else { badgeTB.style.display = 'none'; }
+    };
+    const openTB = () => {
+        openModal(modalTB);
+        nutTB?.setAttribute('aria-expanded', 'true');
+        (dongTBX || modalTB.querySelector('button'))?.focus();
+    };
+    const closeTB = () => {
+        closeModal(modalTB);
+        nutTB?.setAttribute('aria-expanded', 'false');
+        nutTB?.focus();
+    };
 
-formThietBi.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const ten = document.getElementById('ten-thiet-bi').value;
-    const nhom = document.getElementById('nhom-thiet-bi').value;
-    const danhMuc = document.getElementById('danh-muc').value;
-    const soLuong = document.getElementById('so-luong').value;
-    if (!ten || !nhom || !danhMuc || !soLuong) {
-        alert('Vui lòng điền đầy đủ thông tin!');
-        return;
-    }
-    const id = document.getElementById('id-thiet-bi').value || bangDanhMuc.rows.length + 1;
+    nutTB?.addEventListener('click', (e) => { e.stopPropagation(); modalTB?.classList.contains('open') ? closeTB() : openTB(); });
+    dongTB?.addEventListener('click', closeTB);
+    dongTBX?.addEventListener('click', closeTB);
+    modalTB?.addEventListener('click', (e) => { if (e.target === modalTB) closeTB(); });
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalTB?.classList.contains('open')) closeTB(); });
+    markRead?.addEventListener('click', () => { setBadge(0); closeTB(); });
+    if (badgeTB && (badgeTB.textContent.trim() === '' || badgeTB.textContent.trim() === '0')) setBadge(1);
 
-    if (!document.getElementById('id-thiet-bi').value) {
-        const newRow = bangDanhMuc.insertRow();
-        newRow.innerHTML = `
-            <td>${id}</td>
-            <td>${ten}</td>
-            <td>${nhom.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</td>
-            <td>${danhMuc}</td>
-            <td>${soLuong}</td>
-            <td><button class="nut-sua">Sửa</button> <button class="nut-xoa">Xóa</button></td>
-        `;
-        ganSuKienNutDanhMuc(newRow);
-    } else {
-        const row = bangDanhMuc.rows[parseInt(id) - 1];
-        row.cells[1].textContent = ten;
-        row.cells[2].textContent = nhom.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
-        row.cells[3].textContent = danhMuc;
-        row.cells[4].textContent = soLuong;
-    }
-    modalThietBi.style.display = 'none';
-    alert('Cập nhật danh mục thành công!');
-});
+    // ===== Quản lý danh mục thiết bị =====
+    const modalTBien = $('#modal-thiet-bi');
+    const formTBien = $('#form-thiet-bi');
+    const tbodyDM = $('#bang-danh-muc');
 
-document.getElementById('nut-nhap-excel').addEventListener('click', () => {
-    const fileInput = document.getElementById('file-excel');
-    if (fileInput.files.length > 0) {
+    $('#nut-them-thiet-bi')?.addEventListener('click', () => {
+        formTBien?.reset();
+        $('#id-thiet-bi').value = '';
+        $('#tieu-de-modal').textContent = 'Thêm thiết bị';
+        openModal(modalTBien);
+    });
+    $('#dong-modal')?.addEventListener('click', () => closeModal(modalTBien));
+    $('#huy-modal')?.addEventListener('click', () => closeModal(modalTBien));
+
+    // Ủy quyền sự kiện sửa/xoá
+    tbodyDM?.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const row = btn.closest('tr');
+        if (!row) return;
+
+        if (btn.classList.contains('nut-sua')) {
+            $('#tieu-de-modal').textContent = 'Sửa thiết bị';
+            $('#id-thiet-bi').value = row.cells[0].textContent.trim();
+            $('#ten-thiet-bi').value = row.cells[1].textContent.trim();
+            $('#nhom-thiet-bi').value = row.cells[2].textContent.trim();
+            $('#don-vi').value = row.cells[3].textContent.trim();
+            $('#so-luong').value = row.cells[4].textContent.trim();
+            $('#lop').value = row.cells[5].textContent.trim();
+            $('#ghi-chu').value = row.cells[6].textContent.trim();
+            openModal(modalTBien);
+        }
+
+        if (btn.classList.contains('nut-xoa')) {
+            if (confirm('Xoá thiết bị này?')) {
+                row.remove();
+            }
+        }
+    });
+
+    formTBien?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const id = $('#id-thiet-bi').value.trim();
+        const ten = $('#ten-thiet-bi').value.trim();
+        const nhom = $('#nhom-thiet-bi').value.trim();
+        const donvi = $('#don-vi').value.trim();
+        const soLuong = $('#so-luong').value.trim();
+        const lop = $('#lop').value.trim();
+        const ghiChu = $('#ghi-chu').value.trim();
+
+        if (!ten || !nhom || !donvi || !soLuong || !lop) {
+            alert('Vui lòng nhập đủ các trường bắt buộc!');
+            return;
+        }
+
+        if (!id) { // thêm mới
+            const newRow = tbodyDM.insertRow(-1);
+            const nextId = tbodyDM.rows.length; // đơn giản: số thứ tự = số dòng
+            newRow.innerHTML = `
+        <td>${nextId}</td>
+        <td>${ten}</td>
+        <td>${nhom}</td>
+        <td>${donvi}</td>
+        <td>${soLuong}</td>
+        <td>${lop}</td>
+        <td>${ghiChu || ''}</td>
+        <td>
+          <button class="nut-sua">Sửa</button>
+          <button class="nut-xoa">Xóa</button>
+        </td>
+      `;
+        } else { // cập nhật
+            // tìm đúng dòng theo số TT
+            const idx = Array.from(tbodyDM.rows).findIndex(r => r.cells[0].textContent.trim() === id);
+            if (idx > -1) {
+                const row = tbodyDM.rows[idx];
+                row.cells[1].textContent = ten;
+                row.cells[2].textContent = nhom;
+                row.cells[3].textContent = donvi;
+                row.cells[4].textContent = soLuong;
+                row.cells[5].textContent = lop;
+                row.cells[6].textContent = ghiChu;
+            }
+        }
+        closeModal(modalTBien);
+        alert('Lưu danh mục thành công!');
+    });
+
+    $('#nut-nhap-excel')?.addEventListener('click', () => {
+        const fi = $('#file-excel');
+        if (!fi || fi.files.length === 0) { alert('Vui lòng chọn file Excel!'); return; }
+        const file = fi.files[0];
         const reader = new FileReader();
-        reader.onload = (e) => {
-            alert(`Nhập file Excel: ${fileInput.files[0].name} - Nội dung (demo): ${e.target.result.substring(0, 100)}... (sẽ triển khai xử lý Excel sau)`);
+        reader.onload = () => {
+            // demo: chỉ báo tên file; xử lý thực tế sẽ dùng thư viện đọc Excel
+            alert(`Đã chọn file: ${file.name}. (Demo import, sẽ triển khai parser XLSX sau)`);
         };
-        reader.readAsText(fileInput.files[0]);
-    } else {
-        alert('Vui lòng chọn file Excel!');
-    }
-});
+        reader.readAsArrayBuffer(file);
+    });
 
-// --- Quản lý tình trạng thiết bị ---
-document.querySelectorAll('.nut-cap-nhat').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const row = btn.parentElement.parentElement;
-        const tinhTrang = row.querySelector('.tinh-trang-select').value;
-        row.cells[2].textContent = tinhTrang.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+    // ===== Quản lý tình trạng =====
+    $('#bang-tinh-trang')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.nut-cap-nhat-tt');
+        if (!btn) return;
+        const row = btn.closest('tr');
+        const select = row.querySelector('.tinh-trang-select');
+        const ttMoi = select?.value || '';
+        if (!ttMoi) { alert('Vui lòng chọn tình trạng!'); return; }
+        row.querySelector('.tt-hien-tai').textContent = ttMoi;
         alert('Cập nhật tình trạng thành công!');
     });
-});
 
-// --- Quản lý mượn - trả ---
-document.querySelectorAll('.nut-duyet').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const row = btn.parentElement.parentElement;
-        row.cells[5].textContent = 'Đã duyệt';
-        alert('Yêu cầu đã được duyệt!');
-    });
-});
+    // ===== Quản lý mượn - trả =====
+    $('#bang-muon-tra')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const row = btn.closest('tr');
 
-document.querySelectorAll('.nut-tu-choi').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const row = btn.parentElement.parentElement;
-        row.cells[5].textContent = 'Từ chối';
-        alert('Yêu cầu đã bị từ chối!');
-    });
-});
-
-document.querySelectorAll('.nut-tra').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const row = btn.parentElement.parentElement;
-        const tinhTrang = row.querySelector('.tinh-trang-tra').value;
-        if (!tinhTrang) {
-            alert('Vui lòng nhập tình trạng trả!');
-            return;
+        if (btn.classList.contains('nut-duyet')) {
+            row.cells[5].textContent = 'Đã duyệt';
+            alert('Đã duyệt yêu cầu!');
         }
-        row.cells[5].textContent = 'Đã trả';
-        row.cells[6].textContent = tinhTrang;
-        alert('Ghi nhận trả thiết bị thành công!');
-    });
-});
-
-document.getElementById('nut-in-phieu').addEventListener('click', () => {
-    window.print();
-    alert('In phiếu mượn (sử dụng window.print để in trang)');
-});
-
-// --- Quản lý bảo trì/sửa chữa ---
-const modalBaoTri = document.getElementById('modal-bao-tri');
-const formBaoTri = document.getElementById('form-bao-tri');
-const bangBaoTri = document.getElementById('bang-bao-tri');
-
-document.getElementById('nut-them-bao-tri').addEventListener('click', () => {
-    formBaoTri.reset();
-    document.getElementById('id-bao-tri').value = '';
-    document.getElementById('tieu-de-bao-tri').textContent = 'Thêm bảo trì';
-    modalBaoTri.style.display = 'flex';
-});
-
-document.getElementById('dong-bao-tri').addEventListener('click', () => modalBaoTri.style.display = 'none');
-document.getElementById('huy-bao-tri').addEventListener('click', () => modalBaoTri.style.display = 'none');
-
-formBaoTri.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const thietBi = document.getElementById('thiet-bi-bao-tri').value;
-    const ngay = document.getElementById('ngay-bao-tri').value;
-    const moTa = document.getElementById('mo-ta-bao-tri').value;
-    const trangThai = document.getElementById('trang-thai-bao-tri').value;
-    if (!thietBi || !ngay || !moTa || !trangThai) {
-        alert('Vui lòng điền đầy đủ thông tin!');
-        return;
-    }
-    const id = document.getElementById('id-bao-tri').value || bangBaoTri.rows.length + 1;
-
-    if (!document.getElementById('id-bao-tri').value) {
-        const newRow = bangBaoTri.insertRow();
-        newRow.innerHTML = `
-            <td>${id}</td>
-            <td>${thietBi}</td>
-            <td>${ngay}</td>
-            <td>${moTa}</td>
-            <td>${trangThai.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</td>
-            <td><button class="nut-sua">Sửa</button></td>
-        `;
-        ganSuKienNutBaoTri(newRow);
-    } else {
-        const row = bangBaoTri.rows[parseInt(id) - 1];
-        row.cells[1].textContent = thietBi;
-        row.cells[2].textContent = ngay;
-        row.cells[3].textContent = moTa;
-        row.cells[4].textContent = trangThai.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
-    }
-    modalBaoTri.style.display = 'none';
-    alert('Cập nhật bảo trì thành công!');
-});
-
-function ganSuKienNutBaoTri(hang) {
-    hang.querySelector('.nut-sua').addEventListener('click', () => {
-        const row = hang;
-        document.getElementById('id-bao-tri').value = row.cells[0].textContent;
-        document.getElementById('thiet-bi-bao-tri').value = row.cells[1].textContent;
-        document.getElementById('ngay-bao-tri').value = row.cells[2].textContent;
-        document.getElementById('mo-ta-bao-tri').value = row.cells[3].textContent;
-        document.getElementById('trang-thai-bao-tri').value = row.cells[4].textContent.toLowerCase().replace(/\s/g, '-');
-        document.getElementById('tieu-de-bao-tri').textContent = 'Sửa bảo trì';
-        modalBaoTri.style.display = 'flex';
-    });
-}
-document.querySelectorAll('#bang-bao-tri tr').forEach(ganSuKienNutBaoTri);
-
-// --- Quản lý kiểm kê ---
-document.getElementById('nut-tao-dot-kiem-ke').addEventListener('click', () => {
-    alert('Tạo đợt kiểm kê mới (sẽ triển khai sau)');
-});
-
-document.querySelectorAll('.nut-cap-nhat').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const row = btn.parentElement.parentElement;
-        const duKien = parseInt(row.cells[3].textContent);
-        const thucTe = parseInt(row.querySelector('.so-luong-thuc-te').value);
-        if (isNaN(thucTe)) {
-            alert('Vui lòng nhập số lượng thực tế hợp lệ!');
-            return;
+        if (btn.classList.contains('nut-tu-choi')) {
+            row.cells[5].textContent = 'Từ chối';
+            alert('Đã từ chối yêu cầu!');
         }
-        const chenhLech = thucTe - duKien;
-        row.cells[5].textContent = chenhLech + (chenhLech > 0 ? ' (tăng)' : (chenhLech < 0 ? ' (giảm)' : ''));
+        if (btn.classList.contains('nut-tra')) {
+            const tinhTrang = row.querySelector('.tinh-trang-tra')?.value.trim();
+            if (!tinhTrang) { alert('Vui lòng nhập tình trạng khi trả!'); return; }
+            row.cells[5].textContent = 'Đã trả';
+            row.cells[6].textContent = tinhTrang;
+            row.querySelector('.nhom-tra').innerHTML = ''; // ẩn controls trả
+            alert('Đã ghi nhận trả thiết bị!');
+        }
+    });
+
+    $('#nut-in-phieu')?.addEventListener('click', () => window.print());
+
+    // ===== Quản lý bảo trì =====
+    const modalBT = $('#modal-bao-tri');
+    $('#nut-them-bao-tri')?.addEventListener('click', () => {
+        $('#tieu-de-bao-tri').textContent = 'Thêm bảo trì';
+        $('#form-bao-tri').reset();
+        $('#id-bao-tri').value = '';
+        openModal(modalBT);
+    });
+    $('#dong-bao-tri')?.addEventListener('click', () => closeModal(modalBT));
+    $('#huy-bao-tri')?.addEventListener('click', () => closeModal(modalBT));
+
+    const tbodyBT = $('#bang-bao-tri');
+    tbodyBT?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.nut-sua');
+        if (!btn) return;
+        const row = btn.closest('tr');
+        $('#tieu-de-bao-tri').textContent = 'Sửa bảo trì';
+        $('#id-bao-tri').value = row.cells[0].textContent.trim();
+        $('#thiet-bi-bao-tri').value = row.cells[1].textContent.trim();
+        $('#ngay-bao-tri').value = row.cells[2].textContent.trim();
+        $('#mo-ta-bao-tri').value = row.cells[3].textContent.trim();
+        $('#trang-thai-bao-tri').value = row.cells[4].textContent.trim();
+        openModal(modalBT);
+    });
+
+    $('#form-bao-tri')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const id = $('#id-bao-tri').value.trim();
+        const tb = $('#thiet-bi-bao-tri').value.trim();
+        const ngay = $('#ngay-bao-tri').value.trim();
+        const moTa = $('#mo-ta-bao-tri').value.trim();
+        const trangThai = $('#trang-thai-bao-tri').value.trim();
+        if (!tb || !ngay || !moTa || !trangThai) { alert('Nhập đủ thông tin!'); return; }
+
+        if (!id) {
+            const newRow = tbodyBT.insertRow(-1);
+            const nextId = tbodyBT.rows.length;
+            newRow.innerHTML = `
+        <td>${nextId}</td>
+        <td>${tb}</td>
+        <td>${ngay}</td>
+        <td>${moTa}</td>
+        <td>${trangThai}</td>
+        <td><button class="nut-sua">Sửa</button></td>
+      `;
+        } else {
+            const idx = Array.from(tbodyBT.rows).findIndex(r => r.cells[0].textContent.trim() === id);
+            if (idx > -1) {
+                const row = tbodyBT.rows[idx];
+                row.cells[1].textContent = tb;
+                row.cells[2].textContent = ngay;
+                row.cells[3].textContent = moTa;
+                row.cells[4].textContent = trangThai;
+            }
+        }
+        closeModal(modalBT);
+        alert('Lưu bảo trì thành công!');
+    });
+
+    // ===== Quản lý kiểm kê =====
+    const tbodyKK = $('#bang-kiem-ke');
+    tbodyKK?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.nut-cap-nhat-kk');
+        if (!btn) return;
+        const row = btn.closest('tr');
+        const duKien = parseInt(row.cells[3].textContent, 10);
+        const thucTe = parseInt(row.querySelector('.so-luong-thuc-te')?.value, 10);
+        if (Number.isNaN(thucTe)) { alert('Nhập số lượng thực tế hợp lệ!'); return; }
+        const chenh = thucTe - duKien;
+        row.querySelector('.chenh-lech').textContent = chenh === 0 ? '0' : (chenh > 0 ? `+${chenh} (tăng)` : `${chenh} (giảm)`);
         alert('Cập nhật kiểm kê thành công!');
     });
-});
 
-document.getElementById('nut-in-bien-ban').addEventListener('click', () => {
-    window.print();
-    alert('In biên bản kiểm kê (sử dụng window.print để in trang)');
-});
-
-// --- Lập báo cáo ---
-document.getElementById('nut-tao-bao-cao').addEventListener('click', () => {
-    alert('Tạo báo cáo định kỳ (sẽ triển khai sau)');
-});
-
-document.querySelectorAll('.nut-in').forEach(btn => {
-    btn.addEventListener('click', () => {
-        window.print();
-        alert('In báo cáo (sử dụng window.print để in trang)');
+    $('#nut-tao-dot-kiem-ke')?.addEventListener('click', () => {
+        alert('Tạo đợt kiểm kê mới (demo).');
     });
-});
+    $('#nut-in-bien-ban')?.addEventListener('click', () => window.print());
 
-// --- Thông báo ---
-document.getElementById('nut-thong-bao').addEventListener('click', () => {
-    const modalTB = document.getElementById('modal-thong-bao');
-    modalTB.style.display = modalTB.style.display === 'block' ? 'none' : 'block';
-});
+    // ===== Lập báo cáo =====
+    $('#nut-tao-bao-cao')?.addEventListener('click', () => {
+        alert('Tạo báo cáo (demo).');
+    });
 
-document.getElementById('dong-thong-bao').addEventListener('click', () => {
-    document.getElementById('modal-thong-bao').style.display = 'none';
-});
-
-// --- Đóng modal khi click ngoài ---
-window.addEventListener('click', (e) => {
-    if (e.target === modalThietBi) modalThietBi.style.display = 'none';
-    if (e.target === modalBaoTri) modalBaoTri.style.display = 'none';
-    if (e.target === document.getElementById('modal-thong-bao')) document.getElementById('modal-thong-bao').style.display = 'none';
-});
-
-// --- Thông báo tự động (demo) ---
-setInterval(() => {
-    const hong = document.querySelectorAll('#bang-tinh-trang td:nth-child(3)[text="Hỏng"]');
-    if (hong.length > 0) {
-        alert('Có thiết bị hỏng cần kiểm tra!');
-    }
-}, 300000); // Kiểm tra mỗi 5 phút
+})();

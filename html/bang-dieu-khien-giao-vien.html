@@ -2,10 +2,10 @@
 <html lang="vi">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Bảng điều khiển Giáo viên - Quản lý Thiết bị</title>
-  <link rel="stylesheet" href="../css/bang-dieu-khien-giao-vien.css">
+  <link rel="stylesheet" href="../css/bang-dieu-khien-giao-vien.css" />
 </head>
 
 <body>
@@ -14,23 +14,29 @@
     <div class="user-info">
       Xin chào, Giáo viên!
       <button id="nut-dang-xuat">Đăng xuất</button>
-      <button id="nut-thong-bao" class="nut-chuong">🔔<span id="so-luong-thong-bao">1</span></button>
+      <button id="nut-thong-bao" class="nut-chuong" aria-label="Thông báo" aria-haspopup="dialog" aria-expanded="false" title="Thông báo">🔔
+        <span id="so-luong-thong-bao">1</span>
+      </button>
     </div>
   </header>
+
   <div class="khoi-chua">
     <aside class="thanh-ben">
       <ul>
-        <li><a href="#" data-page="tong-quan">Tổng quan</a></li>
+        <li><a href="#" class="active" data-page="tong-quan">Tổng quan</a></li>
         <li><a href="#" data-page="tim-kiem-thiet-bi">Tìm kiếm thiết bị</a></li>
-        <li><a href="#" data-page="danh-muc-thiet-bi">Xem danh mục thiết bị</a></li>
+        <li><a href="#" data-page="danh-muc-thiet-bi">Danh mục thiết bị</a></li>
         <li><a href="#" data-page="gui-yeu-cau-muon">Gửi yêu cầu mượn</a></li>
         <li><a href="#" data-page="theo-doi-yeu-cau">Theo dõi yêu cầu</a></li>
         <li><a href="#" data-page="lich-su-muon">Xem lịch sử mượn</a></li>
         <li><a href="#" data-page="bao-cao-hu-hong">Báo cáo hư hỏng</a></li>
       </ul>
     </aside>
+
     <main>
       <h1>Bảng điều khiển Giáo viên</h1>
+
+      <!-- Tổng quan -->
       <div id="tong-quan" class="trang-an">
         <div class="the-container">
           <div class="the">
@@ -52,30 +58,32 @@
       </div>
 
       <!-- Tìm kiếm thiết bị -->
-      <div id="tim-kiem-thiet-bi" class="trang-an" style="display: none;">
+      <div id="tim-kiem-thiet-bi" class="trang-an" style="display:none;">
         <h2>Tìm kiếm thiết bị</h2>
         <div class="tim-kiem-form">
-          <input type="text" id="tim-kiem-ten" placeholder="Tên thiết bị">
+          <input id="tim-kiem-ten" placeholder="Nhập tên thiết bị..." />
           <select id="tim-kiem-danh-muc">
-            <option value="">Chọn danh mục</option>
-            <option value="Máy chiếu">Máy chiếu</option>
-            <option value="Laptop">Laptop</option>
-            <option value="Thiết bị thí nghiệm">Thiết bị thí nghiệm</option>
+            <option value="">-- Danh mục --</option>
+            <option>Máy chiếu</option>
+            <option>Laptop</option>
+            <option>Thiết bị thí nghiệm</option>
           </select>
           <select id="tim-kiem-tinh-trang">
-            <option value="">Chọn tình trạng</option>
-            <option value="Tốt">Tốt</option>
-            <option value="Hỏng">Hỏng</option>
-            <option value="Đang sửa">Đang sửa</option>
+            <option value="">-- Tình trạng --</option>
+            <option>Tốt</option>
+            <option>Đang sửa</option>
+            <option>Hỏng</option>
           </select>
-          <button id="nut-tim-kiem">Tìm kiếm</button>
+          <button id="nut-tim-kiem">Tìm</button>
         </div>
+
         <table id="bang-tim-kiem">
           <thead>
             <tr>
               <th>Tên thiết bị</th>
               <th>Danh mục</th>
               <th>Tình trạng</th>
+              <th>Số lượng còn</th>
             </tr>
           </thead>
           <tbody>
@@ -83,59 +91,72 @@
               <td>Máy chiếu Epson</td>
               <td>Máy chiếu</td>
               <td>Tốt</td>
+              <td>5</td>
+            </tr>
+            <tr>
+              <td>Thiết bị thí nghiệm Hóa</td>
+              <td>Thiết bị thí nghiệm</td>
+              <td>Hỏng</td>
+              <td>2</td>
             </tr>
             <tr>
               <td>Laptop Dell</td>
               <td>Laptop</td>
               <td>Đang sửa</td>
+              <td>3</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Danh mục thiết bị -->
-      <div id="danh-muc-thiet-bi" class="trang-an" style="display: none;">
+      <!-- Danh mục thiết bị (chuẩn theo Word: 6 cột) -->
+      <div id="danh-muc-thiet-bi" class="trang-an" style="display:none;">
         <h2>Danh mục thiết bị</h2>
         <table>
           <thead>
             <tr>
+              <th>Số TT</th>
               <th>Tên thiết bị</th>
-              <th>Danh mục</th>
-              <th>Môn học</th>
-              <th>Tình trạng</th>
+              <th>Đơn vị</th>
               <th>Số lượng</th>
+              <th>Lớp</th>
+              <th>Ghi chú</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Máy chiếu Epson</td>
-              <td>Máy chiếu</td>
-              <td>Toán</td>
-              <td>Tốt</td>
-              <td>20</td>
+              <td>1</td>
+              <td>Video tư liệu - Truyện Kiều</td>
+              <td>Bộ</td>
+              <td>1</td>
+              <td>8</td>
+              <td></td>
             </tr>
             <tr>
-              <td>Laptop Dell</td>
-              <td>Laptop</td>
-              <td>Lý</td>
-              <td>Tốt</td>
-              <td>30</td>
-            </tr>
-            <tr>
-              <td>Bộ thí nghiệm</td>
-              <td>Thiết bị thí nghiệm</td>
-              <td>Hóa</td>
-              <td>Hỏng</td>
               <td>2</td>
+              <td>Máy chiếu Epson</td>
+              <td>Chiếc</td>
+              <td>4</td>
+              <td>6,7,8,9</td>
+              <td>Thiết bị dạy học</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Laptop Dell</td>
+              <td>Chiếc</td>
+              <td>6</td>
+              <td>6,7,8,9</td>
+              <td>Thiết bị dạy học</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Gửi yêu cầu mượn thiết bị -->
-      <div id="gui-yeu-cau-muon" class="trang-an" style="display: none;">
-        <h2>Gửi yêu cầu mượn thiết bị</h2>
+      <!-- Gửi yêu cầu mượn -->
+      <div id="gui-yeu-cau-muon" class="trang-an" style="display:none;">
+        <h2>Gửi yêu cầu mượn</h2>
         <button id="nut-them-yeu-cau" class="nut-them">Thêm yêu cầu</button>
+
         <table id="bang-yeu-cau">
           <thead>
             <tr>
@@ -151,27 +172,43 @@
           <tbody></tbody>
         </table>
 
-        <!-- Modal thêm yêu cầu -->
-        <div id="modal-yeu-cau" class="modal" style="display: none;">
+        <!-- Modal Thêm yêu cầu -->
+        <div id="modal-yeu-cau" class="modal">
           <div class="noi-dung-modal">
-            <span class="dong-modal" id="dong-modal">&times;</span>
+            <button class="dong-x" id="dong-modal" aria-label="Đóng">&times;</button>
             <h3>Thêm yêu cầu mượn</h3>
             <form id="form-yeu-cau">
-              <input type="hidden" id="id-yeu-cau">
-              <label for="thiet-bi-muon">Thiết bị:</label>
-              <select id="thiet-bi-muon" required>
-                <option value="">Chọn thiết bị</option>
-                <option value="Máy chiếu Epson">Máy chiếu Epson</option>
-                <option value="Laptop Dell">Laptop Dell</option>
-              </select>
-              <label for="ngay-muon">Ngày mượn:</label>
-              <input type="date" id="ngay-muon" required>
-              <label for="ngay-tra">Ngày trả dự kiến:</label>
-              <input type="date" id="ngay-tra" required>
-              <label for="muc-dich">Mục đích:</label>
-              <textarea id="muc-dich" required></textarea>
+              <input type="hidden" id="id-yeu-cau" />
+              <div class="form-grid">
+                <div class="field">
+                  <label for="thiet-bi-muon">Thiết bị</label>
+                  <select id="thiet-bi-muon" required>
+                    <option value="">Chọn thiết bị</option>
+                    <option value="Máy chiếu Epson">Máy chiếu Epson</option>
+                    <option value="Laptop Dell">Laptop Dell</option>
+                  </select>
+                  <div class="help">Chọn thiết bị bạn muốn mượn.</div>
+                </div>
+
+                <div class="field">
+                  <label for="ngay-muon">Ngày mượn</label>
+                  <input type="date" id="ngay-muon" required />
+                </div>
+
+                <div class="field">
+                  <label for="ngay-tra">Ngày trả dự kiến</label>
+                  <input type="date" id="ngay-tra" required />
+                </div>
+
+                <div class="field" style="grid-column:1 / -1;">
+                  <label for="muc-dich">Mục đích</label>
+                  <textarea id="muc-dich" required></textarea>
+                  <div class="help">Mô tả ngắn gọn mục đích sử dụng.</div>
+                </div>
+              </div>
+
               <div class="nut-modal">
-                <button type="submit">Gửi</button>
+                <button type="submit">Gửi yêu cầu</button>
                 <button type="button" id="huy-modal">Hủy</button>
               </div>
             </form>
@@ -180,7 +217,7 @@
       </div>
 
       <!-- Theo dõi yêu cầu -->
-      <div id="theo-doi-yeu-cau" class="trang-an" style="display: none;">
+      <div id="theo-doi-yeu-cau" class="trang-an" style="display:none;">
         <h2>Theo dõi yêu cầu</h2>
         <table>
           <thead>
@@ -198,27 +235,18 @@
             <tr>
               <td>1</td>
               <td>Máy chiếu Epson</td>
-              <td>2025-09-20</td>
-              <td>2025-09-22</td>
-              <td>Học tập</td>
-              <td>Chờ duyệt</td>
-              <td><button class="nut-huy">Hủy</button></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Laptop Dell</td>
-              <td>2025-09-19</td>
               <td>2025-09-21</td>
+              <td>2025-09-22</td>
               <td>Thí nghiệm</td>
               <td>Đã duyệt</td>
-              <td></td>
+              <td><button class="nut-huy">Hủy</button></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Lịch sử mượn thiết bị -->
-      <div id="lich-su-muon" class="trang-an" style="display: none;">
+      <!-- Lịch sử mượn -->
+      <div id="lich-su-muon" class="trang-an" style="display:none;">
         <h2>Lịch sử mượn thiết bị</h2>
         <button id="nut-in-lich-su" class="nut-in">In lịch sử</button>
         <table>
@@ -254,15 +282,16 @@
       </div>
 
       <!-- Báo cáo hư hỏng -->
-      <div id="bao-cao-hu-hong" class="trang-an" style="display: none;">
+      <div id="bao-cao-hu-hong" class="trang-an" style="display:none;">
         <h2>Báo cáo hư hỏng</h2>
         <button id="nut-them-bao-cao" class="nut-them">Thêm báo cáo</button>
+
         <table id="bang-bao-cao">
           <thead>
             <tr>
               <th>ID</th>
               <th>Thiết bị</th>
-              <th>Mô tả hư hỏng</th>
+              <th>Mô tả</th>
               <th>Ngày báo cáo</th>
               <th>Trạng thái</th>
             </tr>
@@ -271,22 +300,28 @@
         </table>
 
         <!-- Modal báo cáo hư hỏng -->
-        <div id="modal-bao-cao" class="modal" style="display: none;">
+        <div id="modal-bao-cao" class="modal">
           <div class="noi-dung-modal">
-            <span class="dong-modal" id="dong-bao-cao">&times;</span>
+            <button class="dong-x" id="dong-bao-cao" aria-label="Đóng">&times;</button>
             <h3>Thêm báo cáo hư hỏng</h3>
             <form id="form-bao-cao">
-              <input type="hidden" id="id-bao-cao">
-              <label for="thiet-bi-hu-hong">Thiết bị:</label>
-              <select id="thiet-bi-hu-hong" required>
-                <option value="">Chọn thiết bị</option>
-                <option value="Máy chiếu Epson">Máy chiếu Epson</option>
-                <option value="Laptop Dell">Laptop Dell</option>
-              </select>
-              <label for="mo-ta-hu-hong">Mô tả hư hỏng:</label>
-              <textarea id="mo-ta-hu-hong" required></textarea>
+              <input type="hidden" id="id-bao-cao" />
+              <div class="form-grid">
+                <div class="field">
+                  <label for="thiet-bi-hu-hong">Thiết bị</label>
+                  <select id="thiet-bi-hu-hong" required>
+                    <option value="">Chọn thiết bị</option>
+                    <option value="Máy chiếu Epson">Máy chiếu Epson</option>
+                    <option value="Laptop Dell">Laptop Dell</option>
+                  </select>
+                </div>
+                <div class="field" style="grid-column:1 / -1;">
+                  <label for="mo-ta-hu-hong">Mô tả hư hỏng</label>
+                  <textarea id="mo-ta-hu-hong" required></textarea>
+                </div>
+              </div>
               <div class="nut-modal">
-                <button type="submit">Gửi</button>
+                <button type="submit">Gửi báo cáo</button>
                 <button type="button" id="huy-bao-cao">Hủy</button>
               </div>
             </form>
@@ -294,19 +329,25 @@
         </div>
       </div>
 
-      <!-- Modal thông báo -->
-      <div id="modal-thong-bao" class="modal-thong-bao" style="display: none;">
-        <div class="noi-dung-thong-bao">
+      <!-- Modal thông báo (đã chỉnh cấu trúc) -->
+      <div id="modal-thong-bao" class="modal" aria-hidden="true">
+        <div class="noi-dung-modal tb-dialog" role="dialog" aria-modal="true" tabindex="-1">
+          <button id="dong-thong-bao-x" class="dong-x" aria-label="Đóng" title="Đóng">&times;</button>
           <h3>Thông báo</h3>
-          <ul>
+          <ul class="tb-list">
             <li>Yêu cầu mượn thiết bị đã được gửi - 1 giờ trước</li>
           </ul>
-          <button id="dong-thong-bao">Đóng</button>
+          <div class="tb-footer">
+            <button id="danh-dau-doc" class="btn-primary">Đánh dấu tất cả đã đọc</button>
+            <button id="dong-thong-bao" class="btn-secondary">Đóng</button>
+          </div>
         </div>
       </div>
     </main>
   </div>
-  <footer>© 2025 Hệ thống Quản lý Thiết bị</footer>
+
+  <footer>© 2025 Hệ thống quản lý thiết bị Trường THCS XYZ</footer>
+
   <script src="../js/bang-dieu-khien-giao-vien.js"></script>
 </body>
 

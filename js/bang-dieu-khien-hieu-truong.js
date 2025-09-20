@@ -1,87 +1,116 @@
-// --- Đăng xuất ---
-document.getElementById('nut-dang-xuat').addEventListener('click', () => {
-    if (confirm('Bạn có chắc muốn đăng xuất?')) {
-        alert('Đăng xuất thành công!');
-        window.location.href = '../html/dang-nhap.html';
-    }
-});
+(function () {
+    // ===== Helpers =====
+    const $ = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+    const openModal = (el) => { if (el) { el.classList.add('open'); document.body.classList.add('no-scroll'); } };
+    const closeModal = (el) => { if (el) { el.classList.remove('open'); document.body.classList.remove('no-scroll'); } };
 
-// --- Điều hướng ---
-document.querySelectorAll('.thanh-ben a').forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const pageId = link.dataset.page;
-        document.querySelectorAll('.thanh-ben a').forEach(a => a.classList.remove('active'));
-        link.classList.add('active');
-        document.querySelectorAll('.trang-an').forEach(page => page.style.display = 'none');
-        document.getElementById(pageId).style.display = 'block';
+    // ===== Logout =====
+    $('#nut-dang-xuat')?.addEventListener('click', () => {
+        if (confirm('Bạn có chắc muốn đăng xuất?')) {
+            alert('Đăng xuất thành công!');
+            window.location.href = '../html/dang-nhap.html';
+        }
     });
-});
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('.thanh-ben a[data-page="tong-quan"]').classList.add('active');
-});
 
-// --- Duyệt kế hoạch và thanh lý ---
-document.querySelectorAll('.nut-phe-duyet').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const row = btn.parentElement.parentElement;
-        row.cells[4].textContent = 'Đã phê duyệt';
-        alert('Phê duyệt thành công!');
+    // ===== Navigation =====
+    $$('.thanh-ben a').forEach(a => {
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const pageId = a.dataset.page;
+            $$('.thanh-ben a').forEach(x => x.classList.remove('active'));
+            a.classList.add('active');
+            $$('main > section.trang-an').forEach(p => p.style.display = 'none');
+            const pageEl = document.getElementById(pageId);
+            if (pageEl) pageEl.style.display = 'block';
+        });
     });
-});
 
-document.querySelectorAll('.nut-tu-choi').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const row = btn.parentElement.parentElement;
-        row.cells[4].textContent = 'Từ chối';
-        alert('Từ chối thành công!');
-    });
-});
+    // ===== Notifications (bell) =====
+    const nutTB = $('#nut-thong-bao');
+    const modalTB = $('#modal-thong-bao');
+    const dongTB = $('#dong-thong-bao');
+    const dongTBX = $('#dong-thong-bao-x');
+    const markRead = $('#danh-dau-doc');
+    const badgeTB = $('#so-luong-thong-bao');
 
-// --- Xuất báo cáo ---
-document.getElementById('nut-xuat-pdf').addEventListener('click', () => {
-    window.print(); // In toàn bộ trang làm demo
-    alert('In báo cáo PDF (sử dụng window.print)');
-});
+    const setBadge = (n) => {
+        if (!badgeTB) return;
+        if (n > 0) { badgeTB.textContent = n; badgeTB.style.display = 'inline-block'; }
+        else { badgeTB.style.display = 'none'; }
+    };
+    const openTB = () => {
+        openModal(modalTB);
+        nutTB?.setAttribute('aria-expanded', 'true');
+        (dongTBX || modalTB.querySelector('button'))?.focus();
+    };
+    const closeTB = () => {
+        closeModal(modalTB);
+        nutTB?.setAttribute('aria-expanded', 'false');
+        nutTB?.focus();
+    };
 
-document.getElementById('nut-xuat-excel').addEventListener('click', () => {
-    alert('Tải báo cáo dưới dạng Excel (sẽ triển khai sau)');
-});
+    nutTB?.addEventListener('click', (e) => { e.stopPropagation(); modalTB?.classList.contains('open') ? closeTB() : openTB(); });
+    dongTB?.addEventListener('click', closeTB);
+    dongTBX?.addEventListener('click', closeTB);
+    modalTB?.addEventListener('click', (e) => { if (e.target === modalTB) closeTB(); });
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalTB?.classList.contains('open')) closeTB(); });
+    markRead?.addEventListener('click', () => { setBadge(0); closeTB(); });
 
-// --- Quản lý kiểm kê ---
-document.getElementById('nut-tao-dot-kiem-ke').addEventListener('click', () => {
-    alert('Tạo đợt kiểm kê mới (sẽ triển khai sau)');
-});
+    // ===== Duyệt kế hoạch mua sắm & thanh lý =====
+    function attachApproveRejectHandlers(tableSelector) {
+        const tbody = $(tableSelector);
+        if (!tbody) return;
 
-document.querySelectorAll('.nut-phe-duyet').forEach(btn => {
-    if (btn.textContent === 'Cập nhật') {
-        btn.addEventListener('click', () => {
-            const row = btn.parentElement.parentElement;
-            const duKien = parseInt(row.cells[2].textContent);
-            const thucTe = parseInt(row.querySelector('.so-luong-thuc-te').value);
-            row.cells[4].textContent = thucTe - duKien;
-            alert('Cập nhật kiểm kê thành công!');
+        tbody.addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const row = btn.closest('tr');
+            if (btn.classList.contains('nut-duyet')) {
+                row.cells[6].textContent = 'Đã phê duyệt'; // cột Trạng thái
+                row.cells[7].textContent = row.cells[7].textContent || ''; // cột Ghi chú giữ nguyên
+                alert('Phê duyệt thành công!');
+                return;
+            }
+            if (btn.classList.contains('nut-tu-choi')) {
+                // mở modal nhập lý do
+                openModal($('#modal-tu-choi'));
+                const confirmBtn = $('#xac-nhan-tu-choi');
+                const cancelBtn = $('#huy-tu-choi');
+                const closeX = $('#dong-tu-choi-x');
+                const textarea = $('#ghi-chu-tu-choi');
+
+                const cleanup = () => {
+                    confirmBtn.onclick = null;
+                    cancelBtn.onclick = null;
+                    closeX.onclick = null;
+                    textarea.value = '';
+                };
+
+                confirmBtn.onclick = () => {
+                    row.cells[6].textContent = 'Từ chối';
+                    row.cells[7].textContent = textarea.value || 'Không có ghi chú';
+                    closeModal($('#modal-tu-choi'));
+                    cleanup();
+                    alert('Từ chối thành công!');
+                };
+                cancelBtn.onclick = () => { closeModal($('#modal-tu-choi')); cleanup(); };
+                closeX.onclick = () => { closeModal($('#modal-tu-choi')); cleanup(); };
+
+                // Đóng bằng Esc khi modal mở
+                const onEsc = (ev) => { if (ev.key === 'Escape') { closeModal($('#modal-tu-choi')); cleanup(); window.removeEventListener('keydown', onEsc); } };
+                window.addEventListener('keydown', onEsc);
+            }
         });
     }
-});
+    attachApproveRejectHandlers('#bang-mua-sam');
+    attachApproveRejectHandlers('#bang-thanh-ly');
 
-document.getElementById('nut-in-bien-ban').addEventListener('click', () => {
-    window.print();
-    alert('In biên bản kiểm kê (sử dụng window.print)');
-});
-
-// --- Thông báo ---
-document.getElementById('nut-thong-bao').addEventListener('click', () => {
-    const modalTB = document.getElementById('modal-thong-bao');
-    modalTB.style.display = modalTB.style.display === 'block' ? 'none' : 'block';
-});
-
-document.getElementById('dong-thong-bao').addEventListener('click', () => {
-    document.getElementById('modal-thong-bao').style.display = 'none';
-});
-
-// --- Đóng modal khi click ngoài ---
-window.addEventListener('click', (e) => {
-    const modalTB = document.getElementById('modal-thong-bao');
-    if (e.target === modalTB) modalTB.style.display = 'none';
-});
+    // ===== Xuất báo cáo =====
+    $('#nut-xuat-pdf')?.addEventListener('click', () => {
+        window.print(); // demo in PDF
+    });
+    $('#nut-xuat-excel')?.addEventListener('click', () => {
+        alert('Tải báo cáo Excel (demo).');
+    });
+})();
