@@ -55,7 +55,6 @@
         if (btn.classList.contains('nut-huy')) alert('(UI) Nhấn Hủy — backend sẽ xử lý sau.');
     });
     $('#nut-them-item')?.addEventListener('click', () => openModal(picker));
-
     [modalPhieu, modalXem, picker].forEach(bindCloseInside);
 
     // Báo cáo hư/hỏng: mở modal UI
@@ -68,12 +67,16 @@
         if (btn.classList.contains('nut-sua')) openModal(modalBC);
         if (btn.classList.contains('nut-huy')) alert('(UI) Nhấn Xóa — backend sẽ xử lý sau.');
     });
-
     [modalBC, modalAnh].forEach(bindCloseInside);
 
-    // Đăng xuất (UI)
+    // Đăng xuất (giữ nguyên yêu cầu của bạn: có xác nhận & điều hướng sang trang đăng nhập)
     $('#nut-dang-xuat')?.addEventListener('click', () => {
-        alert('(UI) Đăng xuất — chuyển màn hình đăng nhập sau khi nối backend.');
+        const ok = confirm('Bạn có chắc muốn đăng xuất không?');
+        if (ok) {
+            // Điều hướng về trang đăng nhập
+            // Điều chỉnh đường dẫn nếu cấu trúc thư mục của bạn khác
+            window.location.href = '../html/dang-nhap.html';
+        }
     });
 
 })();
