@@ -180,23 +180,3 @@ a {
 a:hover {
     text-decoration: underline
 }
-
-.demo {
-    margin-top: 12px;
-    font-size: 13px;
-    color: var(--muted)
-}
-
-.demo-box {
-    border: 1px dashed #d1d5db;
-    border-radius: 8px;
-    padding: 8px;
-    margin-top: 6px;
-    background: #fafafa
-}
-
-.demo-box code {
-    background: #eef2ff;
-    padding: 2px 6px;
-    border-radius: 4px
-}
