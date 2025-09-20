@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng điều khiển Quản trị viên - Quản lý Thiết bị</title>
+  <link rel="stylesheet" href="../css/bang-dieu-khien-quan-tri-vien.css">
+</head>
+
+<body>
+  <header>
+    <div class="logo">Quản lý thiết bị UNIQUE</div>
+    <div class="user-info">
+      Xin chào, Quản trị viên!
+      <button id="nut-dang-xuat">Đăng xuất</button>
+      <button id="nut-thong-bao" class="nut-chuong">🔔<span id="so-luong-thong-bao">2</span></button>
+    </div>
+  </header>
+  <div class="khoi-chua">
+    <aside class="thanh-ben">
+      <ul>
+        <li><a href="#" data-page="tong-quan">Tổng quan</a></li>
+        <li><a href="#" data-page="quan-ly-nguoi-dung">Quản lý người dùng</a></li>
+        <li><a href="#" data-page="phan-quyen-truy-cap">Phân quyền truy cập</a></li>
+        <li><a href="#" data-page="giam-sat-he-thong">Giám sát hệ thống</a></li>
+      </ul>
+    </aside>
+    <main>
+      <h1>Bảng điều khiển Quản trị viên</h1>
+      <div id="tong-quan" class="trang-an">
+        <div class="the-container">
+          <div class="the">
+            <h3>Tổng thiết bị</h3>
+            <p>127</p>
+            <span class="icon">📦</span>
+          </div>
+          <div class="the">
+            <h3>Người dùng</h3>
+            <p>45</p>
+            <span class="icon">👤</span>
+          </div>
+          <div class="the">
+            <h3>Yêu cầu chờ</h3>
+            <p>8</p>
+            <span class="icon">⏳</span>
+          </div>
+          <div class="the">
+            <h3>Thiết bị hỏng</h3>
+            <p>3</p>
+            <span class="icon">⚠️</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quản lý người dùng -->
+      <div id="quan-ly-nguoi-dung" class="trang-an" style="display: none;">
+        <h2>Quản lý người dùng</h2>
+        <button id="nut-them-nguoi-dung" class="nut-them-nguoi-dung">Thêm người dùng</button>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tên đăng nhập</th>
+              <th>Họ tên</th>
+              <th>Vai trò</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="bang-nguoi-dung">
+            <tr>
+              <td>1</td>
+              <td>admin</td>
+              <td>Nguyễn Văn A</td>
+              <td>Quản trị viên</td>
+              <td>Hoạt động</td>
+              <td>
+                <button class="nut-sua">Sửa</button>
+                <button class="nut-xoa">Xóa</button>
+                <button class="nut-vo-hieu-hoa">Vô hiệu hóa</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>hieutruong</td>
+              <td>Trần Thị B</td>
+              <td>Hiệu trưởng</td>
+              <td>Hoạt động</td>
+              <td>
+                <button class="nut-sua">Sửa</button>
+                <button class="nut-xoa">Xóa</button>
+                <button class="nut-vo-hieu-hoa">Vô hiệu hóa</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Modal thêm người dùng -->
+        <div id="modal-them-nguoi-dung" class="modal" style="display: none;">
+          <div class="noi-dung-modal">
+            <span class="dong-modal" id="dong-modal">&times;</span>
+            <h3>Thêm người dùng mới</h3>
+            <form id="form-them-nguoi-dung">
+              <label for="ten-dang-nhap">Tên đăng nhập:</label>
+              <input type="text" id="ten-dang-nhap" required>
+              <label for="mat-khau">Mật khẩu:</label>
+              <input type="password" id="mat-khau" required>
+              <label for="ho-ten">Họ tên:</label>
+              <input type="text" id="ho-ten" required>
+              <label for="vai-tro">Vai trò:</label>
+              <select id="vai-tro" required>
+                <option value="">Chọn vai trò</option>
+                <option value="quan-tri-vien">Quản trị viên</option>
+                <option value="hieu-truong">Hiệu trưởng</option>
+                <option value="to-truong">Tổ trưởng chuyên môn</option>
+                <option value="giao-vien">Giáo viên</option>
+                <option value="nhan-vien-thiet-bi">Nhân viên thiết bị</option>
+              </select>
+              <label for="trang-thai">Trạng thái:</label>
+              <select id="trang-thai" required>
+                <option value="hoat-dong">Hoạt động</option>
+                <option value="vo-hieu-hoa">Vô hiệu hóa</option>
+              </select>
+              <div class="nut-modal">
+                <button type="submit">Lưu</button>
+                <button type="button" id="huy-modal">Hủy</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Modal sửa người dùng -->
+        <div id="modal-sua-nguoi-dung" class="modal" style="display: none;">
+          <div class="noi-dung-modal">
+            <span class="dong-modal" id="dong-sua-modal">&times;</span>
+            <h3>Cập nhật thông tin người dùng</h3>
+            <form id="form-sua-nguoi-dung">
+              <input type="hidden" id="id-sua">
+              <label for="ten-dang-nhap-sua">Tên đăng nhập:</label>
+              <input type="text" id="ten-dang-nhap-sua" required>
+              <label for="mat-khau-sua">Mật khẩu:</label>
+              <input type="password" id="mat-khau-sua" required>
+              <label for="ho-ten-sua">Họ tên:</label>
+              <input type="text" id="ho-ten-sua" required>
+              <label for="vai-tro-sua">Vai trò:</label>
+              <select id="vai-tro-sua" required>
+                <option value="">Chọn vai trò</option>
+                <option value="quan-tri-vien">Quản trị viên</option>
+                <option value="hieu-truong">Hiệu trưởng</option>
+                <option value="to-truong">Tổ trưởng chuyên môn</option>
+                <option value="giao-vien">Giáo viên</option>
+                <option value="nhan-vien-thiet-bi">Nhân viên thiết bị</option>
+              </select>
+              <label for="trang-thai-sua">Trạng thái:</label>
+              <select id="trang-thai-sua" required>
+                <option value="hoat-dong">Hoạt động</option>
+                <option value="vo-hieu-hoa">Vô hiệu hóa</option>
+              </select>
+              <div class="nut-modal">
+                <button type="submit">Cập nhật</button>
+                <button type="button" id="huy-sua-modal">Hủy</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phân quyền truy cập -->
+      <div id="phan-quyen-truy-cap" class="trang-an" style="display: none;">
+        <h2>Phân quyền truy cập</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Tên đăng nhập</th>
+              <th>Vai trò</th>
+              <th>Quyền</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="bang-phan-quyen">
+            <tr>
+              <td>admin</td>
+              <td>Quản trị viên</td>
+              <td>
+                <label><input type="checkbox" class="quyen" data-quyen="quan-ly-tai-khoan" checked> Quản lý tài khoản</label><br>
+                <label><input type="checkbox" class="quyen" data-quyen="phan-quyen" checked> Phân quyền</label><br>
+                <label><input type="checkbox" class="quyen" data-quyen="giam-sat" checked> Giám sát</label>
+              </td>
+              <td><button class="nut-cap-nhat-quyen">Cập nhật</button></td>
+            </tr>
+            <tr>
+              <td>hieutruong</td>
+              <td>Hiệu trưởng</td>
+              <td>
+                <label><input type="checkbox" class="quyen" data-quyen="duyet-ke-hoach"> Duyệt kế hoạch</label><br>
+                <label><input type="checkbox" class="quyen" data-quyen="xem-bao-cao" checked> Xem báo cáo</label>
+              </td>
+              <td><button class="nut-cap-nhat-quyen">Cập nhật</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Giám sát hệ thống -->
+      <div id="giam-sat-he-thong" class="trang-an" style="display: none;">
+        <h2>Giám sát hệ thống</h2>
+        <input type="date" id="loc-ngay">
+        <button id="nut-tim-kiem">Tìm kiếm</button>
+        <table>
+          <thead>
+            <tr>
+              <th>Thời gian</th>
+              <th>Người dùng</th>
+              <th>Hành động</th>
+              <th>Chi tiết</th>
+            </tr>
+          </thead>
+          <tbody id="bang-nhat-ky">
+            <tr>
+              <td>2025-09-20 19:18</td>
+              <td>admin</td>
+              <td>Đăng nhập</td>
+              <td>IP: 192.168.1.1</td>
+            </tr>
+            <tr>
+              <td>2025-09-20 19:00</td>
+              <td>hieutruong</td>
+              <td>Thêm thiết bị</td>
+              <td>Máy chiếu mới</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal thông báo -->
+      <div id="modal-thong-bao" class="modal-thong-bao" style="display: none;">
+        <div class="noi-dung-thong-bao">
+          <h3>Thông báo</h3>
+          <ul>
+            <li>Yêu cầu mượn máy chiếu từ Giáo viên A - 1 giờ trước</li>
+            <li>Thiết bị Micro Shure hỏng, cần kiểm tra - 2 giờ trước</li>
+          </ul>
+          <button id="dong-thong-bao">Đóng</button>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer>© 2025 Hệ thống Quản lý Thiết bị</footer>
+  <script src="../js/bang-dieu-khien-quan-tri-vien.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng điều khiển Tổ trưởng Chuyên môn - Quản lý Thiết bị</title>
+  <link rel="stylesheet" href="../css/bang-dieu-khien-to-truong.css">
+</head>
+
+<body>
+  <header>
+    <div class="logo">Quản lý thiết bị UNIQUE</div>
+    <div class="user-info">
+      Xin chào, Tổ trưởng Chuyên môn!
+      <button id="nut-dang-xuat">Đăng xuất</button>
+      <button id="nut-thong-bao" class="nut-chuong">🔔<span id="so-luong-thong-bao">2</span></button>
+    </div>
+  </header>
+  <div class="khoi-chua">
+    <aside class="thanh-ben">
+      <ul>
+        <li><a href="#" data-page="tong-quan">Tổng quan</a></li>
+        <li><a href="#" data-page="lap-ke-hoach-mua-sam">Lập kế hoạch mua sắm</a></li>
+        <li><a href="#" data-page="theo-doi-thiet-bi">Theo dõi tình hình thiết bị</a></li>
+      </ul>
+    </aside>
+    <main>
+      <h1>Bảng điều khiển Tổ trưởng Chuyên môn</h1>
+      <div id="tong-quan" class="trang-an">
+        <div class="the-container">
+          <div class="the">
+            <h3>Tổng thiết bị</h3>
+            <p>127</p>
+            <span class="icon">📦</span>
+          </div>
+          <div class="the">
+            <h3>Thiết bị môn học</h3>
+            <p>45</p>
+            <span class="icon">📚</span>
+          </div>
+          <div class="the">
+            <h3>Kế hoạch chờ duyệt</h3>
+            <p>2</p>
+            <span class="icon">📄</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lập kế hoạch mua sắm -->
+      <div id="lap-ke-hoach-mua-sam" class="trang-an" style="display: none;">
+        <h2>Lập kế hoạch mua sắm</h2>
+        <button id="nut-them-ke-hoach" class="nut-them">Thêm kế hoạch</button>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Thiết bị</th>
+              <th>Số lượng</th>
+              <th>Lý do</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="bang-ke-hoach">
+            <tr>
+              <td>1</td>
+              <td>Máy chiếu Epson</td>
+              <td>5</td>
+              <td>Bổ sung cho lớp học</td>
+              <td>Chờ duyệt</td>
+              <td>
+                <button class="nut-sua">Sửa</button>
+                <button class="nut-xoa">Xóa</button>
+                <button class="nut-gui">Gửi</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Modal thêm/sửa kế hoạch -->
+        <div id="modal-ke-hoach" class="modal" style="display: none;">
+          <div class="noi-dung-modal">
+            <span class="dong-modal" id="dong-modal">&times;</span>
+            <h3 id="tieu-de-modal">Thêm kế hoạch mua sắm</h3>
+            <form id="form-ke-hoach">
+              <input type="hidden" id="id-ke-hoach">
+              <label for="thiet-bi">Thiết bị:</label>
+              <input type="text" id="thiet-bi" required>
+              <label for="so-luong">Số lượng:</label>
+              <input type="number" id="so-luong" required min="1">
+              <label for="ly-do">Lý do:</label>
+              <textarea id="ly-do" required></textarea>
+              <div class="nut-modal">
+                <button type="submit">Lưu</button>
+                <button type="button" id="huy-modal">Hủy</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Theo dõi tình hình thiết bị -->
+      <div id="theo-doi-thiet-bi" class="trang-an" style="display: none;">
+        <h2>Theo dõi tình hình thiết bị</h2>
+        <select id="loc-mon-hoc">
+          <option value="">Chọn môn học</option>
+          <option value="toan">Toán</option>
+          <option value="ly">Lý</option>
+          <option value="hoa">Hóa</option>
+        </select>
+        <button id="nut-loc">Lọc</button>
+        <table>
+          <thead>
+            <tr>
+              <th>Thiết bị</th>
+              <th>Số lượng tốt</th>
+              <th>Số lượng hỏng</th>
+              <th>Ghi chú</th>
+            </tr>
+          </thead>
+          <tbody id="bang-thiet-bi">
+            <tr>
+              <td>Máy tính cầm tay</td>
+              <td>20</td>
+              <td>1</td>
+              <td>Cần bảo trì</td>
+            </tr>
+            <tr>
+              <td>Bộ thí nghiệm Lý</td>
+              <td>15</td>
+              <td>2</td>
+              <td>Hỏng nặng</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal thông báo -->
+      <div id="modal-thong-bao" class="modal-thong-bao" style="display: none;">
+        <div class="noi-dung-thong-bao">
+          <h3>Thông báo</h3>
+          <ul>
+            <li>Kế hoạch mua sắm đã được gửi - 1 giờ trước</li>
+          </ul>
+          <button id="dong-thong-bao">Đóng</button>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer>© 2025 Hệ thống Quản lý Thiết bị</footer>
+  <script src="../js/bang-dieu-khien-to-truong.js"></script>
+</body>
+
+</html>

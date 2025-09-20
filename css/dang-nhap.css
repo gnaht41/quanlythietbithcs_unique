@@ -1,0 +1,111 @@
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e0e7f0, #a3bffa);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    color: #333;
+}
+
+.login-container {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    width: 380px;
+    text-align: center;
+    border-top: 6px solid #1a2a44;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.login-container:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #1a2a44;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+h2 {
+    color: #1a2a44;
+    margin-bottom: 25px;
+    font-size: 26px;
+}
+
+label {
+    display: block;
+    margin: 18px 0 8px;
+    text-align: left;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    outline: none;
+    font-size: 14px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus {
+    border-color: #1a2a44;
+    box-shadow: 0 0 8px rgba(26, 42, 68, 0.4);
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, #2ecc71, #27ae60);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background 0.4s ease, transform 0.3s ease;
+}
+
+button:hover {
+    background: linear-gradient(90deg, #27ae60, #219653);
+    transform: scale(1.08);
+}
+
+p {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #2980b9;
+}
+
+.demo-note {
+    margin-top: 15px;
+    font-size: 12px;
+    color: #7f8c8d;
+    text-align: left;
+    line-height: 1.5;
+    border-top: 1px dashed #ddd;
+    padding-top: 10px;
+}

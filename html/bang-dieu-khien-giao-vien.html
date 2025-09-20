@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng điều khiển Giáo viên - Quản lý Thiết bị</title>
+  <link rel="stylesheet" href="../css/bang-dieu-khien-giao-vien.css">
+</head>
+
+<body>
+  <header>
+    <div class="logo">Quản lý thiết bị UNIQUE</div>
+    <div class="user-info">
+      Xin chào, Giáo viên!
+      <button id="nut-dang-xuat">Đăng xuất</button>
+      <button id="nut-thong-bao" class="nut-chuong">🔔<span id="so-luong-thong-bao">1</span></button>
+    </div>
+  </header>
+  <div class="khoi-chua">
+    <aside class="thanh-ben">
+      <ul>
+        <li><a href="#" data-page="tong-quan">Tổng quan</a></li>
+        <li><a href="#" data-page="tim-kiem-thiet-bi">Tìm kiếm thiết bị</a></li>
+        <li><a href="#" data-page="xem-danh-muc">Xem danh mục thiết bị</a></li>
+        <li><a href="#" data-page="gui-yeu-cau-muon">Gửi yêu cầu mượn</a></li>
+        <li><a href="#" data-page="theo-doi-yeu-cau">Theo dõi yêu cầu</a></li>
+        <li><a href="#" data-page="lich-su-muon">Xem lịch sử mượn</a></li>
+      </ul>
+    </aside>
+    <main>
+      <h1>Bảng điều khiển Giáo viên</h1>
+      <div id="tong-quan" class="trang-an">
+        <div class="the-container">
+          <div class="the">
+            <h3>Tổng thiết bị</h3>
+            <p>127</p>
+            <span class="icon">📦</span>
+          </div>
+          <div class="the">
+            <h3>Thiết bị mượn được</h3>
+            <p>10</p>
+            <span class="icon">📝</span>
+          </div>
+          <div class="the">
+            <h3>Yêu cầu chờ</h3>
+            <p>2</p>
+            <span class="icon">⏳</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tìm kiếm thiết bị -->
+      <div id="tim-kiem-thiet-bi" class="trang-an" style="display: none;">
+        <h2>Tìm kiếm thiết bị</h2>
+        <div class="tim-kiem-form">
+          <input type="text" id="tim-kiem-ten" placeholder="Tên thiết bị">
+          <select id="tim-kiem-danh-muc">
+            <option value="">Chọn danh mục</option>
+            <option value="may-chieu">Máy chiếu</option>
+            <option value="laptop">Laptop</option>
+            <option value="thiet-bi-thi-nghiem">Thiết bị thí nghiệm</option>
+          </select>
+          <select id="tim-kiem-tinh-trang">
+            <option value="">Chọn tình trạng</option>
+            <option value="tot">Tốt</option>
+            <option value="hong">Hỏng</option>
+            <option value="dang-sua">Đang sửa</option>
+          </select>
+          <button id="nut-tim-kiem">Tìm kiếm</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Tên thiết bị</th>
+              <th>Danh mục</th>
+              <th>Tình trạng</th>
+            </tr>
+          </thead>
+          <tbody id="bang-tim-kiem">
+            <tr>
+              <td>Máy chiếu Epson</td>
+              <td>Máy chiếu</td>
+              <td>Tốt</td>
+            </tr>
+            <tr>
+              <td>Laptop Dell</td>
+              <td>Laptop</td>
+              <td>Đang sửa</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Xem danh mục thiết bị -->
+      <div id="xem-danh-muc" class="trang-an" style="display: none;">
+        <h2>Danh mục thiết bị</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Tên thiết bị</th>
+              <th>Danh mục</th>
+              <th>Tình trạng</th>
+              <th>Số lượng</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Máy chiếu Epson</td>
+              <td>Máy chiếu</td>
+              <td>Tốt</td>
+              <td>20</td>
+            </tr>
+            <tr>
+              <td>Laptop Dell</td>
+              <td>Laptop</td>
+              <td>Tốt</td>
+              <td>30</td>
+            </tr>
+            <tr>
+              <td>Bộ thí nghiệm</td>
+              <td>Thiết bị thí nghiệm</td>
+              <td>Hỏng</td>
+              <td>2</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Gửi yêu cầu mượn -->
+      <div id="gui-yeu-cau-muon" class="trang-an" style="display: none;">
+        <h2>Gửi yêu cầu mượn thiết bị</h2>
+        <button id="nut-them-yeu-cau" class="nut-them">Thêm yêu cầu</button>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Thiết bị</th>
+              <th>Ngày mượn</th>
+              <th>Ngày trả dự kiến</th>
+              <th>Mục đích</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="bang-yeu-cau">
+          </tbody>
+        </table>
+
+        <!-- Modal thêm yêu cầu -->
+        <div id="modal-yeu-cau" class="modal" style="display: none;">
+          <div class="noi-dung-modal">
+            <span class="dong-modal" id="dong-modal">&times;</span>
+            <h3>Thêm yêu cầu mượn</h3>
+            <form id="form-yeu-cau">
+              <input type="hidden" id="id-yeu-cau">
+              <label for="thiet-bi-muon">Thiết bị:</label>
+              <select id="thiet-bi-muon" required>
+                <option value="">Chọn thiết bị</option>
+                <option value="may-chieu-epson">Máy chiếu Epson</option>
+                <option value="laptop-dell">Laptop Dell</option>
+              </select>
+              <label for="ngay-muon">Ngày mượn:</label>
+              <input type="date" id="ngay-muon" required>
+              <label for="ngay-tra">Ngày trả dự kiến:</label>
+              <input type="date" id="ngay-tra" required>
+              <label for="muc-dich">Mục đích:</label>
+              <textarea id="muc-dich" required></textarea>
+              <div class="nut-modal">
+                <button type="submit">Gửi</button>
+                <button type="button" id="huy-modal">Hủy</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Theo dõi yêu cầu -->
+      <div id="theo-doi-yeu-cau" class="trang-an" style="display: none;">
+        <h2>Theo dõi yêu cầu</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Thiết bị</th>
+              <th>Ngày mượn</th>
+              <th>Ngày trả dự kiến</th>
+              <th>Mục đích</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Máy chiếu Epson</td>
+              <td>2025-09-20</td>
+              <td>2025-09-22</td>
+              <td>Học tập</td>
+              <td>Chờ duyệt</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Laptop Dell</td>
+              <td>2025-09-19</td>
+              <td>2025-09-21</td>
+              <td>Thí nghiệm</td>
+              <td>Đã duyệt</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Xem lịch sử mượn -->
+      <div id="lich-su-muon" class="trang-an" style="display: none;">
+        <h2>Lịch sử mượn thiết bị</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Thiết bị</th>
+              <th>Ngày mượn</th>
+              <th>Ngày trả thực tế</th>
+              <th>Mục đích</th>
+              <th>Ghi chú</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Máy chiếu Epson</td>
+              <td>2025-09-10</td>
+              <td>2025-09-12</td>
+              <td>Học tập</td>
+              <td>Trả đúng hạn</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Laptop Dell</td>
+              <td>2025-09-01</td>
+              <td>2025-09-03</td>
+              <td>Thí nghiệm</td>
+              <td>Trễ 1 ngày</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal thông báo -->
+      <div id="modal-thong-bao" class="modal-thong-bao" style="display: none;">
+        <div class="noi-dung-thong-bao">
+          <h3>Thông báo</h3>
+          <ul>
+            <li>Yêu cầu mượn thiết bị đã được gửi - 1 giờ trước</li>
+          </ul>
+          <button id="dong-thong-bao">Đóng</button>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer>© 2025 Hệ thống Quản lý Thiết bị</footer>
+  <script src="../js/bang-dieu-khien-giao-vien.js"></script>
+</body>
+
+</html>

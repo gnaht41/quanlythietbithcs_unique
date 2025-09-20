@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng điều khiển Nhân viên Thiết bị - Quản lý Thiết bị</title>
+  <link rel="stylesheet" href="../css/bang-dieu-khien-nhan-vien-thiet-bi.css">
+</head>
+
+<body>
+  <header>
+    <div class="logo">Quản lý thiết bị UNIQUE</div>
+    <div class="user-info">
+      Xin chào, Nhân viên Thiết bị!
+      <button id="nut-dang-xuat">Đăng xuất</button>
+      <button id="nut-thong-bao" class="nut-chuong">🔔<span id="so-luong-thong-bao">4</span></button>
+    </div>
+  </header>
+  <div class="khoi-chua">
+    <aside class="thanh-ben">
+      <ul>
+        <li><a href="#" data-page="tong-quan">Tổng quan</a></li>
+        <li><a href="#" data-page="quan-ly-danh-muc">Quản lý danh mục thiết bị</a></li>
+        <li><a href="#" data-page="quan-ly-tinh-trang">Quản lý tình trạng thiết bị</a></li>
+        <li><a href="#" data-page="quan-ly-muon-tra">Quản lý mượn - trả</a></li>
+        <li><a href="#" data-page="quan-ly-bao-tri">Quản lý bảo trì/sửa chữa</a></li>
+        <li><a href="#" data-page="quan-ly-kiem-ke">Quản lý kiểm kê</a></li>
+        <li><a href="#" data-page="lap-bao-cao">Lập báo cáo</a></li>
+      </ul>
+    </aside>
+    <main>
+      <h1>Bảng điều khiển Nhân viên Thiết bị</h1>
+      <div id="tong-quan" class="trang-an">
+        <div class="the-container">
+          <div class="the">
+            <h3>Tổng thiết bị</h3>
+            <p>127</p>
+            <span class="icon">📦</span>
+          </div>
+          <div class="the">
+            <h3>Thiết bị mượn</h3>
+            <p>15</p>
+            <span class="icon">📝</span>
+          </div>
+          <div class="the">
+            <h3>Thiết bị hỏng</h3>
+            <p>3</p>
+            <span class="icon">⚠️</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quản lý danh mục thiết bị -->
+      <div id="quan-ly-danh-muc" class="trang-an" style="display: none;">
+        <h2>Quản lý danh mục thiết bị</h2>
+        <button id="nut-them-thiet-bi" class="nut-them">Thêm thiết bị</button>
+        <button id="nut-nhap-excel" class="nut-them">Nhập từ Excel</button>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tên thiết bị</th>
+              <th>Danh mục</th>
+              <th>Số lượng</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="bang-danh-muc">
+            <tr>
+              <td>1</td>
+              <td>Máy chiếu Epson</td>
+              <td>Máy chiếu</td>
+              <td>20</td>
+              <td>
+                <button class="nut-sua">Sửa</button>
+                <button class="nut-xoa">Xóa</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Laptop Dell</td>
+              <td>Laptop</td>
+              <td>30</td>
+              <td>
+                <button class="nut-sua">Sửa</button>
+                <button class="nut-xoa">Xóa</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Modal thêm/sửa thiết bị -->
+        <div id="modal-thiet-bi" class="modal" style="display: none;">
+          <div class="noi-dung-modal">
+            <span class="dong-modal" id="dong-modal">&times;</span>
+            <h3 id="tieu-de-modal">Thêm thiết bị</h3>
+            <form id="form-thiet-bi">
+              <input type="hidden" id="id-thiet-bi">
+              <label for="ten-thiet-bi">Tên thiết bị:</label>
+              <input type="text" id="ten-thiet-bi" required>
+              <label for="danh-muc">Danh mục:</label>
+              <select id="danh-muc" required>
+                <option value="">Chọn danh mục</option>
+                <option value="may-chieu">Máy chiếu</option>
+                <option value="laptop">Laptop</option>
+                <option value="thiet-bi-thi-nghiem">Thiết bị thí nghiệm</option>
+              </select>
+              <label for="so-luong">Số lượng:</label>
+              <input type="number" id="so-luong" required min="1">
+              <div class="nut-modal">
+                <button type="submit">Lưu</button>
+                <button type="button" id="huy-modal">Hủy</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quản lý tình trạng thiết bị -->
+      <div id="quan-ly-tinh-trang" class="trang-an" style="display: none;">
+        <h2>Quản lý tình trạng thiết bị</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tên thiết bị</th>
+              <th>Tình trạng</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="bang-tinh-trang">
+            <tr>
+              <td>1</td>
+              <td>Máy chiếu Epson</td>
+              <td>Tốt</td>
+              <td>
+                <select class="tinh-trang-select">
+                  <option value="tot">Tốt</option>
+                  <option value="hong">Hỏng</option>
+                  <option value="dang-sua">Đang sửa chữa</option>
+                  <option value="da-thanh-ly">Đã thanh lý</option>
+                </select>
+                <button class="nut-cap-nhat">Cập nhật</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Laptop Dell</td>
+              <td>Đang sửa chữa</td>
+              <td>
+                <select class="tinh-trang-select">
+                  <option value="tot">Tốt</option>
+                  <option value="hong">Hỏng</option>
+                  <option value="dang-sua">Đang sửa chữa</option>
+                  <option value="da-thanh-ly">Đã thanh lý</option>
+                </select>
+                <button class="nut-cap-nhat">Cập nhật</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Quản lý mượn - trả -->
+      <div id="quan-ly-muon-tra" class="trang-an" style="display: none;">
+        <h2>Quản lý mượn - trả</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Thiết bị</th>
+              <th>Giáo viên</th>
+              <th>Ngày mượn</th>
+              <th>Ngày trả dự kiến</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="bang-muon-tra">
+            <tr>
+              <td>1</td>
+              <td>Máy chiếu Epson</td>
+              <td>Nguyễn Văn A</td>
+              <td>2025-09-20</td>
+              <td>2025-09-22</td>
+              <td>Chờ duyệt</td>
+              <td>
+                <button class="nut-duyet">Duyệt</button>
+                <button class="nut-tu-choi">Từ chối</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Laptop Dell</td>
+              <td>Trần Thị B</td>
+              <td>2025-09-19</td>
+              <td>2025-09-21</td>
+              <td>Đã duyệt</td>
+              <td>
+                <button class="nut-tra">Ghi nhận trả</button>
+                <input type="text" class="tinh-trang-tra" placeholder="Tình trạng trả">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button id="nut-in-phieu" class="nut-them">In phiếu mượn</button>
+      </div>
+
+      <!-- Quản lý bảo trì/sửa chữa -->
+      <div id="quan-ly-bao-tri" class="trang-an" style="display: none;">
+        <h2>Quản lý bảo trì/sửa chữa</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Thiết bị</th>
+              <th>Ngày bảo trì</th>
+              <th>Mô tả</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody id="bang-bao-tri">
+            <tr>
+              <td>1</td>
+              <td>Máy chiếu Epson</td>
+              <td>2025-09-15</td>
+              <td>Thay bóng đèn</td>
+              <td>Hoàn thành</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Laptop Dell</td>
+              <td>2025-09-10</td>
+              <td>Sửa bàn phím</td>
+              <td>Đang xử lý</td>
+            </tr>
+          </tbody>
+        </table>
+        <button id="nut-them-bao-tri" class="nut-them">Thêm bảo trì</button>
+      </div>
+
+      <!-- Quản lý kiểm kê -->
+      <div id="quan-ly-kiem-ke" class="trang-an" style="display: none;">
+        <h2>Quản lý kiểm kê</h2>
+        <button id="nut-tao-dot-kiem-ke" class="nut-them">Tạo đợt kiểm kê</button>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Đợt kiểm kê</th>
+              <th>Thiết bị</th>
+              <th>Số lượng thực tế</th>
+              <th>Chênh lệch</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="bang-kiem-ke">
+            <tr>
+              <td>1</td>
+              <td>Cuối kỳ 1</td>
+              <td>Máy chiếu Epson</td>
+              <td><input type="number" class="so-luong-thuc-te" value="19"></td>
+              <td>-1</td>
+              <td><button class="nut-cap-nhat-kiem-ke">Cập nhật</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <button id="nut-in-bien-ban" class="nut-them">In biên bản kiểm kê</button>
+      </div>
+
+      <!-- Lập báo cáo -->
+      <div id="lap-bao-cao" class="trang-an" style="display: none;">
+        <h2>Lập báo cáo</h2>
+        <button id="nut-tao-bao-cao" class="nut-them">Tạo báo cáo</button>
+        <table>
+          <thead>
+            <tr>
+              <th>Loại báo cáo</th>
+              <th>Thời gian</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Báo cáo định kỳ</td>
+              <td>Tháng 9/2025</td>
+              <td>Hoàn thành</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal thông báo -->
+      <div id="modal-thong-bao" class="modal-thong-bao" style="display: none;">
+        <div class="noi-dung-thong-bao">
+          <h3>Thông báo</h3>
+          <ul>
+            <li>Yêu cầu mượn mới từ Giáo viên - 1 giờ trước</li>
+            <li>Thiết bị hỏng cần kiểm tra - 2 giờ trước</li>
+          </ul>
+          <button id="dong-thong-bao">Đóng</button>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer>© 2025 Hệ thống Quản lý Thiết bị</footer>
+  <script src="../js/bang-dieu-khien-nhan-vien-thiet-bi.js"></script>
+</body>
+
+</html>
