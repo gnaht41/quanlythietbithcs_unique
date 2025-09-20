@@ -1,7 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    background: #f5f7fa;
+    background: linear-gradient(135deg, #f5f7fa, #e0e7f0);
     color: #333;
 }
 
@@ -9,40 +9,44 @@ body {
 header {
     background: #1a2a44;
     color: white;
-    padding: 10px 20px;
+    padding: 15px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .logo {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
 }
 
 .user-info {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
 }
 
 .user-info button {
     background: #ff4444;
     color: white;
     border: none;
-    padding: 5px 15px;
-    border-radius: 20px;
+    padding: 8px 20px;
+    border-radius: 25px;
     cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .user-info button:hover {
     background: #cc0000;
+    transform: scale(1.05);
 }
 
 #nut-thong-bao {
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 24px;
     cursor: pointer;
     position: relative;
 }
@@ -51,17 +55,17 @@ header {
     background: #e74c3c;
     color: white;
     border-radius: 50%;
-    padding: 2px 6px;
+    padding: 3px 7px;
     font-size: 12px;
     position: absolute;
-    top: -5px;
-    right: -10px;
+    top: -8px;
+    right: -12px;
 }
 
 /* --- LAYOUT --- */
 .khoi-chua {
     display: flex;
-    min-height: calc(100vh - 60px);
+    min-height: calc(100vh - 70px);
 }
 
 .thanh-ben {
@@ -69,6 +73,7 @@ header {
     background: #2c3e50;
     padding: 20px 0;
     color: white;
+    border-right: 1px solid #34495e;
 }
 
 .thanh-ben ul {
@@ -79,25 +84,40 @@ header {
 .thanh-ben a {
     color: white;
     text-decoration: none;
-    padding: 10px 20px;
+    padding: 12px 25px;
     display: block;
-    transition: background 0.3s;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 .thanh-ben a:hover,
 .thanh-ben a.active {
     background: #34495e;
+    color: #ecf0f1;
 }
 
 main {
     flex: 1;
-    padding: 20px;
+    padding: 25px;
 }
 
 /* --- TỔNG QUAN --- */
+.trang-an {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
 .the-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
     margin-bottom: 20px;
 }
@@ -107,12 +127,12 @@ main {
     padding: 20px;
     border-radius: 10px;
     text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
 }
 
 .the:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
 }
 
 .the h3 {
@@ -123,15 +143,57 @@ main {
 
 .the p {
     margin: 0;
-    font-size: 24px;
+    font-size: 26px;
     font-weight: bold;
     color: #2c3e50;
 }
 
 .the .icon {
     display: block;
-    margin-top: 10px;
-    font-size: 24px;
+    margin-top: 15px;
+    font-size: 28px;
+}
+
+.hoat-dong-gan-day {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.hoat-dong-gan-day h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.hoat-dong-gan-day ul {
+    list-style: none;
+    padding: 0;
+}
+
+.hoat-dong-gan-day li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.hoat-dong-gan-day li:last-child {
+    border-bottom: none;
+}
+
+.dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.green {
+    background: #2ecc71;
+}
+
+.orange {
+    background: #e67e22;
 }
 
 /* --- BẢNG --- */
@@ -141,49 +203,61 @@ table {
     background: white;
     border-radius: 10px;
     margin-top: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 th,
 td {
-    padding: 12px;
+    padding: 15px;
     border-bottom: 1px solid #eee;
 }
 
 th {
     background: #f5f7fa;
     text-align: left;
+    font-weight: 600;
+}
+
+/* --- NÚT --- */
+button {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .nut-them {
-    background: #2ecc71;
+    background: linear-gradient(90deg, #2ecc71, #27ae60);
     color: white;
-    margin-bottom: 10px;
-    padding: 8px 15px;
+    margin-bottom: 15px;
 }
 
 .nut-them:hover {
-    background: #27ae60;
+    background: linear-gradient(90deg, #27ae60, #219653);
+    transform: scale(1.05);
 }
 
 .nut-sua {
     background: #3498db;
     color: white;
-    margin-right: 5px;
+    margin-right: 10px;
 }
 
 .nut-sua:hover {
     background: #2980b9;
+    transform: scale(1.05);
 }
 
 .nut-xoa {
     background: #e74c3c;
     color: white;
-    margin-right: 5px;
+    margin-right: 10px;
 }
 
 .nut-xoa:hover {
     background: #c0392b;
+    transform: scale(1.05);
 }
 
 .nut-gui {
@@ -193,6 +267,18 @@ th {
 
 .nut-gui:hover {
     background: #d4ac0d;
+    transform: scale(1.05);
+}
+
+.nut-in {
+    background: #3498db;
+    color: white;
+    margin-left: 10px;
+}
+
+.nut-in:hover {
+    background: #2980b9;
+    transform: scale(1.05);
 }
 
 /* --- MODAL --- */
@@ -211,25 +297,29 @@ th {
 
 .noi-dung-modal {
     background: white;
-    padding: 20px;
-    border-radius: 10px;
-    width: 400px;
+    padding: 25px;
+    border-radius: 15px;
+    width: 450px;
     position: relative;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
 .noi-dung-modal label {
     display: block;
-    margin: 10px 0 5px;
+    margin: 15px 0 8px;
+    color: #2c3e50;
+    font-weight: 500;
 }
 
 .noi-dung-modal input,
 .noi-dung-modal textarea,
 .noi-dung-modal select {
     width: 100%;
-    padding: 8px;
-    border-radius: 20px;
+    padding: 10px;
+    border-radius: 25px;
     border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s ease;
 }
 
 .noi-dung-modal textarea {
@@ -237,13 +327,21 @@ th {
     resize: vertical;
 }
 
+.noi-dung-modal input:focus,
+.noi-dung-modal textarea:focus,
+.noi-dung-modal select:focus {
+    border-color: #1a2a44;
+    box-shadow: 0 0 8px rgba(26, 42, 68, 0.3);
+}
+
 .dong-modal {
     position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 20px;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
     cursor: pointer;
     color: #999;
+    transition: color 0.3s ease;
 }
 
 .dong-modal:hover {
@@ -253,74 +351,116 @@ th {
 .nut-modal {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
-    margin-top: 15px;
+    gap: 15px;
+    margin-top: 20px;
 }
 
 .nut-modal button[type="submit"] {
-    background: #2ecc71;
+    background: linear-gradient(90deg, #2ecc71, #27ae60);
     color: white;
-    padding: 8px 20px;
 }
 
 .nut-modal button[type="submit"]:hover {
-    background: #27ae60;
+    background: linear-gradient(90deg, #27ae60, #219653);
+    transform: scale(1.05);
 }
 
 .nut-modal button[type="button"] {
     background: #e74c3c;
     color: white;
-    padding: 8px 20px;
 }
 
 .nut-modal button[type="button"]:hover {
     background: #c0392b;
+    transform: scale(1.05);
 }
 
 /* --- LỌC --- */
 #loc-mon-hoc {
-    padding: 8px;
-    border-radius: 20px;
+    padding: 10px;
+    border-radius: 25px;
     border: 1px solid #ccc;
-    margin-right: 10px;
+    margin-right: 15px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+#loc-mon-hoc:focus {
+    border-color: #1a2a44;
+    box-shadow: 0 0 8px rgba(26, 42, 68, 0.3);
 }
 
 #nut-loc {
-    padding: 8px 15px;
+    padding: 10px 20px;
     background: #3498db;
     color: white;
     border: none;
-    border-radius: 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
 }
 
 #nut-loc:hover {
     background: #2980b9;
+    transform: scale(1.05);
 }
 
 /* --- THÔNG BÁO --- */
 .modal-thong-bao {
     display: none;
     position: fixed;
-    top: 60px;
-    right: 20px;
+    top: 70px;
+    right: 25px;
     background: white;
-    border-radius: 10px;
-    width: 300px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    width: 320px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     z-index: 1000;
 }
 
 .noi-dung-thong-bao {
-    padding: 15px;
+    padding: 20px;
 }
 
 .noi-dung-thong-bao h3 {
     margin-top: 0;
+    color: #1a2a44;
 }
 
+.noi-dung-thong-bao ul {
+    list-style: none;
+    padding: 0;
+}
+
+.noi-dung-thong-bao li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.noi-dung-thong-bao li:last-child {
+    border-bottom: none;
+}
+
+.noi-dung-thong-bao button {
+    width: 100%;
+    padding: 8px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    margin-top: 15px;
+}
+
+.noi-dung-thong-bao button:hover {
+    background: #2980b9;
+    transform: scale(1.05);
+}
+
+/* --- FOOTER --- */
 footer {
     background: #1a2a44;
     color: white;
-    padding: 10px;
+    padding: 15px;
     text-align: center;
+    font-size: 14px;
 }

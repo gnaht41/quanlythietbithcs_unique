@@ -10,7 +10,7 @@
 
 <body>
   <header>
-    <div class="logo">Quản lý thiết bị UNIQUE</div>
+    <div class="logo">Trường THCS XYZ</div>
     <div class="user-info">
       Xin chào, Hiệu trưởng!
       <button id="nut-dang-xuat">Đăng xuất</button>
@@ -24,6 +24,8 @@
         <li><a href="#" data-page="duyet-ke-hoach-mua-sam">Duyệt kế hoạch mua sắm</a></li>
         <li><a href="#" data-page="duyet-thanh-ly">Duyệt thanh lý</a></li>
         <li><a href="#" data-page="xem-bao-cao">Xem báo cáo</a></li>
+        <li><a href="#" data-page="giam-sat-thiet-bi">Giám sát thiết bị</a></li>
+        <li><a href="#" data-page="quan-ly-kiem-ke">Quản lý kiểm kê</a></li>
       </ul>
     </aside>
     <main>
@@ -67,7 +69,7 @@
               <th>Hành động</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="bang-ke-hoach-mua-sam">
             <tr>
               <td>1</td>
               <td>Máy chiếu Epson</td>
@@ -94,7 +96,7 @@
         </table>
       </div>
 
-      <!-- Duyệt thanh lý -->
+      <!-- Duyệt thanh lý thiết bị -->
       <div id="duyet-thanh-ly" class="trang-an" style="display: none;">
         <h2>Duyệt thanh lý thiết bị</h2>
         <table>
@@ -108,7 +110,7 @@
               <th>Hành động</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="bang-thanh-ly">
             <tr>
               <td>1</td>
               <td>Micro Shure</td>
@@ -138,8 +140,10 @@
       <!-- Xem báo cáo -->
       <div id="xem-bao-cao" class="trang-an" style="display: none;">
         <h2>Xem báo cáo</h2>
-        <button id="nut-xuat-pdf" class="nut-xuat">Xuất PDF</button>
-        <button id="nut-xuat-excel" class="nut-xuat">Xuất Excel</button>
+        <div>
+          <button id="nut-xuat-pdf" class="nut-xuat">Xuất PDF</button>
+          <button id="nut-xuat-excel" class="nut-xuat">Xuất Excel</button>
+        </div>
         <h3>Tình hình thiết bị</h3>
         <table>
           <thead>
@@ -209,6 +213,69 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Giám sát thiết bị -->
+      <div id="giam-sat-thiet-bi" class="trang-an" style="display: none;">
+        <h2>Giám sát thiết bị</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tên thiết bị</th>
+              <th>Nhóm</th>
+              <th>Số lượng</th>
+              <th>Tình trạng</th>
+            </tr>
+          </thead>
+          <tbody id="bang-giam-sat">
+            <tr>
+              <td>1</td>
+              <td>Máy chiếu Epson</td>
+              <td>Nghe nhìn</td>
+              <td>20</td>
+              <td>Tốt</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Laptop Dell</td>
+              <td>Phương tiện hỗ trợ</td>
+              <td>30</td>
+              <td>Tốt</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Quản lý kiểm kê -->
+      <div id="quan-ly-kiem-ke" class="trang-an" style="display: none;">
+        <h2>Quản lý kiểm kê</h2>
+        <button id="nut-tao-dot-kiem-ke" class="nut-phe-duyet">Tạo đợt kiểm kê</button>
+        <table>
+          <thead>
+            <tr>
+              <th>Đợt kiểm kê</th>
+              <th>Thiết bị</th>
+              <th>Số lượng dự kiến</th>
+              <th>Số lượng thực tế</th>
+              <th>Chênh lệch</th>
+              <th>Ghi chú</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="bang-kiem-ke">
+            <tr>
+              <td>Cuối năm 2025</td>
+              <td>Máy chiếu Epson</td>
+              <td>20</td>
+              <td><input type="number" class="so-luong-thuc-te" value="19"></td>
+              <td>-1</td>
+              <td>Mất 1 cái</td>
+              <td><button class="nut-phe-duyet">Cập nhật</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <button id="nut-in-bien-ban" class="nut-xuat">In biên bản</button>
       </div>
 
       <!-- Modal thông báo -->

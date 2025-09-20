@@ -40,11 +40,34 @@ document.querySelectorAll('.nut-tu-choi').forEach(btn => {
 
 // --- Xuất báo cáo ---
 document.getElementById('nut-xuat-pdf').addEventListener('click', () => {
-    alert('Tải báo cáo dưới dạng PDF (sẽ triển khai sau)');
+    window.print(); // In toàn bộ trang làm demo
+    alert('In báo cáo PDF (sử dụng window.print)');
 });
 
 document.getElementById('nut-xuat-excel').addEventListener('click', () => {
     alert('Tải báo cáo dưới dạng Excel (sẽ triển khai sau)');
+});
+
+// --- Quản lý kiểm kê ---
+document.getElementById('nut-tao-dot-kiem-ke').addEventListener('click', () => {
+    alert('Tạo đợt kiểm kê mới (sẽ triển khai sau)');
+});
+
+document.querySelectorAll('.nut-phe-duyet').forEach(btn => {
+    if (btn.textContent === 'Cập nhật') {
+        btn.addEventListener('click', () => {
+            const row = btn.parentElement.parentElement;
+            const duKien = parseInt(row.cells[2].textContent);
+            const thucTe = parseInt(row.querySelector('.so-luong-thuc-te').value);
+            row.cells[4].textContent = thucTe - duKien;
+            alert('Cập nhật kiểm kê thành công!');
+        });
+    }
+});
+
+document.getElementById('nut-in-bien-ban').addEventListener('click', () => {
+    window.print();
+    alert('In biên bản kiểm kê (sử dụng window.print)');
 });
 
 // --- Thông báo ---

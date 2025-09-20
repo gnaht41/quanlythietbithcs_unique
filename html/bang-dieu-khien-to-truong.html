@@ -10,7 +10,7 @@
 
 <body>
   <header>
-    <div class="logo">Quản lý thiết bị UNIQUE</div>
+    <div class="logo">Trường THCS XYZ</div>
     <div class="user-info">
       Xin chào, Tổ trưởng Chuyên môn!
       <button id="nut-dang-xuat">Đăng xuất</button>
@@ -45,12 +45,20 @@
             <span class="icon">📄</span>
           </div>
         </div>
+        <div class="hoat-dong-gan-day">
+          <h3>Hoạt động gần đây</h3>
+          <ul>
+            <li><span class="dot green"></span> Kế hoạch mua sắm đã gửi - 1 giờ trước</li>
+            <li><span class="dot orange"></span> Thiết bị hỏng được báo cáo - 2 giờ trước</li>
+          </ul>
+        </div>
       </div>
 
       <!-- Lập kế hoạch mua sắm -->
       <div id="lap-ke-hoach-mua-sam" class="trang-an" style="display: none;">
         <h2>Lập kế hoạch mua sắm</h2>
         <button id="nut-them-ke-hoach" class="nut-them">Thêm kế hoạch</button>
+        <button id="nut-in-ke-hoach" class="nut-in">In kế hoạch</button>
         <table>
           <thead>
             <tr>
@@ -116,6 +124,7 @@
               <th>Thiết bị</th>
               <th>Số lượng tốt</th>
               <th>Số lượng hỏng</th>
+              <th>Chênh lệch</th>
               <th>Ghi chú</th>
             </tr>
           </thead>
@@ -124,12 +133,14 @@
               <td>Máy tính cầm tay</td>
               <td>20</td>
               <td>1</td>
+              <td>-1 (giảm)</td>
               <td>Cần bảo trì</td>
             </tr>
             <tr>
               <td>Bộ thí nghiệm Lý</td>
               <td>15</td>
               <td>2</td>
+              <td>-2 (giảm)</td>
               <td>Hỏng nặng</td>
             </tr>
           </tbody>

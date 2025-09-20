@@ -38,10 +38,14 @@ document.getElementById('huy-modal').addEventListener('click', () => modal.style
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const id = document.getElementById('id-ke-hoach').value || bang.rows.length + 1;
     const thietBi = document.getElementById('thiet-bi').value;
     const soLuong = document.getElementById('so-luong').value;
     const lyDo = document.getElementById('ly-do').value;
+    if (!thietBi || !soLuong || !lyDo) {
+        alert('Vui lòng điền đầy đủ thông tin!');
+        return;
+    }
+    const id = document.getElementById('id-ke-hoach').value || bang.rows.length + 1;
 
     if (!document.getElementById('id-ke-hoach').value) {
         const newRow = bang.insertRow();
@@ -68,65 +72,40 @@ form.addEventListener('submit', (e) => {
     alert('Lưu kế hoạch thành công!');
 });
 
-document.querySelectorAll('.nut-sua').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const row = btn.parentElement.parentElement;
-        document.getElementById('id-ke-hoach').value = row.cells[0].textContent;
-        document.getElementById('thiet-bi').value = row.cells[1].textContent;
-        document.getElementById('so-luong').value = row.cells[2].textContent;
-        document.getElementById('ly-do').value = row.cells[3].textContent;
-        document.getElementById('tieu-de-modal').textContent = 'Sửa kế hoạch mua sắm';
-        modal.style.display = 'flex';
-    });
+document.getElementById('nut-in-ke-hoach').addEventListener('click', () => {
+    window.print();
+    alert('In kế hoạch mua sắm (sử dụng window.print để in trang)');
 });
-
-document.querySelectorAll('.nut-xoa').forEach(btn => {
-    btn.addEventListener('click', () => {
-        if (confirm('Bạn có chắc muốn xóa kế hoạch này?')) {
-            btn.parentElement.parentElement.remove();
-            alert('Xóa kế hoạch thành công!');
-        }
-    });
-});
-
-document.querySelectorAll('.nut-gui').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const row = btn.parentElement.parentElement;
-        row.cells[4].textContent = 'Đã gửi';
-        btn.disabled = true;
-        alert('Kế hoạch đã được gửi tới Hiệu trưởng!');
-    });
-});
-
-function ganSuKienNut(hang) {
-    hang.querySelector('.nut-sua').addEventListener('click', () => {
-        const row = hang;
-        document.getElementById('id-ke-hoach').value = row.cells[0].textContent;
-        document.getElementById('thiet-bi').value = row.cells[1].textContent;
-        document.getElementById('so-luong').value = row.cells[2].textContent;
-        document.getElementById('ly-do').value = row.cells[3].textContent;
-        document.getElementById('tieu-de-modal').textContent = 'Sửa kế hoạch mua sắm';
-        modal.style.display = 'flex';
-    });
-    hang.querySelector('.nut-xoa').addEventListener('click', () => {
-        if (confirm('Bạn có chắc muốn xóa kế hoạch này?')) {
-            hang.remove();
-            alert('Xóa kế hoạch thành công!');
-        }
-    });
-    hang.querySelector('.nut-gui').addEventListener('click', () => {
-        const row = hang;
-        row.cells[4].textContent = 'Đã gửi';
-        row.querySelector('.nut-gui').disabled = true;
-        alert('Kế hoạch đã được gửi tới Hiệu trưởng!');
-    });
-}
-document.querySelectorAll('#bang-ke-hoach tr').forEach(ganSuKienNut);
 
 // --- Theo dõi tình hình thiết bị ---
 document.getElementById('nut-loc').addEventListener('click', () => {
     const monHoc = document.getElementById('loc-mon-hoc').value;
     if (monHoc) {
+        // Demo lọc với data tĩnh
+        const bangThietBi = document.getElementById('bang-thiet-bi');
+        bangThietBi.innerHTML = ''; // Xóa bảng cũ
+        const dataDemo = {
+            'toan': [
+                { thietBi: 'Máy tính cầm tay', tot: 20, hong: 1, chenhLech: '-1', ghiChu: 'Cần bảo trì' }
+            ],
+            'ly': [
+                { thietBi: 'Bộ thí nghiệm Lý', tot: 15, hong: 2, chenhLech: '-2', ghiChu: 'Hỏng nặng' }
+            ],
+            'hoa': [
+                { thietBi: 'Hóa chất thí nghiệm', tot: 10, hong: 0, chenhLech: '0', ghiChu: 'Tốt' }
+            ]
+        };
+        const data = dataDemo[monHoc] || [];
+        data.forEach(item => {
+            const row = bangThietBi.insertRow();
+            row.innerHTML = `
+                <td>${item.thietBi}</td>
+                <td>${item.tot}</td>
+                <td>${item.hong}</td>
+                <td>${item.chenhLech}</td>
+                <td>${item.ghiChu}</td>
+            `;
+        });
         alert(`Lọc thiết bị cho môn học: ${monHoc}`);
     } else {
         alert('Vui lòng chọn môn học!');
