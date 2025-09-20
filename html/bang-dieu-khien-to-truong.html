@@ -24,6 +24,7 @@
     <aside class="thanh-ben">
       <ul>
         <li><a href="#" class="active" data-page="tong-quan">Tổng quan</a></li>
+        <li><a href="#" data-page="danh-sach-thiet-bi">Danh sách thiết bị</a></li><!-- MỚI -->
         <li><a href="#" data-page="lap-ke-hoach-mua-sam">Lập kế hoạch mua sắm</a></li>
         <li><a href="#" data-page="theo-doi-thiet-bi">Theo dõi tình hình thiết bị</a></li>
       </ul>
@@ -60,6 +61,69 @@
             <li><span class="dot orange"></span> Ghi nhận 1 thiết bị hỏng (Bộ thí nghiệm Lý)</li>
           </ul>
         </div>
+      </section>
+
+      <!-- DANH SÁCH THIẾT BỊ (MỚI) -->
+      <section id="danh-sach-thiet-bi" class="trang-an" style="display:none;">
+        <div class="hang-cta">
+          <h2>Danh sách thiết bị</h2>
+          <button class="nut-in">In danh sách</button>
+        </div>
+
+        <div class="bo-loc">
+          <input placeholder="Nhập tên thiết bị..." />
+          <select title="Danh mục/Môn">
+            <option value="">-- Danh mục/Môn --</option>
+            <option value="toan">Toán</option>
+            <option value="khtn">KHTN</option>
+            <option value="lsdl">Lịch sử & Địa lý</option>
+            <option value="ngoai-ngu">Ngoại ngữ</option>
+            <option value="dung-chung">Dùng chung</option>
+          </select>
+          <select title="Tình trạng">
+            <option value="">-- Tình trạng --</option>
+            <option value="Tốt">Tốt</option>
+            <option value="Đang sửa">Đang sửa</option>
+            <option value="Hỏng">Hỏng</option>
+          </select>
+          <input placeholder="Lớp (VD: 6,7,8,9)" />
+          <button class="btn-primary">Tìm</button>
+          <button class="btn-secondary">Xóa lọc</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Số TT</th>
+              <th>Tên thiết bị</th>
+              <th>Đơn vị</th>
+              <th>Số lượng</th>
+              <th>Lớp</th>
+              <th>Tình trạng</th>
+              <th>Ghi chú</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Bộ vẽ trên bảng (Toán)</td>
+              <td>Bộ</td>
+              <td>7</td>
+              <td>6,7,8,9</td>
+              <td>Tốt</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Máy chiếu Epson</td>
+              <td>Chiếc</td>
+              <td>4</td>
+              <td>6,7,8,9</td>
+              <td>Tốt</td>
+              <td>Phòng dùng chung</td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
       <!-- LẬP KẾ HOẠCH MUA SẮM -->
@@ -103,15 +167,14 @@
           </tbody>
         </table>
 
-        <!-- Modal thêm/sửa kế hoạch -->
+        <!-- Modal thêm/sửa kế hoạch (UI only) -->
         <div id="modal-ke-hoach" class="modal" aria-hidden="true">
           <div class="noi-dung-modal" role="dialog" aria-modal="true" tabindex="-1">
             <button id="dong-modal" class="dong-x" aria-label="Đóng">&times;</button>
             <h3 id="tieu-de-modal">Thêm kế hoạch mua sắm</h3>
 
-            <form id="form-ke-hoach">
+            <form id="form-ke-hoach" novalidate>
               <input type="hidden" id="id-ke-hoach" />
-
               <div class="form-grid">
                 <div class="field">
                   <label for="thiet-bi">Tên thiết bị</label>
@@ -130,7 +193,6 @@
                     <option>Hộp</option>
                     <option>Tờ</option>
                     <option>Quả</option>
-                    <option>Chiếc (thiết bị số)</option>
                   </select>
                 </div>
                 <div class="field">
@@ -148,7 +210,7 @@
               </div>
 
               <div class="nut-modal">
-                <button type="submit" class="btn-primary">Lưu</button>
+                <button type="button" class="btn-primary" data-close>Lưu (UI)</button>
                 <button type="button" id="huy-modal" class="btn-secondary">Hủy</button>
               </div>
             </form>
