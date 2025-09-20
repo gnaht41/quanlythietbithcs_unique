@@ -1,64 +1,50 @@
+// UI-only. Không xử lý dữ liệu thật; backend nối sau.
+// - Giữ Logout có xác nhận
+// - Chuông thông báo
+// - CRUD danh mục
+// - Phiếu mượn: tạo/sửa, thêm item từ picker, xem, duyệt/từ chối, ghi nhận trả (UI)
 (function () {
-    // ===== Helpers =====
-    const $ = (sel, root = document) => root.querySelector(sel);
-    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+    // Helpers
+    const $ = (s, r = document) => r.querySelector(s);
+    const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
     const openModal = (el) => { if (el) { el.classList.add('open'); document.body.classList.add('no-scroll'); } };
     const closeModal = (el) => { if (el) { el.classList.remove('open'); document.body.classList.remove('no-scroll'); } };
 
-    // ===== Logout =====
+    // Logout
     $('#nut-dang-xuat')?.addEventListener('click', () => {
         if (confirm('Bạn có chắc muốn đăng xuất?')) {
-            alert('Đăng xuất thành công!');
             window.location.href = '../html/dang-nhap.html';
         }
     });
 
-    // ===== Navigation =====
+    // Sidebar navigation
     $$('.thanh-ben a').forEach(a => {
         a.addEventListener('click', (e) => {
             e.preventDefault();
             const pageId = a.dataset.page;
             $$('.thanh-ben a').forEach(x => x.classList.remove('active'));
             a.classList.add('active');
-            $$('main > div.trang-an').forEach(p => p.style.display = 'none');
-            const pageEl = document.getElementById(pageId);
-            if (pageEl) pageEl.style.display = 'block';
+            $$('main > section.trang-an').forEach(p => p.style.display = 'none');
+            $('#' + pageId).style.display = 'block';
         });
     });
 
-    // ===== Notification (bell) =====
+    // Notifications (bell)
     const nutTB = $('#nut-thong-bao');
     const modalTB = $('#modal-thong-bao');
-    const dongTB = $('#dong-thong-bao');
-    const dongTBX = $('#dong-thong-bao-x');
     const badgeTB = $('#so-luong-thong-bao');
-    const markRead = $('#danh-dau-doc');
-
-    const setBadge = (n) => {
-        if (!badgeTB) return;
-        if (n > 0) { badgeTB.textContent = n; badgeTB.style.display = 'inline-block'; }
-        else { badgeTB.style.display = 'none'; }
-    };
-    const openTB = () => {
-        openModal(modalTB);
-        nutTB?.setAttribute('aria-expanded', 'true');
-        (dongTBX || modalTB.querySelector('button'))?.focus();
-    };
-    const closeTB = () => {
-        closeModal(modalTB);
-        nutTB?.setAttribute('aria-expanded', 'false');
-        nutTB?.focus();
-    };
+    const setBadge = (n) => { if (!badgeTB) return; badgeTB.style.display = n > 0 ? 'inline-block' : 'none'; badgeTB.textContent = n; };
+    const openTB = () => { openModal(modalTB); nutTB?.setAttribute('aria-expanded', 'true'); };
+    const closeTB = () => { closeModal(modalTB); nutTB?.setAttribute('aria-expanded', 'false'); };
 
     nutTB?.addEventListener('click', (e) => { e.stopPropagation(); modalTB?.classList.contains('open') ? closeTB() : openTB(); });
-    dongTB?.addEventListener('click', closeTB);
-    dongTBX?.addEventListener('click', closeTB);
     modalTB?.addEventListener('click', (e) => { if (e.target === modalTB) closeTB(); });
     window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalTB?.classList.contains('open')) closeTB(); });
-    markRead?.addEventListener('click', () => { setBadge(0); closeTB(); });
-    if (badgeTB && (badgeTB.textContent.trim() === '' || badgeTB.textContent.trim() === '0')) setBadge(1);
+    $('#dong-thong-bao')?.addEventListener('click', closeTB);
+    $('#dong-thong-bao-x')?.addEventListener('click', closeTB);
+    $('#danh-dau-doc')?.addEventListener('click', () => { setBadge(0); closeTB(); });
 
-    // ===== Quản lý danh mục thiết bị =====
+    /* ================= Quản lý danh mục (UI) ================ */
     const modalTBien = $('#modal-thiet-bi');
     const formTBien = $('#form-thiet-bi');
     const tbodyDM = $('#bang-danh-muc');
@@ -72,12 +58,9 @@
     $('#dong-modal')?.addEventListener('click', () => closeModal(modalTBien));
     $('#huy-modal')?.addEventListener('click', () => closeModal(modalTBien));
 
-    // Ủy quyền sự kiện sửa/xoá
     tbodyDM?.addEventListener('click', (e) => {
-        const btn = e.target.closest('button');
-        if (!btn) return;
-        const row = btn.closest('tr');
-        if (!row) return;
+        const btn = e.target.closest('button'); if (!btn) return;
+        const row = btn.closest('tr'); if (!row) return;
 
         if (btn.classList.contains('nut-sua')) {
             $('#tieu-de-modal').textContent = 'Sửa thiết bị';
@@ -87,14 +70,12 @@
             $('#don-vi').value = row.cells[3].textContent.trim();
             $('#so-luong').value = row.cells[4].textContent.trim();
             $('#lop').value = row.cells[5].textContent.trim();
-            $('#ghi-chu').value = row.cells[6].textContent.trim();
+            $('#tinh-trang').value = row.cells[6].textContent.trim();
+            $('#ghi-chu').value = row.cells[7].textContent.trim();
             openModal(modalTBien);
         }
-
         if (btn.classList.contains('nut-xoa')) {
-            if (confirm('Xoá thiết bị này?')) {
-                row.remove();
-            }
+            if (confirm('Xóa thiết bị này?')) row.remove();
         }
     });
 
@@ -103,104 +84,134 @@
         const id = $('#id-thiet-bi').value.trim();
         const ten = $('#ten-thiet-bi').value.trim();
         const nhom = $('#nhom-thiet-bi').value.trim();
-        const donvi = $('#don-vi').value.trim();
-        const soLuong = $('#so-luong').value.trim();
+        const dv = $('#don-vi').value.trim();
+        const sl = $('#so-luong').value.trim();
         const lop = $('#lop').value.trim();
-        const ghiChu = $('#ghi-chu').value.trim();
+        const tt = $('#tinh-trang').value.trim();
+        const gc = $('#ghi-chu').value.trim();
+        if (!ten || !nhom || !dv || !sl || !lop || !tt) { alert('Vui lòng nhập đủ thông tin bắt buộc!'); return; }
 
-        if (!ten || !nhom || !donvi || !soLuong || !lop) {
-            alert('Vui lòng nhập đủ các trường bắt buộc!');
-            return;
-        }
-
-        if (!id) { // thêm mới
-            const newRow = tbodyDM.insertRow(-1);
-            const nextId = tbodyDM.rows.length; // đơn giản: số thứ tự = số dòng
-            newRow.innerHTML = `
+        if (!id) {
+            const nextId = tbodyDM.rows.length + 1;
+            const tr = tbodyDM.insertRow(-1);
+            tr.innerHTML = `
         <td>${nextId}</td>
         <td>${ten}</td>
         <td>${nhom}</td>
-        <td>${donvi}</td>
-        <td>${soLuong}</td>
+        <td>${dv}</td>
+        <td>${sl}</td>
         <td>${lop}</td>
-        <td>${ghiChu || ''}</td>
-        <td>
-          <button class="nut-sua">Sửa</button>
-          <button class="nut-xoa">Xóa</button>
-        </td>
+        <td>${tt}</td>
+        <td>${gc || ''}</td>
+        <td><button class="nut-sua">Sửa</button> <button class="nut-xoa">Xóa</button></td>
       `;
-        } else { // cập nhật
-            // tìm đúng dòng theo số TT
+        } else {
             const idx = Array.from(tbodyDM.rows).findIndex(r => r.cells[0].textContent.trim() === id);
             if (idx > -1) {
                 const row = tbodyDM.rows[idx];
                 row.cells[1].textContent = ten;
                 row.cells[2].textContent = nhom;
-                row.cells[3].textContent = donvi;
-                row.cells[4].textContent = soLuong;
+                row.cells[3].textContent = dv;
+                row.cells[4].textContent = sl;
                 row.cells[5].textContent = lop;
-                row.cells[6].textContent = ghiChu;
+                row.cells[6].textContent = tt;
+                row.cells[7].textContent = gc;
             }
         }
         closeModal(modalTBien);
-        alert('Lưu danh mục thành công!');
+        alert('(UI) Lưu danh mục thành công!');
     });
 
     $('#nut-nhap-excel')?.addEventListener('click', () => {
         const fi = $('#file-excel');
         if (!fi || fi.files.length === 0) { alert('Vui lòng chọn file Excel!'); return; }
-        const file = fi.files[0];
-        const reader = new FileReader();
-        reader.onload = () => {
-            // demo: chỉ báo tên file; xử lý thực tế sẽ dùng thư viện đọc Excel
-            alert(`Đã chọn file: ${file.name}. (Demo import, sẽ triển khai parser XLSX sau)`);
-        };
-        reader.readAsArrayBuffer(file);
+        alert(`(UI) Đã chọn file: ${fi.files[0].name} — xử lý ở backend.`);
     });
 
-    // ===== Quản lý tình trạng =====
-    $('#bang-tinh-trang')?.addEventListener('click', (e) => {
-        const btn = e.target.closest('.nut-cap-nhat-tt');
-        if (!btn) return;
-        const row = btn.closest('tr');
-        const select = row.querySelector('.tinh-trang-select');
-        const ttMoi = select?.value || '';
-        if (!ttMoi) { alert('Vui lòng chọn tình trạng!'); return; }
-        row.querySelector('.tt-hien-tai').textContent = ttMoi;
-        alert('Cập nhật tình trạng thành công!');
+    /* ================= Phiếu mượn (UI) ================ */
+    const modalPhieu = $('#modal-phieu');
+    const modalPicker = $('#picker-thiet-bi');
+    const modalXem = $('#modal-xem');
+    const modalTra = $('#modal-tra');
+    const dsItemBody = $('#ds-item-phieu');
+    let itemAutoId = 0;
+
+    // mở modal tạo phiếu
+    $('#nut-them-phieu')?.addEventListener('click', () => {
+        $('#tieu-de-phieu').textContent = 'Tạo phiếu mượn';
+        $('#form-phieu')?.reset();
+        dsItemBody.innerHTML = '';
+        itemAutoId = 0;
+        openModal(modalPhieu);
     });
 
-    // ===== Quản lý mượn - trả =====
-    $('#bang-muon-tra')?.addEventListener('click', (e) => {
-        const btn = e.target.closest('button');
-        if (!btn) return;
-        const row = btn.closest('tr');
+    // đóng modal phiếu bằng các nút có data-close
+    modalPhieu?.addEventListener('click', (e) => {
+        if (e.target === modalPhieu) closeModal(modalPhieu);
+        if (e.target.matches('[data-close]')) closeModal(modalPhieu);
+    });
+    modalPicker?.addEventListener('click', (e) => { if (e.target === modalPicker || e.target.matches('[data-close]')) closeModal(modalPicker); });
+    modalXem?.addEventListener('click', (e) => { if (e.target === modalXem || e.target.matches('[data-close]')) closeModal(modalXem); });
+    modalTra?.addEventListener('click', (e) => { if (e.target === modalTra || e.target.matches('[data-close]')) closeModal(modalTra); });
 
-        if (btn.classList.contains('nut-duyet')) {
-            row.cells[5].textContent = 'Đã duyệt';
-            alert('Đã duyệt yêu cầu!');
-        }
-        if (btn.classList.contains('nut-tu-choi')) {
-            row.cells[5].textContent = 'Từ chối';
-            alert('Đã từ chối yêu cầu!');
-        }
-        if (btn.classList.contains('nut-tra')) {
-            const tinhTrang = row.querySelector('.tinh-trang-tra')?.value.trim();
-            if (!tinhTrang) { alert('Vui lòng nhập tình trạng khi trả!'); return; }
-            row.cells[5].textContent = 'Đã trả';
-            row.cells[6].textContent = tinhTrang;
-            row.querySelector('.nhom-tra').innerHTML = ''; // ẩn controls trả
-            alert('Đã ghi nhận trả thiết bị!');
-        }
+    // nút Thêm thiết bị -> mở picker
+    $('#nut-them-item')?.addEventListener('click', () => openModal(modalPicker));
+
+    // chọn thiết bị trong picker -> thêm dòng item vào phiếu
+    $('#bang-picker')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.chon-thiet-bi'); if (!btn) return;
+        const ten = btn.dataset.ten;
+        const dv = btn.dataset.dv;
+        const lop = btn.dataset.lop;
+        const tt = btn.dataset.tt;
+        itemAutoId++;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+      <td>${ten}</td>
+      <td>${dv}</td>
+      <td><input type="number" min="1" value="1" class="inp-sl" /></td>
+      <td>${lop}</td>
+      <td>${tt}</td>
+      <td><button type="button" class="nut-huy nut-xoa-item">Xóa</button></td>
+    `;
+        dsItemBody.appendChild(tr);
+        closeModal(modalPicker);
     });
 
-    $('#nut-in-phieu')?.addEventListener('click', () => window.print());
+    // xóa item trong phiếu
+    dsItemBody?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.nut-xoa-item'); if (!btn) return;
+        btn.closest('tr')?.remove();
+    });
 
-    // ===== Quản lý bảo trì =====
+    // bảng phiếu: xem / sửa / duyệt / từ chối / ghi nhận trả
+    $('#bang-phieu')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('button'); if (!btn) return;
+
+        if (btn.classList.contains('nut-xem')) openModal(modalXem);
+        if (btn.classList.contains('nut-sua')) { // mở modal phiếu ở trạng thái sửa
+            $('#tieu-de-phieu').textContent = 'Sửa phiếu mượn';
+            // demo: reset items & add 1 item mẫu
+            $('#form-phieu')?.reset();
+            dsItemBody.innerHTML = '';
+            const demo = document.createElement('tr');
+            demo.innerHTML = `<td>Máy chiếu Epson</td><td>Chiếc</td><td><input type="number" min="1" value="1" class="inp-sl" /></td><td>8</td><td>Tốt</td><td><button type="button" class="nut-huy nut-xoa-item">Xóa</button></td>`;
+            dsItemBody.appendChild(demo);
+            openModal(modalPhieu);
+        }
+        if (btn.classList.contains('nut-duyet')) alert('(UI) Đã duyệt phiếu!');
+        if (btn.classList.contains('nut-tu-choi')) alert('(UI) Đã từ chối phiếu!');
+        if (btn.classList.contains('nut-tra')) openModal(modalTra);
+    });
+
+    // In DS phiếu
+    $('#nut-in-ds-phieu')?.addEventListener('click', () => window.print());
+
+    /* ============== Bảo trì (UI) ============== */
     const modalBT = $('#modal-bao-tri');
     $('#nut-them-bao-tri')?.addEventListener('click', () => {
         $('#tieu-de-bao-tri').textContent = 'Thêm bảo trì';
-        $('#form-bao-tri').reset();
+        $('#form-bao-tri')?.reset();
         $('#id-bao-tri').value = '';
         openModal(modalBT);
     });
@@ -209,8 +220,7 @@
 
     const tbodyBT = $('#bang-bao-tri');
     tbodyBT?.addEventListener('click', (e) => {
-        const btn = e.target.closest('.nut-sua');
-        if (!btn) return;
+        const btn = e.target.closest('.nut-sua'); if (!btn) return;
         const row = btn.closest('tr');
         $('#tieu-de-bao-tri').textContent = 'Sửa bảo trì';
         $('#id-bao-tri').value = row.cells[0].textContent.trim();
@@ -226,57 +236,43 @@
         const id = $('#id-bao-tri').value.trim();
         const tb = $('#thiet-bi-bao-tri').value.trim();
         const ngay = $('#ngay-bao-tri').value.trim();
-        const moTa = $('#mo-ta-bao-tri').value.trim();
-        const trangThai = $('#trang-thai-bao-tri').value.trim();
-        if (!tb || !ngay || !moTa || !trangThai) { alert('Nhập đủ thông tin!'); return; }
+        const mt = $('#mo-ta-bao-tri').value.trim();
+        const tt = $('#trang-thai-bao-tri').value.trim();
+        if (!tb || !ngay || !mt || !tt) { alert('Nhập đủ thông tin!'); return; }
 
         if (!id) {
-            const newRow = tbodyBT.insertRow(-1);
-            const nextId = tbodyBT.rows.length;
-            newRow.innerHTML = `
-        <td>${nextId}</td>
-        <td>${tb}</td>
-        <td>${ngay}</td>
-        <td>${moTa}</td>
-        <td>${trangThai}</td>
-        <td><button class="nut-sua">Sửa</button></td>
-      `;
+            const nextId = tbodyBT.rows.length + 1;
+            const tr = tbodyBT.insertRow(-1);
+            tr.innerHTML = `<td>${nextId}</td><td>${tb}</td><td>${ngay}</td><td>${mt}</td><td>${tt}</td><td><button class="nut-sua">Sửa</button></td>`;
         } else {
             const idx = Array.from(tbodyBT.rows).findIndex(r => r.cells[0].textContent.trim() === id);
             if (idx > -1) {
                 const row = tbodyBT.rows[idx];
                 row.cells[1].textContent = tb;
                 row.cells[2].textContent = ngay;
-                row.cells[3].textContent = moTa;
-                row.cells[4].textContent = trangThai;
+                row.cells[3].textContent = mt;
+                row.cells[4].textContent = tt;
             }
         }
         closeModal(modalBT);
-        alert('Lưu bảo trì thành công!');
+        alert('(UI) Lưu bảo trì thành công!');
     });
 
-    // ===== Quản lý kiểm kê =====
+    /* ============== Kiểm kê (UI) ============== */
     const tbodyKK = $('#bang-kiem-ke');
     tbodyKK?.addEventListener('click', (e) => {
-        const btn = e.target.closest('.nut-cap-nhat-kk');
-        if (!btn) return;
+        const btn = e.target.closest('.nut-cap-nhat-kk'); if (!btn) return;
         const row = btn.closest('tr');
         const duKien = parseInt(row.cells[3].textContent, 10);
         const thucTe = parseInt(row.querySelector('.so-luong-thuc-te')?.value, 10);
-        if (Number.isNaN(thucTe)) { alert('Nhập số lượng thực tế hợp lệ!'); return; }
+        if (Number.isNaN(thucTe)) { alert('Nhập SL thực tế hợp lệ!'); return; }
         const chenh = thucTe - duKien;
         row.querySelector('.chenh-lech').textContent = chenh === 0 ? '0' : (chenh > 0 ? `+${chenh} (tăng)` : `${chenh} (giảm)`);
-        alert('Cập nhật kiểm kê thành công!');
+        alert('(UI) Cập nhật kiểm kê!');
     });
-
-    $('#nut-tao-dot-kiem-ke')?.addEventListener('click', () => {
-        alert('Tạo đợt kiểm kê mới (demo).');
-    });
+    $('#nut-tao-dot-kiem-ke')?.addEventListener('click', () => alert('(UI) Tạo đợt kiểm kê mới.'));
     $('#nut-in-bien-ban')?.addEventListener('click', () => window.print());
 
-    // ===== Lập báo cáo =====
-    $('#nut-tao-bao-cao')?.addEventListener('click', () => {
-        alert('Tạo báo cáo (demo).');
-    });
-
+    /* ============== Báo cáo (UI) ============== */
+    $('#nut-tao-bao-cao')?.addEventListener('click', () => alert('(UI) Tạo báo cáo.'));
 })();

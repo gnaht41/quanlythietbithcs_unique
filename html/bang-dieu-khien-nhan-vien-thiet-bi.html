@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Bảng điều khiển Nhân viên Thiết bị - Quản lý Thiết bị</title>
+  <title>Bảng điều khiển Nhân viên Thiết bị</title>
   <link rel="stylesheet" href="../css/bang-dieu-khien-nhan-vien-thiet-bi.css" />
 </head>
 
@@ -14,8 +14,8 @@
     <div class="user-info">
       Xin chào, Nhân viên Thiết bị!
       <button id="nut-dang-xuat">Đăng xuất</button>
-      <button id="nut-thong-bao" class="nut-chuong" aria-label="Thông báo" aria-haspopup="dialog" aria-expanded="false" title="Thông báo">🔔
-        <span id="so-luong-thong-bao">4</span>
+      <button id="nut-thong-bao" class="nut-chuong" aria-label="Thông báo" aria-haspopup="dialog" aria-expanded="false" title="Thông báo">
+        🔔 <span id="so-luong-thong-bao">4</span>
       </button>
     </div>
   </header>
@@ -24,9 +24,9 @@
     <aside class="thanh-ben">
       <ul>
         <li><a href="#" class="active" data-page="tong-quan">Tổng quan</a></li>
+        <li><a href="#" data-page="danh-sach-thiet-bi">Danh sách thiết bị</a></li>
         <li><a href="#" data-page="quan-ly-danh-muc">Quản lý danh mục thiết bị</a></li>
-        <li><a href="#" data-page="quan-ly-tinh-trang">Quản lý tình trạng thiết bị</a></li>
-        <li><a href="#" data-page="quan-ly-muon-tra">Quản lý mượn - trả</a></li>
+        <li><a href="#" data-page="phieu-muon">Phiếu mượn</a></li><!-- ĐÃ ĐỔI -->
         <li><a href="#" data-page="quan-ly-bao-tri">Quản lý bảo trì/sửa chữa</a></li>
         <li><a href="#" data-page="quan-ly-kiem-ke">Quản lý kiểm kê</a></li>
         <li><a href="#" data-page="lap-bao-cao">Lập báo cáo</a></li>
@@ -37,36 +37,96 @@
       <h1>Bảng điều khiển Nhân viên Thiết bị</h1>
 
       <!-- Tổng quan -->
-      <div id="tong-quan" class="trang-an">
+      <section id="tong-quan" class="trang-an">
         <div class="the-container">
           <div class="the">
             <h3>Tổng thiết bị</h3>
-            <p>127</p>
-            <span class="icon">📦</span>
+            <p>127</p><span class="icon">📦</span>
           </div>
           <div class="the">
-            <h3>Thiết bị đang mượn</h3>
-            <p>15</p>
-            <span class="icon">📝</span>
+            <h3>Phiếu chờ duyệt</h3>
+            <p>2</p><span class="icon">📝</span>
           </div>
           <div class="the">
             <h3>Thiết bị hỏng</h3>
-            <p>3</p>
-            <span class="icon">⚠️</span>
+            <p>3</p><span class="icon">⚠️</span>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- Quản lý danh mục thiết bị -->
-      <div id="quan-ly-danh-muc" class="trang-an" style="display:none;">
-        <h2>Quản lý danh mục thiết bị</h2>
+      <!-- Danh sách thiết bị (READ-ONLY) -->
+      <section id="danh-sach-thiet-bi" class="trang-an" style="display:none;">
         <div class="hang-cta">
-          <button id="nut-them-thiet-bi" class="nut-them">Thêm thiết bị</button>
-          <input type="file" id="file-excel" accept=".xlsx,.xls" />
-          <button id="nut-nhap-excel" class="nut-in">Nhập từ Excel</button>
+          <h2>Danh sách thiết bị</h2>
+          <div class="bo-loc">
+            <input placeholder="Nhập tên thiết bị..." />
+            <select title="Danh mục/Môn">
+              <option value="">-- Danh mục/Môn --</option>
+              <option value="ngu-van">Ngữ văn</option>
+              <option value="toan">Toán</option>
+              <option value="khtn">KHTN</option>
+              <option value="lsdl">Lịch sử & Địa lý</option>
+              <option value="ngoai-ngu">Ngoại ngữ</option>
+              <option value="dung-chung">Dùng chung</option>
+            </select>
+            <select title="Tình trạng">
+              <option value="">-- Tình trạng --</option>
+              <option value="Tốt">Tốt</option>
+              <option value="Đang sửa">Đang sửa</option>
+              <option value="Hỏng">Hỏng</option>
+            </select>
+            <input placeholder="Lớp (VD: 6,7,8,9)" />
+            <button class="btn-primary">Tìm</button>
+            <button class="btn-secondary">Xóa lọc</button>
+          </div>
         </div>
 
-        <!-- Chuẩn theo Word: Số TT | Tên thiết bị | Đơn vị | Số lượng | Lớp | Ghi chú -->
+        <table>
+          <thead>
+            <tr>
+              <th>Số TT</th>
+              <th>Tên thiết bị</th>
+              <th>Đơn vị</th>
+              <th>Số lượng</th>
+              <th>Lớp</th>
+              <th>Tình trạng</th>
+              <th>Ghi chú</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Bộ vẽ trên bảng (Toán)</td>
+              <td>Bộ</td>
+              <td>7</td>
+              <td>6,7,8,9</td>
+              <td>Tốt</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Máy chiếu Epson</td>
+              <td>Chiếc</td>
+              <td>4</td>
+              <td>6,7,8,9</td>
+              <td>Tốt</td>
+              <td>Phòng dùng chung</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Quản lý danh mục thiết bị (CRUD UI) -->
+      <section id="quan-ly-danh-muc" class="trang-an" style="display:none;">
+        <div class="hang-cta">
+          <h2>Quản lý danh mục thiết bị</h2>
+          <div class="cta-right">
+            <button id="nut-them-thiet-bi" class="nut-them">Thêm thiết bị</button>
+            <input type="file" id="file-excel" accept=".xlsx,.xls" />
+            <button id="nut-nhap-excel" class="nut-in">Nhập từ Excel</button>
+          </div>
+        </div>
+
         <table>
           <thead>
             <tr>
@@ -76,6 +136,7 @@
               <th>Đơn vị</th>
               <th>Số lượng</th>
               <th>Lớp</th>
+              <th>Tình trạng</th>
               <th>Ghi chú</th>
               <th>Hành động</th>
             </tr>
@@ -88,11 +149,9 @@
               <td>Chiếc</td>
               <td>20</td>
               <td>6,7,8,9</td>
+              <td>Tốt</td>
               <td></td>
-              <td>
-                <button class="nut-sua">Sửa</button>
-                <button class="nut-xoa">Xóa</button>
-              </td>
+              <td><button class="nut-sua">Sửa</button> <button class="nut-xoa">Xóa</button></td>
             </tr>
             <tr>
               <td>2</td>
@@ -101,60 +160,68 @@
               <td>Bộ</td>
               <td>1</td>
               <td>8</td>
+              <td>Tốt</td>
               <td></td>
-              <td>
-                <button class="nut-sua">Sửa</button>
-                <button class="nut-xoa">Xóa</button>
-              </td>
+              <td><button class="nut-sua">Sửa</button> <button class="nut-xoa">Xóa</button></td>
             </tr>
           </tbody>
         </table>
 
         <!-- Modal thêm/sửa thiết bị -->
-        <div id="modal-thiet-bi" class="modal">
-          <div class="noi-dung-modal">
-            <button class="dong-x" id="dong-modal">&times;</button>
+        <div id="modal-thiet-bi" class="modal" aria-hidden="true">
+          <div class="noi-dung-modal" role="dialog" aria-modal="true" tabindex="-1">
+            <button class="dong-x" id="dong-modal" aria-label="Đóng">&times;</button>
             <h3 id="tieu-de-modal">Thêm thiết bị</h3>
-            <form id="form-thiet-bi">
+            <form id="form-thiet-bi" novalidate>
               <input type="hidden" id="id-thiet-bi" />
               <div class="form-grid">
                 <div class="field">
                   <label for="ten-thiet-bi">Tên thiết bị</label>
-                  <input type="text" id="ten-thiet-bi" required />
+                  <input id="ten-thiet-bi" required />
                 </div>
                 <div class="field">
                   <label for="nhom-thiet-bi">Nhóm</label>
                   <select id="nhom-thiet-bi" required>
                     <option value="">Chọn nhóm</option>
-                    <option value="Mô hình, mẫu vật">Mô hình, mẫu vật</option>
-                    <option value="Dụng cụ thí nghiệm">Dụng cụ thí nghiệm</option>
-                    <option value="Vật liệu nghe nhìn">Vật liệu nghe nhìn</option>
-                    <option value="Phương tiện hỗ trợ">Phương tiện hỗ trợ</option>
+                    <option>Mô hình, mẫu vật</option>
+                    <option>Dụng cụ thí nghiệm</option>
+                    <option>Vật liệu nghe nhìn</option>
+                    <option>Phương tiện hỗ trợ</option>
                   </select>
                 </div>
                 <div class="field">
                   <label for="don-vi">Đơn vị</label>
                   <select id="don-vi" required>
                     <option value="">Chọn đơn vị</option>
-                    <option value="Bộ">Bộ</option>
-                    <option value="Chiếc">Chiếc</option>
-                    <option value="Cái">Cái</option>
-                    <option value="Hộp">Hộp</option>
-                    <option value="Tờ">Tờ</option>
-                    <option value="Quả">Quả</option>
+                    <option>Bộ</option>
+                    <option>Chiếc</option>
+                    <option>Cái</option>
+                    <option>Hộp</option>
+                    <option>Tờ</option>
+                    <option>Quả</option>
                   </select>
                 </div>
                 <div class="field">
                   <label for="so-luong">Số lượng</label>
-                  <input type="number" id="so-luong" min="1" required />
+                  <input id="so-luong" type="number" min="1" required />
                 </div>
                 <div class="field">
                   <label for="lop">Lớp</label>
-                  <input type="text" id="lop" placeholder="VD: 6,7,8,9" required />
+                  <input id="lop" placeholder="VD: 6,7,8,9" required />
                 </div>
-                <div class="field" style="grid-column:1 / -1;">
+                <div class="field">
+                  <label for="tinh-trang">Tình trạng</label>
+                  <select id="tinh-trang" required>
+                    <option value="">Chọn</option>
+                    <option>Tốt</option>
+                    <option>Đang sửa</option>
+                    <option>Hỏng</option>
+                    <option>Đã thanh lý</option>
+                  </select>
+                </div>
+                <div class="field" style="grid-column:1/-1">
                   <label for="ghi-chu">Ghi chú</label>
-                  <input type="text" id="ghi-chu" />
+                  <input id="ghi-chu" />
                 </div>
               </div>
               <div class="nut-modal">
@@ -164,61 +231,39 @@
             </form>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- Quản lý tình trạng thiết bị -->
-      <div id="quan-ly-tinh-trang" class="trang-an" style="display:none;">
-        <h2>Quản lý tình trạng thiết bị</h2>
-        <table>
+      <!-- PHIẾU MƯỢN (thay cho Quản lý mượn - trả) -->
+      <section id="phieu-muon" class="trang-an" style="display:none;">
+        <div class="hang-cta">
+          <h2>Phiếu mượn</h2>
+          <div class="cta-right">
+            <button id="nut-them-phieu" class="nut-them">Tạo phiếu</button>
+            <button id="nut-in-ds-phieu" class="nut-in">In danh sách</button>
+          </div>
+        </div>
+
+        <div class="bo-loc">
+          <input placeholder="Tìm theo mã phiếu / giáo viên..." />
+          <select>
+            <option value="">-- Trạng thái --</option>
+            <option>Chờ duyệt</option>
+            <option>Đã duyệt</option>
+            <option>Đang mượn</option>
+            <option>Đã trả</option>
+            <option>Đã từ chối</option>
+          </select>
+          <input type="date" />
+          <input type="date" />
+          <button class="btn-primary">Lọc</button>
+          <button class="btn-secondary">Xóa lọc</button>
+        </div>
+
+        <table id="bang-phieu">
           <thead>
             <tr>
-              <th>Số TT</th>
-              <th>Tên thiết bị</th>
-              <th>Tình trạng hiện tại</th>
-              <th>Cập nhật tình trạng</th>
-            </tr>
-          </thead>
-          <tbody id="bang-tinh-trang">
-            <tr>
-              <td>1</td>
-              <td>Máy chiếu Epson</td>
-              <td class="tt-hien-tai">Tốt</td>
-              <td>
-                <select class="tinh-trang-select">
-                  <option>Tốt</option>
-                  <option>Hỏng</option>
-                  <option>Đang sửa chữa</option>
-                  <option>Đã thanh lý</option>
-                </select>
-                <button class="nut-cap-nhat-tt">Cập nhật</button>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Laptop Dell</td>
-              <td class="tt-hien-tai">Đang sửa chữa</td>
-              <td>
-                <select class="tinh-trang-select">
-                  <option>Tốt</option>
-                  <option>Hỏng</option>
-                  <option>Đang sửa chữa</option>
-                  <option>Đã thanh lý</option>
-                </select>
-                <button class="nut-cap-nhat-tt">Cập nhật</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Quản lý mượn - trả -->
-      <div id="quan-ly-muon-tra" class="trang-an" style="display:none;">
-        <h2>Quản lý mượn - trả</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Thiết bị</th>
+              <th>#</th>
+              <th>Mã phiếu</th>
               <th>Giáo viên</th>
               <th>Ngày mượn</th>
               <th>Ngày trả dự kiến</th>
@@ -227,40 +272,214 @@
               <th>Hành động</th>
             </tr>
           </thead>
-          <tbody id="bang-muon-tra">
+          <tbody>
             <tr>
               <td>1</td>
-              <td>Máy chiếu Epson</td>
+              <td>PM-2025-001</td>
               <td>Nguyễn Văn A</td>
               <td>2025-09-20</td>
               <td>2025-09-22</td>
               <td>Chờ duyệt</td>
               <td></td>
               <td>
+                <button class="nut-xem">Xem</button>
+                <button class="nut-sua">Sửa</button>
                 <button class="nut-duyet">Duyệt</button>
                 <button class="nut-tu-choi">Từ chối</button>
               </td>
             </tr>
             <tr>
               <td>2</td>
-              <td>Laptop Dell</td>
+              <td>PM-2025-002</td>
               <td>Trần Thị B</td>
               <td>2025-09-19</td>
               <td>2025-09-21</td>
-              <td>Đã duyệt</td>
-              <td></td>
-              <td class="nhom-tra">
-                <input type="text" class="tinh-trang-tra" placeholder="Tình trạng khi trả" />
+              <td>Đang mượn</td>
+              <td>Mượn cho tiết thực hành</td>
+              <td>
+                <button class="nut-xem">Xem</button>
                 <button class="nut-tra">Ghi nhận trả</button>
               </td>
             </tr>
           </tbody>
         </table>
-        <button id="nut-in-phieu" class="nut-in">In phiếu mượn</button>
-      </div>
+
+        <!-- Modal: Tạo/Sửa phiếu -->
+        <div id="modal-phieu" class="modal" aria-hidden="true">
+          <div class="noi-dung-modal" role="dialog" aria-modal="true" tabindex="-1">
+            <button class="dong-x" data-close aria-label="Đóng">&times;</button>
+            <h3 id="tieu-de-phieu">Tạo phiếu mượn</h3>
+
+            <form id="form-phieu" class="form-grid" novalidate>
+              <div class="field">
+                <label>Mã phiếu</label>
+                <input id="ma-phieu" placeholder="Tự sinh hoặc nhập tay (UI)" />
+              </div>
+              <div class="field">
+                <label>Giáo viên</label>
+                <input id="gv-phieu" placeholder="Tên giáo viên" required />
+              </div>
+              <div class="field">
+                <label>Ngày mượn</label>
+                <input type="date" id="ngay-muon" required />
+              </div>
+              <div class="field">
+                <label>Ngày trả dự kiến</label>
+                <input type="date" id="ngay-tra-du-kien" required />
+              </div>
+              <div class="field" style="grid-column:1/-1">
+                <label>Mục đích</label>
+                <input id="muc-dich" placeholder="VD: Dạy thực hành bài ..." />
+              </div>
+              <div class="field" style="grid-column:1/-1">
+                <label>Ghi chú</label>
+                <input id="ghi-chu-phieu" placeholder="Ghi chú thêm (nếu có)" />
+              </div>
+
+              <div class="field full" style="grid-column:1/-1">
+                <div class="hang-cta" style="margin:6px 0;">
+                  <h4>Thiết bị trong phiếu</h4>
+                  <button type="button" id="nut-them-item" class="btn-outline">+ Thêm thiết bị</button>
+                </div>
+                <div class="bang-gom">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Thiết bị</th>
+                        <th>Đơn vị</th>
+                        <th>SL</th>
+                        <th>Lớp</th>
+                        <th>Tình trạng</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="ds-item-phieu">
+                      <!-- Items sẽ render UI-only -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="nut-modal">
+                <button type="button" class="btn-primary" data-close>Lưu (UI)</button>
+                <button type="button" class="btn-secondary" data-close>Hủy</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Modal: Chọn thiết bị (picker) -->
+        <div id="picker-thiet-bi" class="modal" aria-hidden="true">
+          <div class="noi-dung-modal picker" role="dialog" aria-modal="true" tabindex="-1">
+            <button class="dong-x" data-close aria-label="Đóng">&times;</button>
+            <h3>Chọn thiết bị</h3>
+
+            <div class="bo-loc" style="margin:8px 0 6px">
+              <input id="tk-ten" placeholder="Tìm theo tên..." />
+              <select id="tk-dm">
+                <option value="">-- Danh mục/Môn --</option>
+                <option value="toan">Toán</option>
+                <option value="khtn">KHTN</option>
+                <option value="lsdl">Lịch sử & Địa lý</option>
+                <option value="ngoai-ngu">Ngoại ngữ</option>
+                <option value="dung-chung">Dùng chung</option>
+              </select>
+              <button class="btn-primary" id="nut-loc-picker">Lọc</button>
+              <button class="btn-secondary" id="nut-xoa-loc-picker">Xóa lọc</button>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Số TT</th>
+                  <th>Tên thiết bị</th>
+                  <th>Đơn vị</th>
+                  <th>Còn</th>
+                  <th>Lớp</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="bang-picker">
+                <tr>
+                  <td>1</td>
+                  <td>Máy chiếu Epson</td>
+                  <td>Chiếc</td>
+                  <td>4</td>
+                  <td>6,7,8,9</td>
+                  <td><button class="btn-outline chon-thiet-bi" data-ten="Máy chiếu Epson" data-dv="Chiếc" data-lop="6,7,8,9" data-tt="Tốt">Chọn</button></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Bộ vẽ trên bảng (Toán)</td>
+                  <td>Bộ</td>
+                  <td>7</td>
+                  <td>6,7,8,9</td>
+                  <td><button class="btn-outline chon-thiet-bi" data-ten="Bộ vẽ trên bảng (Toán)" data-dv="Bộ" data-lop="6,7,8,9" data-tt="Tốt">Chọn</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Modal: Ghi nhận trả -->
+        <div id="modal-tra" class="modal" aria-hidden="true">
+          <div class="noi-dung-modal" role="dialog" aria-modal="true" tabindex="-1">
+            <button class="dong-x" data-close aria-label="Đóng">&times;</button>
+            <h3>Ghi nhận trả</h3>
+            <form class="form-grid" novalidate>
+              <div class="field" style="grid-column:1/-1">
+                <label>Tình trạng khi trả</label>
+                <textarea id="tt-khi-tra" placeholder="Mô tả ngắn..."></textarea>
+              </div>
+            </form>
+            <div class="nut-modal">
+              <button class="btn-primary" data-close>Xác nhận</button>
+              <button class="btn-secondary" data-close>Hủy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal: Xem phiếu -->
+        <div id="modal-xem" class="modal" aria-hidden="true">
+          <div class="noi-dung-modal xem" role="dialog" aria-modal="true" tabindex="-1">
+            <button class="dong-x" data-close aria-label="Đóng">&times;</button>
+            <h3>Chi tiết phiếu mượn</h3>
+            <div class="kh-view">
+              <p><b>Mã:</b> PM-2025-001</p>
+              <p><b>Giáo viên:</b> Nguyễn Văn A</p>
+              <p><b>Thời gian:</b> 20/09/2025 → 22/09/2025</p>
+              <p><b>Mục đích:</b> Dạy thực hành</p>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Thiết bị</th>
+                  <th>Đơn vị</th>
+                  <th>SL</th>
+                  <th>Lớp</th>
+                  <th>Tình trạng</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Máy chiếu Epson</td>
+                  <td>Chiếc</td>
+                  <td>1</td>
+                  <td>8</td>
+                  <td>Tốt</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="nut-modal">
+              <button class="btn-primary">In</button>
+              <button class="btn-secondary" data-close>Đóng</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- Quản lý bảo trì/sửa chữa -->
-      <div id="quan-ly-bao-tri" class="trang-an" style="display:none;">
+      <section id="quan-ly-bao-tri" class="trang-an" style="display:none;">
         <h2>Quản lý bảo trì/sửa chữa</h2>
         <button id="nut-them-bao-tri" class="nut-them">Thêm bảo trì</button>
         <table>
@@ -283,46 +502,38 @@
               <td>Hoàn thành</td>
               <td><button class="nut-sua">Sửa</button></td>
             </tr>
-            <tr>
-              <td>2</td>
-              <td>Laptop Dell</td>
-              <td>2025-09-10</td>
-              <td>Sửa bàn phím</td>
-              <td>Đang xử lý</td>
-              <td><button class="nut-sua">Sửa</button></td>
-            </tr>
           </tbody>
         </table>
 
         <!-- Modal bảo trì -->
-        <div id="modal-bao-tri" class="modal">
-          <div class="noi-dung-modal">
-            <button class="dong-x" id="dong-bao-tri">&times;</button>
+        <div id="modal-bao-tri" class="modal" aria-hidden="true">
+          <div class="noi-dung-modal" role="dialog" aria-modal="true" tabindex="-1">
+            <button class="dong-x" id="dong-bao-tri" aria-label="Đóng">&times;</button>
             <h3 id="tieu-de-bao-tri">Thêm bảo trì</h3>
-            <form id="form-bao-tri">
+            <form id="form-bao-tri" novalidate>
               <input type="hidden" id="id-bao-tri" />
               <div class="form-grid">
                 <div class="field">
                   <label for="thiet-bi-bao-tri">Thiết bị</label>
                   <select id="thiet-bi-bao-tri" required>
                     <option value="">Chọn thiết bị</option>
-                    <option value="Máy chiếu Epson">Máy chiếu Epson</option>
-                    <option value="Laptop Dell">Laptop Dell</option>
+                    <option>Máy chiếu Epson</option>
+                    <option>Bộ vẽ trên bảng (Toán)</option>
                   </select>
                 </div>
                 <div class="field">
                   <label for="ngay-bao-tri">Ngày bảo trì</label>
                   <input type="date" id="ngay-bao-tri" required />
                 </div>
-                <div class="field" style="grid-column:1 / -1;">
+                <div class="field" style="grid-column:1/-1">
                   <label for="mo-ta-bao-tri">Mô tả</label>
                   <textarea id="mo-ta-bao-tri" required></textarea>
                 </div>
                 <div class="field">
                   <label for="trang-thai-bao-tri">Trạng thái</label>
                   <select id="trang-thai-bao-tri" required>
-                    <option value="Hoàn thành">Hoàn thành</option>
-                    <option value="Đang xử lý">Đang xử lý</option>
+                    <option>Hoàn thành</option>
+                    <option>Đang xử lý</option>
                   </select>
                 </div>
               </div>
@@ -333,10 +544,10 @@
             </form>
           </div>
         </div>
-      </div>
+      </section>
 
       <!-- Quản lý kiểm kê -->
-      <div id="quan-ly-kiem-ke" class="trang-an" style="display:none;">
+      <section id="quan-ly-kiem-ke" class="trang-an" style="display:none;">
         <h2>Quản lý kiểm kê</h2>
         <button id="nut-tao-dot-kiem-ke" class="nut-them">Tạo đợt kiểm kê</button>
         <table>
@@ -366,10 +577,10 @@
           </tbody>
         </table>
         <button id="nut-in-bien-ban" class="nut-in">In biên bản kiểm kê</button>
-      </div>
+      </section>
 
       <!-- Lập báo cáo -->
-      <div id="lap-bao-cao" class="trang-an" style="display:none;">
+      <section id="lap-bao-cao" class="trang-an" style="display:none;">
         <h2>Lập báo cáo</h2>
         <button id="nut-tao-bao-cao" class="nut-them">Tạo báo cáo</button>
         <table>
@@ -390,7 +601,7 @@
             </tr>
           </tbody>
         </table>
-      </div>
+      </section>
 
       <!-- Modal thông báo -->
       <div id="modal-thong-bao" class="modal" aria-hidden="true">
@@ -398,7 +609,7 @@
           <button id="dong-thong-bao-x" class="dong-x" aria-label="Đóng" title="Đóng">&times;</button>
           <h3>Thông báo</h3>
           <ul class="tb-list">
-            <li>Yêu cầu mượn mới từ Giáo viên - 1 giờ trước</li>
+            <li>Phiếu mới từ Giáo viên - 1 giờ trước</li>
             <li>Thiết bị hỏng cần kiểm tra - 2 giờ trước</li>
           </ul>
           <div class="tb-footer">

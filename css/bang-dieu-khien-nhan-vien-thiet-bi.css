@@ -1,16 +1,16 @@
-/* ===== Base ===== */
+/* Base */
 * {
-    box-sizing: border-box;
+    box-sizing: border-box
 }
 
 body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     background: linear-gradient(135deg, #f5f7fa, #e0e7f0);
-    color: #333;
+    color: #333
 }
 
-/* ===== Header ===== */
+/* Header */
 header {
     background: #1a2a44;
     color: #fff;
@@ -18,17 +18,17 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .2)
 }
 
 .logo {
-    font-weight: 700;
+    font-weight: 700
 }
 
 .user-info {
     display: flex;
     gap: 10px;
-    align-items: center;
+    align-items: center
 }
 
 #nut-dang-xuat {
@@ -38,11 +38,11 @@ header {
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: filter .2s;
+    transition: filter .2s
 }
 
 #nut-dang-xuat:hover {
-    filter: brightness(.95);
+    filter: brightness(.95)
 }
 
 /* Bell */
@@ -58,13 +58,13 @@ header {
     background: #f3f5f7;
     color: #1a2a44;
     cursor: pointer;
-    transition: background .2s, transform .15s, color .2s;
+    transition: background .2s, transform .15s, color .2s
 }
 
 #nut-thong-bao:hover {
     background: #e9eef3;
     color: #0d6efd;
-    transform: translateY(-1px);
+    transform: translateY(-1px)
 }
 
 #so-luong-thong-bao {
@@ -80,26 +80,26 @@ header {
     font-weight: 700;
     line-height: 18px;
     border-radius: 999px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .15)
 }
 
-/* ===== Layout ===== */
+/* Layout */
 .khoi-chua {
     display: grid;
     grid-template-columns: 240px 1fr;
-    min-height: calc(100vh - 60px);
+    min-height: calc(100vh - 60px)
 }
 
 .thanh-ben {
     background: #2c3e50;
     color: #ecf0f1;
-    padding: 12px 0;
+    padding: 12px 0
 }
 
 .thanh-ben ul {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 0
 }
 
 .thanh-ben a {
@@ -107,40 +107,40 @@ header {
     text-decoration: none;
     padding: 12px 25px;
     display: block;
-    transition: background .3s, color .3s;
+    transition: background .3s, color .3s
 }
 
 .thanh-ben a:hover,
 .thanh-ben a.active {
-    background: #34495e;
+    background: #34495e
 }
 
 main {
-    padding: 25px;
+    padding: 25px
 }
 
-/* ===== Anim ===== */
+/* Animations */
 .trang-an {
-    animation: fadeIn .3s ease;
+    animation: fadeIn .3s ease
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(4px);
+        transform: translateY(4px)
     }
 
     to {
         opacity: 1;
-        transform: none;
+        transform: none
     }
 }
 
-/* ===== Cards ===== */
+/* Cards */
 .the-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 14px;
+    gap: 14px
 }
 
 .the {
@@ -148,18 +148,18 @@ main {
     border-radius: 12px;
     padding: 14px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
-    position: relative;
+    position: relative
 }
 
 .the h3 {
     margin: 0 0 6px;
-    color: #1a2a44;
+    color: #1a2a44
 }
 
 .the p {
     margin: 0;
     font-size: 22px;
-    font-weight: 700;
+    font-weight: 700
 }
 
 .the .icon {
@@ -167,10 +167,10 @@ main {
     right: 12px;
     bottom: 12px;
     font-size: 20px;
-    opacity: .25;
+    opacity: .25
 }
 
-/* ===== Buttons ===== */
+/* Buttons */
 .nut-them,
 .nut-in,
 .nut-huy,
@@ -186,55 +186,103 @@ main {
     border-radius: 8px;
     cursor: pointer;
     color: #fff;
-    transition: filter .2s, transform .15s;
+    transition: filter .2s, transform .15s
 }
 
 .nut-them {
-    background: #2ecc71;
+    background: #2ecc71
 }
 
 .nut-in {
-    background: #3498db;
+    background: #3498db
 }
 
 .nut-huy,
 .nut-xoa,
 .nut-tu-choi {
-    background: #e74c3c;
+    background: #e74c3c
 }
 
 .nut-sua {
-    background: #3498db;
+    background: #6366f1
 }
 
 .nut-duyet {
-    background: #27ae60;
+    background: #27ae60
 }
 
 .nut-tra {
-    background: #f59e0b;
+    background: #f59e0b
 }
 
 .nut-cap-nhat-tt,
 .nut-cap-nhat-kk {
-    background: #6366f1;
+    background: #6366f1
 }
 
-.nut-them:hover,
-.nut-in:hover,
-.nut-huy:hover,
-.nut-sua:hover,
-.nut-xoa:hover,
-.nut-duyet:hover,
-.nut-tu-choi:hover,
-.nut-tra:hover,
-.nut-cap-nhat-tt:hover,
-.nut-cap-nhat-kk:hover {
+button:hover {
     filter: brightness(.95);
-    transform: translateY(-1px);
+    transform: translateY(-1px)
 }
 
-/* ===== Tables ===== */
+.btn-primary {
+    background: #10b981;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 12px;
+    cursor: pointer
+}
+
+.btn-secondary {
+    background: #e2e8f0;
+    color: #0f172a;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 12px;
+    cursor: pointer
+}
+
+.btn-outline {
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 8px 12px;
+    cursor: pointer
+}
+
+/* Filters */
+.hang-cta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 6px
+}
+
+.bo-loc {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap
+}
+
+.bo-loc input,
+.bo-loc select {
+    padding: 8px 10px;
+    border: 1px solid #d1d9e6;
+    border-radius: 10px;
+    outline: none;
+    background: #fff
+}
+
+.bo-loc input:focus,
+.bo-loc select:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, .2)
+}
+
+/* Tables */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -242,25 +290,18 @@ table {
     border-radius: 10px;
     margin-top: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .1)
 }
 
 th,
 td {
     padding: 12px 14px;
     border-bottom: 1px solid #eee;
-    text-align: left;
+    text-align: left
 }
 
 thead th {
-    background: #f8fafc;
-}
-
-.hang-cta {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
+    background: #f8fafc
 }
 
 /* Inputs in tables */
@@ -270,17 +311,17 @@ thead th {
     padding: 8px 10px;
     border: 1px solid #d1d9e6;
     border-radius: 10px;
-    outline: none;
+    outline: none
 }
 
 .tinh-trang-select:focus,
 .tinh-trang-tra:focus,
 .so-luong-thuc-te:focus {
     border-color: #60a5fa;
-    box-shadow: 0 0 0 4px rgba(96, 165, 250, .2);
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, .2)
 }
 
-/* ===== Modal ===== */
+/* Modal */
 .modal {
     position: fixed;
     inset: 0;
@@ -288,15 +329,15 @@ thead th {
     align-items: center;
     justify-content: center;
     background: rgba(0, 0, 0, .25);
-    z-index: 99;
+    z-index: 99
 }
 
 .modal.open {
-    display: flex !important;
+    display: flex !important
 }
 
 body.no-scroll {
-    overflow: hidden;
+    overflow: hidden
 }
 
 .noi-dung-modal {
@@ -305,8 +346,17 @@ body.no-scroll {
     padding: 20px;
     border-radius: 12px;
     min-width: 320px;
-    max-width: 560px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, .15);
+    max-width: 900px;
+    width: calc(100% - 32px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .15)
+}
+
+.noi-dung-modal.picker {
+    max-width: 1100px
+}
+
+.noi-dung-modal.xem {
+    max-width: 900px
 }
 
 .dong-x {
@@ -318,36 +368,32 @@ body.no-scroll {
     border: none;
     font-size: 22px;
     line-height: 1;
-    color: #334155;
-}
-
-.noi-dung-modal h3 {
-    margin: 0 0 12px;
+    color: #334155
 }
 
 /* Form grid */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px 14px;
+    gap: 12px 14px
 }
 
-@media (max-width:640px) {
+@media(max-width:720px) {
     .form-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr
     }
 }
 
 .field {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 6px
 }
 
 .field label {
     font-size: 14px;
     font-weight: 600;
-    color: #334155;
+    color: #334155
 }
 
 .field input,
@@ -356,97 +402,62 @@ body.no-scroll {
     padding: 10px 12px;
     border: 1px solid #d1d9e6;
     border-radius: 10px;
-    outline: none;
-    transition: border-color .15s, box-shadow .15s;
+    background: #fff;
+    font-size: 14px
 }
 
 .field textarea {
     min-height: 96px;
-    resize: vertical;
+    resize: vertical
 }
 
 .field input:focus,
 .field select:focus,
 .field textarea:focus {
     border-color: #60a5fa;
-    box-shadow: 0 0 0 4px rgba(96, 165, 250, .2);
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, .2)
 }
 
-.nut-modal {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-    justify-content: flex-end;
+/* “Thiết bị trong phiếu” table wrapper */
+.bang-gom {
+    max-height: 40vh;
+    overflow: auto;
+    border: 1px solid #eef2f7;
+    border-radius: 10px
 }
 
-.nut-modal button[type="submit"] {
-    background: #0ea5e9;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 14px;
-    cursor: pointer;
-}
-
-.nut-modal button[type="button"] {
-    background: #e2e8f0;
-    color: #0f172a;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 14px;
-    cursor: pointer;
-}
-
-/* ===== Notification dialog ===== */
+/* Notification dialog */
 .tb-dialog {
     max-width: 420px;
-    width: calc(100% - 40px);
+    width: calc(100% - 40px)
 }
 
 .tb-list {
     list-style: none;
     margin: 0 0 10px;
-    padding: 0;
+    padding: 0
 }
 
 .tb-list li {
     padding: 10px 0;
-    border-bottom: 1px solid #ecf0f1;
+    border-bottom: 1px solid #ecf0f1
 }
 
 .tb-list li:last-child {
-    border-bottom: none;
+    border-bottom: none
 }
 
 .tb-footer {
     display: flex;
     gap: 10px;
-    justify-content: flex-end;
+    justify-content: flex-end
 }
 
-.btn-primary {
-    background: #10b981;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 12px;
-    cursor: pointer;
-}
-
-.btn-secondary {
-    background: #e2e8f0;
-    color: #0f172a;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 12px;
-    cursor: pointer;
-}
-
-/* ===== Footer ===== */
+/* Footer */
 footer {
     background: #1a2a44;
     color: #fff;
     padding: 15px;
     text-align: center;
-    font-size: 14px;
+    font-size: 14px
 }
