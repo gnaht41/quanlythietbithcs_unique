@@ -57,11 +57,11 @@
     </div>
     <script src="views/js/dang-nhap.js"></script>
     <?php if (!empty($error_message)): ?>
-        <script>
-            if (typeof showLoginError === 'function') {
-                showLoginError('<?php echo htmlspecialchars($error_message, ENT_QUOTES, 'UTF-8'); ?>');
-            }
-        </script>
+    <script>
+    if (typeof showLoginError === 'function') {
+        showLoginError('<?php echo htmlspecialchars($error_message, ENT_QUOTES, 'UTF-8'); ?>');
+    }
+    </script>
     <?php endif; ?>
 </body>
 
