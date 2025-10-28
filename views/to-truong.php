@@ -1,309 +1,47 @@
 <?php
-// Ví dụ cho views/quan-tri-vien.php
+// views/to-truong.php (File layout chính)
 session_start();
 
-// Kiểm tra xem người dùng đã đăng nhập và có đúng vai trò Admin (maVT = 1) chưa
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['maVT'])) {
-    // Nếu chưa đăng nhập hoặc sai vai trò, chuyển về trang login
-    header("Location: ../index.php?action=login"); // Dùng ../ để quay lại thư mục gốc
+// --- KIỂM TRA SESSION ---
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['maVT'])) { // Thêm check vai trò: && $_SESSION['maVT'] == 3
+    header("Location: ../index.php?action=login");
     exit;
 }
 
-// Nếu đã đăng nhập và đúng vai trò, tiếp tục hiển thị nội dung trang admin
+// --- CÀI ĐẶT BIẾN ---
+$page_title = 'Bảng điều khiển Tổ trưởng Chuyên môn';
+$user_name = 'Tổ trưởng Chuyên môn';
+$css_file = 'to-truong.css';
+$js_file = 'to-truong.js';
+
+// --- INCLUDE HEADER ---
+require_once 'partials/header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="vi">
+<div class="khoi-chua">
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Bảng điều khiển Tổ trưởng Chuyên môn - Quản lý Thiết bị</title>
-    <link rel="stylesheet" href="css/to-truong.css" />
-</head>
+    <?php // --- INCLUDE SIDEBAR ---
+    require_once 'partials/sidebar-totruong.php';
+    ?>
 
-<body>
-    <header>
-        <div class="logo">Trường THCS XYZ</div>
-        <div class="user-info">
-            <span>Xin chào, Tổ trưởng Chuyên môn!</span>
-            <a href="../index.php?action=logout" id="nut-dang-xuat-link"
-                style="/* Thêm style nếu cần cho giống button */ color: white; background-color: #e74c3c; padding: 8px 12px; border-radius: 8px; text-decoration: none;">Đăng
-                xuất</a>
-        </div>
-    </header>
+    <main>
+        <h1>Bảng điều khiển Tổ trưởng Chuyên môn</h1>
 
-    <div class="khoi-chua">
-        <aside class="thanh-ben">
-            <ul>
-                <li><a href="#" class="active" data-page="tong-quan">Tổng quan</a></li>
-                <li><a href="#" data-page="danh-sach-thiet-bi">Danh sách thiết bị</a></li><!-- MỚI -->
-                <li><a href="#" data-page="lap-ke-hoach-mua-sam">Lập kế hoạch mua sắm</a></li>
-                <li><a href="#" data-page="theo-doi-thiet-bi">Theo dõi tình hình thiết bị</a></li>
-            </ul>
-        </aside>
+        <?php // --- INCLUDE CÁC TRANG CON ---
+        require_once 'pages_to-truong/tong-quan.php';
+        require_once 'pages_to-truong/danh-sach-thiet-bi.php';
+        require_once 'pages_to-truong/lap-ke-hoach-mua-sam.php';
+        require_once 'pages_to-truong/theo-doi-thiet-bi.php';
 
-        <main>
-            <h1>Bảng điều khiển Tổ trưởng Chuyên môn</h1>
+        // Tùy chọn: Include modal thông báo chung nếu có
+        // require_once 'partials/modal-thongbao.php';
+        ?>
 
-            <!-- TỔNG QUAN -->
-            <section id="tong-quan" class="trang-an">
-                <div class="the-container">
-                    <div class="the">
-                        <h3>Thiết bị thuộc tổ</h3>
-                        <p>45</p><span class="icon">📚</span>
-                    </div>
-                    <div class="the">
-                        <h3>Kế hoạch đã gửi</h3>
-                        <p>3</p><span class="icon">📄</span>
-                    </div>
-                    <div class="the">
-                        <h3>Chờ duyệt</h3>
-                        <p>2</p><span class="icon">⏳</span>
-                    </div>
-                    <div class="the">
-                        <h3>Báo cáo hỏng</h3>
-                        <p>1</p><span class="icon">⚠️</span>
-                    </div>
-                </div>
 
-                <div class="hoat-dong-gan-day">
-                    <h3>Hoạt động gần đây</h3>
-                    <ul>
-                        <li><span class="dot green"></span> Đã gửi kế hoạch mua sắm thiết bị môn Lý</li>
-                        <li><span class="dot orange"></span> Ghi nhận 1 thiết bị hỏng (Bộ thí nghiệm Lý)</li>
-                    </ul>
-                </div>
-            </section>
+    </main>
 
-            <!-- DANH SÁCH THIẾT BỊ (MỚI) -->
-            <section id="danh-sach-thiet-bi" class="trang-an" style="display:none;">
-                <div class="hang-cta">
-                    <h2>Danh sách thiết bị</h2>
-                    <button class="nut-in">In danh sách</button>
-                </div>
+</div>
 
-                <div class="bo-loc">
-                    <input placeholder="Nhập tên thiết bị..." />
-                    <select title="Danh mục/Môn">
-                        <option value="">-- Danh mục/Môn --</option>
-                        <option value="toan">Toán</option>
-                        <option value="khtn">KHTN</option>
-                        <option value="lsdl">Lịch sử & Địa lý</option>
-                        <option value="ngoai-ngu">Ngoại ngữ</option>
-                        <option value="dung-chung">Dùng chung</option>
-                    </select>
-                    <select title="Tình trạng">
-                        <option value="">-- Tình trạng --</option>
-                        <option value="Tốt">Tốt</option>
-                        <option value="Đang sửa">Đang sửa</option>
-                        <option value="Hỏng">Hỏng</option>
-                    </select>
-                    <input placeholder="Lớp (VD: 6,7,8,9)" />
-                    <button class="btn-primary">Tìm</button>
-                    <button class="btn-secondary">Xóa lọc</button>
-                </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Số TT</th>
-                            <th>Tên thiết bị</th>
-                            <th>Đơn vị</th>
-                            <th>Số lượng</th>
-                            <th>Lớp</th>
-                            <th>Tình trạng</th>
-                            <th>Ghi chú</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Bộ vẽ trên bảng (Toán)</td>
-                            <td>Bộ</td>
-                            <td>7</td>
-                            <td>6,7,8,9</td>
-                            <td>Tốt</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Máy chiếu Epson</td>
-                            <td>Chiếc</td>
-                            <td>4</td>
-                            <td>6,7,8,9</td>
-                            <td>Tốt</td>
-                            <td>Phòng dùng chung</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- LẬP KẾ HOẠCH MUA SẮM -->
-            <section id="lap-ke-hoach-mua-sam" class="trang-an" style="display:none;">
-                <div class="hang-cta">
-                    <h2>Lập kế hoạch mua sắm</h2>
-                    <button id="nut-them-ke-hoach" class="nut-them">Thêm kế hoạch</button>
-                    <button id="nut-in-ke-hoach" class="nut-in">In kế hoạch</button>
-                </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Tên thiết bị</th>
-                            <th>Số lượng</th>
-                            <th>Đơn vị</th>
-                            <th>Lớp</th>
-                            <th>Lý do</th>
-                            <th>Trạng thái</th>
-                            <th>Ghi chú</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bang-ke-hoach">
-                        <tr>
-                            <td>1</td>
-                            <td>Máy chiếu Epson</td>
-                            <td>5</td>
-                            <td>Chiếc</td>
-                            <td>8,9</td>
-                            <td>Bổ sung cho lớp học</td>
-                            <td>Chờ duyệt</td>
-                            <td></td>
-                            <td class="hanh-dong">
-                                <button class="nut-sua">Sửa</button>
-                                <button class="nut-xoa">Xóa</button>
-                                <button class="nut-gui">Gửi</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <!-- Modal thêm/sửa kế hoạch (UI only) -->
-                <div id="modal-ke-hoach" class="modal" aria-hidden="true">
-                    <div class="noi-dung-modal" role="dialog" aria-modal="true" tabindex="-1">
-                        <button id="dong-modal" class="dong-x" aria-label="Đóng">&times;</button>
-                        <h3 id="tieu-de-modal">Thêm kế hoạch mua sắm</h3>
-
-                        <form id="form-ke-hoach" novalidate>
-                            <input type="hidden" id="id-ke-hoach" />
-                            <div class="form-grid">
-                                <div class="field">
-                                    <label for="thiet-bi">Tên thiết bị</label>
-                                    <input id="thiet-bi" required placeholder="VD: Laptop Dell" />
-                                </div>
-                                <div class="field">
-                                    <label for="so-luong">Số lượng</label>
-                                    <input id="so-luong" type="number" min="1" required />
-                                </div>
-                                <div class="field">
-                                    <label for="don-vi">Đơn vị</label>
-                                    <select id="don-vi" required>
-                                        <option value="">Chọn</option>
-                                        <option>Chiếc</option>
-                                        <option>Bộ</option>
-                                        <option>Hộp</option>
-                                        <option>Tờ</option>
-                                        <option>Quả</option>
-                                    </select>
-                                </div>
-                                <div class="field">
-                                    <label for="lop-ap-dung">Lớp áp dụng</label>
-                                    <input id="lop-ap-dung" placeholder="VD: 6,7,8,9" />
-                                </div>
-                                <div class="field full">
-                                    <label for="ly-do">Lý do</label>
-                                    <textarea id="ly-do" required
-                                        placeholder="Bổ sung/Thay thế/Phục vụ chương trình..."></textarea>
-                                </div>
-                                <div class="field full">
-                                    <label for="ghi-chu">Ghi chú</label>
-                                    <textarea id="ghi-chu" placeholder="Ghi chú thêm (nếu có)"></textarea>
-                                </div>
-                            </div>
-
-                            <div class="nut-modal">
-                                <button type="button" class="btn-primary" data-close>Lưu (UI)</button>
-                                <button type="button" id="huy-modal" class="btn-secondary">Hủy</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </section>
-
-            <!-- THEO DÕI TÌNH HÌNH THIẾT BỊ -->
-            <section id="theo-doi-thiet-bi" class="trang-an" style="display:none;">
-                <h2>Theo dõi tình hình thiết bị theo môn/danh mục</h2>
-
-                <div class="bo-loc">
-                    <select id="loc-mon-hoc">
-                        <option value="">-- Chọn môn học/danh mục --</option>
-                        <option value="ngu-van">Ngữ văn</option>
-                        <option value="toan">Toán</option>
-                        <option value="ngoai-ngu">Ngoại ngữ</option>
-                        <option value="gdcd">Giáo dục công dân</option>
-                        <option value="lsdl">Lịch sử & Địa lý</option>
-                        <option value="khtn">Khoa học tự nhiên</option>
-                        <option value="cong-nghe">Công nghệ</option>
-                        <option value="tin-hoc">Tin học</option>
-                        <option value="gdtc">GDTC</option>
-                        <option value="am-nhac">Nghệ thuật (Âm nhạc)</option>
-                        <option value="my-thuat">Nghệ thuật (Mỹ thuật)</option>
-                        <option value="hdtn">Hoạt động trải nghiệm</option>
-                        <option value="dung-chung">Thiết bị dùng chung</option>
-                    </select>
-                    <button id="nut-loc" class="nut-in">Lọc</button>
-                </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Thiết bị</th>
-                            <th>Danh mục/Môn</th>
-                            <th>Số lượng tổng</th>
-                            <th>Tốt</th>
-                            <th>Hỏng</th>
-                            <th>Đang sửa</th>
-                            <th>Chênh lệch</th>
-                            <th>Ghi chú</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bang-thiet-bi">
-                        <tr>
-                            <td>Bộ thí nghiệm Lý</td>
-                            <td>KHTN</td>
-                            <td>17</td>
-                            <td>15</td>
-                            <td>2</td>
-                            <td>0</td>
-                            <td>-2</td>
-                            <td>Hỏng nặng 2 bộ</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- Modal: Thông báo -->
-            <div id="modal-thong-bao" class="modal" aria-hidden="true">
-                <div class="noi-dung-modal tb-dialog" role="dialog" aria-modal="true" tabindex="-1">
-                    <button id="dong-thong-bao-x" class="dong-x" aria-label="Đóng">&times;</button>
-                    <h3>Thông báo</h3>
-                    <ul class="tb-list">
-                        <li>Kế hoạch mua sắm đã được gửi - 1 giờ trước</li>
-                        <li>Hiệu trưởng đã xem kế hoạch #1 - 10 phút trước</li>
-                    </ul>
-                    <div class="tb-footer">
-                        <button id="danh-dau-doc" class="btn-primary">Đánh dấu đã đọc</button>
-                        <button id="dong-thong-bao" class="btn-secondary">Đóng</button>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <footer>© 2025 Hệ thống Quản lý Thiết bị</footer>
-    <script src="js/to-truong.js"></script>
-</body>
-
-</html>
+<?php // --- INCLUDE FOOTER ---
+require_once 'partials/footer.php';
+?>

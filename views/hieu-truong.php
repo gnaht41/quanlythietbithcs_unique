@@ -1,372 +1,47 @@
 <?php
-// Ví dụ cho views/quan-tri-vien.php
+// views/hieu-truong.php (File layout chính)
 session_start();
 
-// Kiểm tra xem người dùng đã đăng nhập và có đúng vai trò Admin (maVT = 1) chưa
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['maVT'])) {
-    // Nếu chưa đăng nhập hoặc sai vai trò, chuyển về trang login
-    header("Location: ../index.php?action=login"); // Dùng ../ để quay lại thư mục gốc
+// --- KIỂM TRA SESSION ---
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['maVT'])) { // Thêm check vai trò: && $_SESSION['maVT'] == 2
+    header("Location: ../index.php?action=login");
     exit;
 }
 
-// Nếu đã đăng nhập và đúng vai trò, tiếp tục hiển thị nội dung trang admin
+// --- CÀI ĐẶT BIẾN ---
+$page_title = 'Bảng điều khiển Hiệu trưởng';
+$user_name = 'Hiệu trưởng';
+$css_file = 'hieu-truong.css';
+$js_file = 'hieu-truong.js';
+
+// --- INCLUDE HEADER ---
+require_once 'partials/header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="vi">
+<div class="khoi-chua">
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Bảng điều khiển Hiệu trưởng</title>
-    <link rel="stylesheet" href="css/hieu-truong.css" />
-</head>
-<!-- tuanvu -->
+    <?php // --- INCLUDE SIDEBAR ---
+    require_once 'partials/sidebar-hieutruong.php';
+    ?>
 
-<body>
-    <header>
-        <div class="logo">Trường THCS XYZ</div>
-        <div class="user-info">
-            Xin chào, Hiệu trưởng!
-            <a href="../index.php?action=logout" id="nut-dang-xuat-link"
-                style="/* Thêm style nếu cần cho giống button */ color: white; background-color: #e74c3c; padding: 8px 12px; border-radius: 8px; text-decoration: none;">Đăng
-                xuất</a>
-        </div>
-    </header>
+    <main>
+        <h1>Bảng điều khiển Hiệu trưởng</h1>
 
-    <div class="khoi-chua">
-        <aside class="thanh-ben">
-            <ul>
-                <li><a href="#" class="active" data-page="tong-quan">Tổng quan</a></li>
-                <li><a href="#" data-page="danh-sach-thiet-bi">Danh sách thiết bị</a></li>
-                <li><a href="#" data-page="duyet-ke-hoach">Duyệt kế hoạch mua sắm</a></li>
-                <li><a href="#" data-page="duyet-thanh-ly">Duyệt thanh lý</a></li>
-                <li><a href="#" data-page="bao-cao-thong-ke">Báo cáo & Thống kê</a></li>
-            </ul>
-        </aside>
+        <?php // --- INCLUDE CÁC TRANG CON ---
+        require_once 'pages_hieu-truong/tong-quan.php';
+        require_once 'pages_hieu-truong/danh-sach-thiet-bi.php';
+        require_once 'pages_hieu-truong/duyet-ke-hoach.php';
+        require_once 'pages_hieu-truong/duyet-thanh-ly.php';
+        require_once 'pages_hieu-truong/bao-cao-thong-ke.php';
 
-        <main>
-            <h1>Bảng điều khiển Hiệu trưởng</h1>
+        // Tùy chọn: Include modal thông báo chung nếu có
+        // require_once 'partials/modal-thongbao.php';
+        ?>
 
-            <!-- Tổng quan -->
-            <section id="tong-quan" class="trang-an">
-                <div class="the-container">
-                    <div class="the">
-                        <h3>Tổng thiết bị</h3>
-                        <p>127</p><span class="icon">📦</span>
-                    </div>
-                    <div class="the">
-                        <h3>Đề xuất chờ duyệt</h3>
-                        <p>3</p><span class="icon">📝</span>
-                    </div>
-                    <div class="the">
-                        <h3>Thanh lý chờ duyệt</h3>
-                        <p>1</p><span class="icon">♻️</span>
-                    </div>
-                </div>
-            </section>
+    </main>
 
-            <!-- Danh sách thiết bị (MỚI) -->
-            <section id="danh-sach-thiet-bi" class="trang-an" style="display:none;">
-                <div class="hang-cta">
-                    <h2>Danh sách thiết bị</h2>
-                    <button class="nut-in">In danh sách</button>
-                </div>
+</div>
 
-                <div class="tim-kiem-form">
-                    <input placeholder="Nhập tên thiết bị..." />
-                    <select title="Danh mục/Môn">
-                        <option value="">-- Danh mục/Môn --</option>
-                        <option value="toan">Toán</option>
-                        <option value="khtn">KHTN</option>
-                        <option value="lsdl">Lịch sử & Địa lý</option>
-                        <option value="ngoai-ngu">Ngoại ngữ</option>
-                        <option value="dung-chung">Dùng chung</option>
-                    </select>
-                    <select title="Tình trạng">
-                        <option value="">-- Tình trạng --</option>
-                        <option value="Tốt">Tốt</option>
-                        <option value="Đang sửa">Đang sửa</option>
-                        <option value="Hỏng">Hỏng</option>
-                    </select>
-                    <input placeholder="Lớp (VD: 6,7,8,9)" />
-                    <button class="btn-primary">Tìm</button>
-                    <button class="nut-secondary">Xóa lọc</button>
-                </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Số TT</th>
-                            <th>Tên thiết bị</th>
-                            <th>Đơn vị</th>
-                            <th>Số lượng</th>
-                            <th>Lớp</th>
-                            <th>Tình trạng</th>
-                            <th>Ghi chú</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Bộ vẽ trên bảng (Toán)</td>
-                            <td>Bộ</td>
-                            <td>7</td>
-                            <td>6,7,8,9</td>
-                            <td>Tốt</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Máy chiếu Epson</td>
-                            <td>Chiếc</td>
-                            <td>4</td>
-                            <td>6,7,8,9</td>
-                            <td>Tốt</td>
-                            <td>Phòng dùng chung</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- Duyệt kế hoạch mua sắm -->
-            <section id="duyet-ke-hoach" class="trang-an" style="display:none;">
-                <div class="hang-cta">
-                    <h2>Duyệt kế hoạch mua sắm</h2>
-                    <div class="cta-right">
-                        <button class="nut-in">In danh sách</button>
-                    </div>
-                </div>
-
-                <div class="tim-kiem-form mini">
-                    <input placeholder="Tìm theo mã kế hoạch / tên thiết bị..." />
-                    <select>
-                        <option value="">-- Trạng thái --</option>
-                        <option>Chờ duyệt</option>
-                        <option>Đã duyệt</option>
-                        <option>Đã từ chối</option>
-                    </select>
-                    <button class="btn-primary">Lọc</button>
-                    <button class="nut-secondary">Xóa lọc</button>
-                </div>
-
-                <table id="bang-ke-hoach">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Mã kế hoạch</th>
-                            <th>Năm học</th>
-                            <th>Thiết bị / Hạng mục</th>
-                            <th>SL đề xuất</th>
-                            <th>Lý do / Mục đích</th>
-                            <th>Trạng thái</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>KHM-2024-001</td>
-                            <td>2024-2025</td>
-                            <td>Tivi 65" (Ngoại ngữ)</td>
-                            <td>1</td>
-                            <td>Tăng cường dạy nghe – nói</td>
-                            <td>Chờ duyệt</td>
-                            <td>
-                                <button class="nut-xem">Xem</button>
-                                <button class="nut-sua">Duyệt</button>
-                                <button class="nut-huy">Từ chối</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <!-- Modal xem kế hoạch -->
-                <div id="modal-xem-ke-hoach" class="modal" aria-hidden="true">
-                    <div class="noi-dung-modal xem" role="dialog" aria-modal="true" tabindex="-1">
-                        <button class="dong-x" data-close aria-label="Đóng">&times;</button>
-                        <h3>Chi tiết kế hoạch</h3>
-                        <div class="kh-view">
-                            <p><b>Mã:</b> KHM-2024-001</p>
-                            <p><b>Năm học:</b> 2024-2025</p>
-                            <p><b>Hạng mục:</b> Tivi 65" (Ngoại ngữ) - SL: 1</p>
-                            <p><b>Mục đích:</b> Tăng cường dạy nghe – nói</p>
-                        </div>
-                        <div class="nut-modal">
-                            <button class="btn-primary">In</button>
-                            <button class="btn-secondary" data-close>Đóng</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modal duyệt kế hoạch -->
-                <div id="modal-duyet-ke-hoach" class="modal" aria-hidden="true">
-                    <div class="noi-dung-modal" role="dialog" aria-modal="true" tabindex="-1">
-                        <button class="dong-x" data-close aria-label="Đóng">&times;</button>
-                        <h3>Duyệt kế hoạch</h3>
-                        <form class="form-grid" novalidate>
-                            <div class="field">
-                                <label>Quyết định</label>
-                                <select>
-                                    <option>Duyệt</option>
-                                    <option>Từ chối</option>
-                                </select>
-                            </div>
-                            <div class="field" style="grid-column:1/-1">
-                                <label>Ghi chú</label>
-                                <textarea placeholder="Nội dung ghi chú khi duyệt/từ chối..."></textarea>
-                            </div>
-                        </form>
-                        <div class="nut-modal">
-                            <button class="btn-primary">Xác nhận</button>
-                            <button class="btn-secondary" data-close>Hủy</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Duyệt thanh lý -->
-            <section id="duyet-thanh-ly" class="trang-an" style="display:none;">
-                <div class="hang-cta">
-                    <h2>Duyệt thanh lý</h2>
-                    <div class="cta-right">
-                        <button class="nut-in">In danh sách</button>
-                    </div>
-                </div>
-
-                <div class="tim-kiem-form mini">
-                    <input placeholder="Tìm theo mã đề xuất / thiết bị..." />
-                    <select>
-                        <option value="">-- Trạng thái --</option>
-                        <option>Chờ duyệt</option>
-                        <option>Đã duyệt</option>
-                        <option>Đã từ chối</option>
-                    </select>
-                    <button class="btn-primary">Lọc</button>
-                    <button class="nut-secondary">Xóa lọc</button>
-                </div>
-
-                <table id="bang-thanh-ly">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Mã đề xuất</th>
-                            <th>Thiết bị</th>
-                            <th>SL / Tình trạng</th>
-                            <th>Lý do thanh lý</th>
-                            <th>Trạng thái</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>TL-202409-01</td>
-                            <td>Kính hiển vi</td>
-                            <td>1 / Hỏng nặng</td>
-                            <td>Không còn khả năng sửa chữa</td>
-                            <td>Chờ duyệt</td>
-                            <td>
-                                <button class="nut-xem">Xem</button>
-                                <button class="nut-sua">Duyệt</button>
-                                <button class="nut-huy">Từ chối</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <!-- Modal xem thanh lý -->
-                <div id="modal-xem-thanh-ly" class="modal" aria-hidden="true">
-                    <div class="noi-dung-modal xem" role="dialog" aria-modal="true" tabindex="-1">
-                        <button class="dong-x" data-close aria-label="Đóng">&times;</button>
-                        <h3>Chi tiết đề xuất thanh lý</h3>
-                        <p><b>Mã:</b> TL-202409-01</p>
-                        <p><b>Thiết bị:</b> Kính hiển vi — SL: 1 — Hỏng nặng</p>
-                        <p><b>Lý do:</b> Không còn khả năng sửa chữa</p>
-                        <div class="nut-modal">
-                            <button class="btn-primary">In</button>
-                            <button class="btn-secondary" data-close>Đóng</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modal duyệt thanh lý -->
-                <div id="modal-duyet-thanh-ly" class="modal" aria-hidden="true">
-                    <div class="noi-dung-modal" role="dialog" aria-modal="true" tabindex="-1">
-                        <button class="dong-x" data-close aria-label="Đóng">&times;</button>
-                        <h3>Duyệt đề xuất thanh lý</h3>
-                        <form class="form-grid" novalidate>
-                            <div class="field">
-                                <label>Quyết định</label>
-                                <select>
-                                    <option>Duyệt</option>
-                                    <option>Từ chối</option>
-                                </select>
-                            </div>
-                            <div class="field" style="grid-column:1/-1">
-                                <label>Ghi chú</label>
-                                <textarea placeholder="Nội dung ghi chú khi duyệt/từ chối..."></textarea>
-                            </div>
-                        </form>
-                        <div class="nut-modal">
-                            <button class="btn-primary">Xác nhận</button>
-                            <button class="btn-secondary" data-close>Hủy</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Báo cáo & Thống kê -->
-            <section id="bao-cao-thong-ke" class="trang-an" style="display:none;">
-                <div class="hang-cta">
-                    <h2>Báo cáo & Thống kê</h2>
-                    <div class="cta-right">
-                        <button class="nut-in">Xuất PDF</button>
-                        <button class="nut-in">Xuất Excel</button>
-                    </div>
-                </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Tên báo cáo</th>
-                            <th>Thời gian</th>
-                            <th>Ghi chú</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Thống kê mượn/trả</td>
-                            <td>01/09/2025 – 21/09/2025</td>
-                            <td>Bản xem nhanh</td>
-                            <td><button class="nut-xem">Xem</button> <button class="nut-in">In</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- Modal thông báo -->
-            <div id="modal-thong-bao" class="modal" aria-hidden="true">
-                <div class="noi-dung-modal tb-dialog" role="dialog" aria-modal="true" tabindex="-1">
-                    <button class="dong-x" data-close aria-label="Đóng" title="Đóng">&times;</button>
-                    <h3>Thông báo</h3>
-                    <ul class="tb-list">
-                        <li>Kế hoạch KHM-2024-001 cần duyệt - 1 giờ trước</li>
-                        <li>Đề xuất thanh lý TL-202409-01 mới - 20 phút trước</li>
-                    </ul>
-                    <div class="tb-footer">
-                        <button class="btn-primary" data-close>Đã hiểu</button>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <footer>© 2025 Hệ thống Quản lý Thiết bị - THCS XYZ</footer>
-    <script src="js/hieu-truong.js"></script>
-</body>
-
-</html>
+<?php // --- INCLUDE FOOTER ---
+require_once 'partials/footer.php';
+?>
