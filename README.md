@@ -77,3 +77,4 @@
 2. Thêm các pages mới cho route của actor đó (tôi đã chia ra rồi) - tôi xoá hết chỉ để mỗi thẻ h2 thôi vì đây là source cũ (chưa chỉnh giao diện)
 3. Code logic vào controller và model (cái này có thể tạo file mới trách đụng code của nhau)
 4. Thêm code css và js (nếu cần thiết) vào thư mục riêng của từng actor (tránh lỗi)
+5. Nếu có chỉnh sửa gì trên CSDL thì xuất scripts ra gửi vào nhóm
