@@ -71,3 +71,8 @@
 ├── 📝 README.md
 └── 🐘 index.php
 ```
+
+## Việc làm của mỗi người:
+1. Vào cái actor của mỗi người, sửa lại cái route (là file views/tenactor.php) sửa đoạn INCLUDE CÁC TRANG CON (nếu cần thiết)
+2. Thêm các pages mới cho route của actor đó (tôi đã chia ra rồi) - tôi xoá hết chỉ để mỗi thẻ h2 thôi vì đây là source cũ (chưa chỉnh giao diện)
+3. Code logic vào controller và model (cái này có thể tạo file mới trách đụng code của nhau)
