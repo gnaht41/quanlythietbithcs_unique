@@ -1,6 +1,7 @@
 # QUẢN LÝ THIẾT BỊ TRƯỜNG THCS - UNIQUE
 
 ## Sơ đồ cây
+
 ```
 ├── 📁 controllers
 │   └── 🐘 AuthController.php
@@ -22,6 +23,16 @@
 │   │   ├── 📄 nhan-vien-thiet-bi.js
 │   │   ├── 📄 quan-tri-vien.js
 │   │   └── 📄 to-truong.js
+│   ├── 📁 pages_quan-tri-vien
+│   │   ├── 🐘 danh-sach-thiet-bi.php
+│   │   ├── 🐘 nhat-ky.php
+│   │   ├── 🐘 phan-quyen.php
+│   │   ├── 🐘 ql-nguoi-dung.php
+│   │   └── 🐘 tong-quan.php
+│   ├── 📁 partials
+│   │   ├── 🐘 footer.php
+│   │   ├── 🐘 header.php
+│   │   └── 🐘 sidebar-admin.php
 │   ├── 🐘 dang-nhap.php
 │   ├── 🐘 giao-vien.php
 │   ├── 🐘 hieu-truong.php
