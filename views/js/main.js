@@ -1,10 +1,9 @@
-// File: views/js/main.js
+// File: views/js/main.js (Phiên bản chỉ xử lý PHP)
 (function () {
     const $ = (s, r = document) => r.querySelector(s);
     const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
-    // --- BỎ CODE XỬ LÝ CLICK SIDEBAR ĐỂ ẨN/HIỆN SECTION ---
-    // Việc chuyển trang giờ do href="?tab=..." đảm nhiệm
+    // --- KHÔNG CÓ CODE XỬ LÝ CLICK SIDEBAR ĐỂ ẨN/HIỆN SECTION ---
 
     // --- CODE ĐĂNG XUẤT ---
     $('#nut-dang-xuat-link')?.addEventListener('click', (e) => {
@@ -15,7 +14,6 @@
         }
     });
 
-    // --- CÁC CODE JS CHUNG KHÁC (NẾU CÓ) ---
-    // Ví dụ: Mở/đóng modal thông báo chung (nếu có)
+    // --- CÁC CODE JS CHUNG KHÁC ---
 
 })();
