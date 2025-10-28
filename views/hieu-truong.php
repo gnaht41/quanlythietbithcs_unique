@@ -8,11 +8,14 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_
     exit;
 }
 
+// --- XÁC ĐỊNH TAB ACTIVE TỪ URL --- // <<< THÊM DÒNG NÀY
+$active_tab = $_GET['tab'] ?? 'tong-quan';
+
 // --- CÀI ĐẶT BIẾN ---
 $page_title = 'Bảng điều khiển Hiệu trưởng';
 $user_name = 'Hiệu trưởng';
 $css_file = 'hieu-truong.css';
-$js_file = 'hieu-truong.js';
+$js_file = 'hieu-truong.js'; // File JS riêng
 
 // --- INCLUDE HEADER ---
 require_once 'partials/header.php';
@@ -21,6 +24,7 @@ require_once 'partials/header.php';
 <div class="khoi-chua">
 
     <?php // --- INCLUDE SIDEBAR ---
+    // sidebar-hieutruong.php cần được cập nhật như hướng dẫn trước
     require_once 'partials/sidebar-hieutruong.php';
     ?>
 
@@ -28,14 +32,12 @@ require_once 'partials/header.php';
         <h1>Bảng điều khiển Hiệu trưởng</h1>
 
         <?php // --- INCLUDE CÁC TRANG CON ---
+        // Các file này cần được cập nhật điều kiện style như hướng dẫn trước
         require_once 'pages_hieu-truong/tong-quan.php';
-        require_once 'pages_hieu-truong/danh-sach-thiet-bi.php';
+        require_once 'pages_hieu-truong/danh-sach-thiet-bi.php'; // Bạn sẽ copy nội dung vào đây
         require_once 'pages_hieu-truong/duyet-ke-hoach.php';
         require_once 'pages_hieu-truong/duyet-thanh-ly.php';
         require_once 'pages_hieu-truong/bao-cao-thong-ke.php';
-
-        // Tùy chọn: Include modal thông báo chung nếu có
-        // require_once 'partials/modal-thongbao.php';
         ?>
 
     </main>
