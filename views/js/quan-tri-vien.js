@@ -5,14 +5,6 @@
     const openModal = (el) => { if (el) { el.classList.add('open'); document.body.classList.add('no-scroll'); } };
     const closeModal = (el) => { if (el) { el.classList.remove('open'); document.body.classList.remove('no-scroll'); } };
 
-    // ===== Logout =====
-    $('#nut-dang-xuat')?.addEventListener('click', () => {
-        if (confirm('Bạn có chắc muốn đăng xuất?')) {
-            alert('Đăng xuất thành công!');
-            window.location.href = '../html/dang-nhap.html';
-        }
-    });
-
     // ===== Sidebar navigation =====
     $$('.thanh-ben a').forEach(a => {
         a.addEventListener('click', (e) => {
@@ -25,25 +17,6 @@
             if (el) el.style.display = 'block';
         });
     });
-
-    // ===== Notifications (bell) =====
-    const nutTB = $('#nut-thong-bao');
-    const modalTB = $('#modal-thong-bao');
-    const dongTB = $('#dong-thong-bao');
-    const dongTBX = $('#dong-thong-bao-x');
-    const markRead = $('#danh-dau-doc');
-    const badge = $('#so-luong-thong-bao');
-
-    const setBadge = (n) => { if (!badge) return; if (n > 0) { badge.textContent = n; badge.style.display = 'inline-block'; } else { badge.style.display = 'none'; } };
-    const openTB = () => { openModal(modalTB); nutTB?.setAttribute('aria-expanded', 'true'); (dongTBX || modalTB.querySelector('button'))?.focus(); };
-    const closeTB = () => { closeModal(modalTB); nutTB?.setAttribute('aria-expanded', 'false'); nutTB?.focus(); };
-
-    nutTB?.addEventListener('click', (e) => { e.stopPropagation(); modalTB?.classList.contains('open') ? closeTB() : openTB(); });
-    dongTB?.addEventListener('click', closeTB);
-    dongTBX?.addEventListener('click', closeTB);
-    modalTB?.addEventListener('click', (e) => { if (e.target === modalTB) closeTB(); });
-    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalTB?.classList.contains('open')) closeTB(); });
-    markRead?.addEventListener('click', () => { setBadge(0); closeTB(); });
 
     // ===== Quản lý tài khoản =====
     const tbodyND = $('#bang-nguoi-dung');

@@ -1,3 +1,17 @@
+<?php
+// Ví dụ cho views/quan-tri-vien.php
+session_start();
+
+// Kiểm tra xem người dùng đã đăng nhập và có đúng vai trò Admin (maVT = 1) chưa
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['maVT'])) {
+  // Nếu chưa đăng nhập hoặc sai vai trò, chuyển về trang login
+  header("Location: ../index.php?action=login"); // Dùng ../ để quay lại thư mục gốc
+  exit;
+}
+
+// Nếu đã đăng nhập và đúng vai trò, tiếp tục hiển thị nội dung trang admin
+?>
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -5,7 +19,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Bảng điều khiển Nhân viên Thiết bị</title>
-  <link rel="stylesheet" href="../css/bang-dieu-khien-nhan-vien-thiet-bi.css" />
+  <link rel="stylesheet" href="css/nhan-vien-thiet-bi.css" />
 </head>
 
 <body>
@@ -14,10 +28,9 @@
     <div class="logo">Trường THCS XYZ</div>
     <div class="user-info">
       Xin chào, Nhân viên Thiết bị!
-      <button id="nut-dang-xuat">Đăng xuất</button>
-      <button id="nut-thong-bao" class="nut-chuong" aria-label="Thông báo" aria-haspopup="dialog" aria-expanded="false" title="Thông báo">
-        🔔 <span id="so-luong-thong-bao">4</span>
-      </button>
+      <a href="../index.php?action=logout" id="nut-dang-xuat-link"
+        style="/* Thêm style nếu cần cho giống button */ color: white; background-color: #e74c3c; padding: 8px 12px; border-radius: 8px; text-decoration: none;">Đăng
+        xuất</a>
     </div>
   </header>
 
@@ -340,7 +353,8 @@
               <div class="field full" style="grid-column:1/-1">
                 <div class="hang-cta" style="margin:6px 0;">
                   <h4>Thiết bị trong phiếu</h4>
-                  <button type="button" id="nut-them-item" class="btn-outline">+ Thêm thiết bị</button>
+                  <button type="button" id="nut-them-item" class="btn-outline">+ Thêm thiết
+                    bị</button>
                 </div>
                 <div class="bang-gom">
                   <table>
@@ -407,7 +421,8 @@
                   <td>Chiếc</td>
                   <td>4</td>
                   <td>6,7,8,9</td>
-                  <td><button class="btn-outline chon-thiet-bi" data-ten="Máy chiếu Epson" data-dv="Chiếc" data-lop="6,7,8,9" data-tt="Tốt">Chọn</button></td>
+                  <td><button class="btn-outline chon-thiet-bi" data-ten="Máy chiếu Epson"
+                      data-dv="Chiếc" data-lop="6,7,8,9" data-tt="Tốt">Chọn</button></td>
                 </tr>
                 <tr>
                   <td>2</td>
@@ -415,7 +430,8 @@
                   <td>Bộ</td>
                   <td>7</td>
                   <td>6,7,8,9</td>
-                  <td><button class="btn-outline chon-thiet-bi" data-ten="Bộ vẽ trên bảng (Toán)" data-dv="Bộ" data-lop="6,7,8,9" data-tt="Tốt">Chọn</button></td>
+                  <td><button class="btn-outline chon-thiet-bi" data-ten="Bộ vẽ trên bảng (Toán)"
+                      data-dv="Bộ" data-lop="6,7,8,9" data-tt="Tốt">Chọn</button></td>
                 </tr>
               </tbody>
             </table>
@@ -623,7 +639,7 @@
   </div>
 
   <footer>© 2025 Hệ thống Quản lý Thiết bị</footer>
-  <script src="../js/bang-dieu-khien-nhan-vien-thiet-bi.js"></script>
+  <script src="js/nhan-vien-thiet-bi.js"></script>
 </body>
 
 </html>

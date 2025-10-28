@@ -1,3 +1,17 @@
+<?php
+// Ví dụ cho views/quan-tri-vien.php
+session_start();
+
+// Kiểm tra xem người dùng đã đăng nhập và có đúng vai trò Admin (maVT = 1) chưa
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['maVT'])) {
+  // Nếu chưa đăng nhập hoặc sai vai trò, chuyển về trang login
+  header("Location: ../index.php?action=login"); // Dùng ../ để quay lại thư mục gốc
+  exit;
+}
+
+// Nếu đã đăng nhập và đúng vai trò, tiếp tục hiển thị nội dung trang admin
+?>
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -5,18 +19,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Bảng điều khiển Giáo viên</title>
-  <link rel="stylesheet" href="../css/bang-dieu-khien-giao-vien.css" />
+  <link rel="stylesheet" href="css/giao-vien.css" />
 </head>
 <!-- chitung -->
+
 <body>
   <header>
     <div class="logo">Trường THCS XYZ</div>
     <div class="user-info">
       Xin chào, Giáo viên!
-      <button id="nut-dang-xuat">Đăng xuất</button>
-      <button id="nut-thong-bao" class="nut-chuong" aria-label="Thông báo" aria-haspopup="dialog" aria-expanded="false" title="Thông báo">
-        🔔 <span id="so-luong-thong-bao">2</span>
-      </button>
+      <a href="../index.php?action=logout" id="nut-dang-xuat-link"
+        style="/* Thêm style nếu cần cho giống button */ color: white; background-color: #e74c3c; padding: 8px 12px; border-radius: 8px; text-decoration: none;">Đăng
+        xuất</a>
     </div>
   </header>
 
@@ -193,7 +207,8 @@
               <div class="khoi-items">
                 <div class="hang-cta">
                   <h4>Thiết bị trong phiếu</h4>
-                  <button type="button" id="nut-them-item" class="btn-outline">+ Thêm thiết bị</button>
+                  <button type="button" id="nut-them-item" class="btn-outline">+ Thêm thiết
+                    bị</button>
                 </div>
 
                 <div class="bang-scroll">
@@ -497,7 +512,7 @@
   </div>
 
   <footer>© 2025 Hệ thống Quản lý Thiết bị - THCS XYZ</footer>
-  <script src="../js/bang-dieu-khien-giao-vien.js"></script>
+  <script src="js/giao-vien.js"></script>
 </body>
 
 </html>
