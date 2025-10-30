@@ -36,7 +36,7 @@ require_once 'partials/header.php';
         require_once 'pages_hieu-truong/tong-quan.php';
         require_once 'pages_hieu-truong/danh-sach-thiet-bi.php'; // Bạn sẽ copy nội dung vào đây
         require_once 'pages_hieu-truong/duyet-ke-hoach.php';
-        require_once 'pages_hieu-truong/duyet-thanh-ly.php';
+        require_once 'pages_hieu-truong/duyet-thanh-ly.php';   
         require_once 'pages_hieu-truong/bao-cao-thong-ke.php';
         ?>
 
