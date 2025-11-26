@@ -46,11 +46,11 @@ CREATE TABLE IF NOT EXISTS TaiKhoan (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO TaiKhoan(username,password,trangThai,maND) VALUES
-('admin','123','Hoạt động',1),
+('quantri','123','Hoạt động',1),
 ('giaovien','123','Hoạt động',2),
 ('nhanvien','123','Khoá',3),
 ('totruong','123','Hoạt động',4),
-('bgiamhieu','123','Hoạt động',5);
+('hieutruong','123','Hoạt động',5);
 
 -- ============================
 -- BẢNG MonHoc

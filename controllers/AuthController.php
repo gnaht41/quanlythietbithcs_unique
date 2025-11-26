@@ -7,13 +7,15 @@ class AuthController
 {
 
     // Map role IDs (maVT) to the correct PHP file names in the views directory
+    // mapping chính xác theo qltb.sql
     private $role_pages = [
         1 => 'quan-tri-vien.php',       // Admin
-        2 => 'hieu-truong.php',         // Hiệu trưởng
-        3 => 'to-truong.php',           // Tổ trưởng
-        4 => 'giao-vien.php',           // Giáo viên
-        5 => 'nhan-vien-thiet-bi.php'   // Nhân viên thiết bị
+        2 => 'giao-vien.php',           // Giáo viên
+        3 => 'nhan-vien-thiet-bi.php',  // Nhân viên
+        4 => 'to-truong.php',           // Tổ trưởng
+        5 => 'hieu-truong.php'          // Ban giám hiệu (Hiệu trưởng)
     ];
+
 
     public function showLoginForm($error_message = '')
     {

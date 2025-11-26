@@ -22,11 +22,14 @@ switch ($action) {
             // Ánh xạ lại để chuyển hướng nếu truy cập index.php trực tiếp khi đã đăng nhập
             $role_pages_index = [
                 1 => 'quan-tri-vien.php',
-                2 => 'hieu-truong.php',
-                3 => 'to-truong.php',
-                4 => 'giao-vien.php',
-                5 => 'nhan-vien-thiet-bi.php'
+                2 => 'giao-vien.php',
+                3 => 'nhan-vien-thiet-bi.php',
+                4 => 'to-truong.php',
+                5 => 'hieu-truong.php'
             ];
+
+
+
             $maVT = $_SESSION['maVT'] ?? null;
             if ($maVT && isset($role_pages_index[$maVT])) {
                 header("Location: views/" . $role_pages_index[$maVT]);
