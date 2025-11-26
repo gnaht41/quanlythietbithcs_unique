@@ -21,31 +21,31 @@ $listTinhTrang = $thietBiModel->getTinhTrang();
             <input type="hidden" name="tab" value="danh-sach-thiet-bi">
 
             <?php foreach ($_GET as $key => $value): ?>
-                <?php if (!in_array($key, ['tenTB', 'maMH', 'tinhTrang', 'lop', 'tab'])): // Bỏ qua cả 'tab' 
+            <?php if (!in_array($key, ['tenTB', 'maMH', 'tinhTrang', 'lop', 'tab'])): // Bỏ qua cả 'tab' 
                 ?>
-                    <input type="hidden" name="<?php echo htmlspecialchars($key); ?>"
-                        value="<?php echo htmlspecialchars($value); ?>">
-                <?php endif; ?>
+            <input type="hidden" name="<?php echo htmlspecialchars($key); ?>"
+                value="<?php echo htmlspecialchars($value); ?>">
+            <?php endif; ?>
             <?php endforeach; ?>
 
             <input name="tenTB" value="<?php echo htmlspecialchars($tenTB_filter); ?>"
                 placeholder="Nhập tên thiết bị..." />
             <select name="maMH" title="Danh mục/Môn">
-                <option value="">-- Danh mục/Môn --</option>
+                <option value="">-- Chọn Môn --</option>
                 <?php foreach ($listMonHoc as $monHoc): ?>
-                    <option value="<?php echo htmlspecialchars($monHoc['maMH']); ?>"
-                        <?php echo ($maMH_filter == $monHoc['maMH']) ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($monHoc['tenMonHoc']); ?>
-                    </option>
+                <option value="<?php echo htmlspecialchars($monHoc['maMH']); ?>"
+                    <?php echo ($maMH_filter == $monHoc['maMH']) ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($monHoc['tenMonHoc']); ?>
+                </option>
                 <?php endforeach; ?>
             </select>
             <select name="tinhTrang" title="Tình trạng">
                 <option value="">-- Tình trạng --</option>
                 <?php foreach ($listTinhTrang as $tt): ?>
-                    <option value="<?php echo htmlspecialchars($tt); ?>"
-                        <?php echo ($tinhTrang_filter == $tt) ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($tt); ?>
-                    </option>
+                <option value="<?php echo htmlspecialchars($tt); ?>"
+                    <?php echo ($tinhTrang_filter == $tt) ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($tt); ?>
+                </option>
                 <?php endforeach; ?>
             </select>
             <input name="lop" value="<?php echo htmlspecialchars($lop_filter); ?>" placeholder="Lớp (VD: 6)" />
@@ -67,21 +67,21 @@ $listTinhTrang = $thietBiModel->getTinhTrang();
         </thead>
         <tbody id="bang-ds-thiet-bi">
             <?php if (!empty($devices)): ?>
-                <?php foreach ($devices as $index => $device): ?>
-                    <tr>
-                        <td><?php echo $index + 1; ?></td>
-                        <td><?php echo htmlspecialchars($device['tenTB']); ?></td>
-                        <td><?php echo htmlspecialchars($device['tenMonHoc'] ?? 'N/A'); ?></td>
-                        <td><?php echo htmlspecialchars($device['donVi']); ?></td>
-                        <td><?php echo htmlspecialchars($device['soLuong']); ?></td>
-                        <td><?php echo htmlspecialchars($device['lop']); ?></td>
-                        <td><?php echo htmlspecialchars($device['tinhTrang']); ?></td>
-                    </tr>
-                <?php endforeach; ?>
+            <?php foreach ($devices as $index => $device): ?>
+            <tr>
+                <td><?php echo $index + 1; ?></td>
+                <td><?php echo htmlspecialchars($device['tenTB']); ?></td>
+                <td><?php echo htmlspecialchars($device['tenMonHoc'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($device['donVi']); ?></td>
+                <td><?php echo htmlspecialchars($device['soLuong']); ?></td>
+                <td><?php echo htmlspecialchars($device['lop']); ?></td>
+                <td><?php echo htmlspecialchars($device['tinhTrang']); ?></td>
+            </tr>
+            <?php endforeach; ?>
             <?php else: ?>
-                <tr>
-                    <td colspan="7" style="text-align: center;">Không tìm thấy thiết bị nào phù hợp.</td>
-                </tr>
+            <tr>
+                <td colspan="7" style="text-align: center;">Không tìm thấy thiết bị nào phù hợp.</td>
+            </tr>
             <?php endif; ?>
         </tbody>
     </table>

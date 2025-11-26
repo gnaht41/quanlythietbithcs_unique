@@ -31,7 +31,7 @@ $listTinhTrang = $thietBiModel->getTinhTrang();
                         <input name="tenTB" value="<?php echo htmlspecialchars($tenTB_filter); ?>"
                                 placeholder="Nhập tên thiết bị..." />
                         <select name="maMH" title="Danh mục/Môn">
-                                <option value="">-- Danh mục/Môn --</option>
+                                <option value="">-- Chọn Môn --</option>
                                 <?php foreach ($listMonHoc as $monHoc): ?>
                                         <option value="<?php echo htmlspecialchars($monHoc['maMH']); ?>"
                                                 <?php echo ($maMH_filter == $monHoc['maMH']) ? 'selected' : ''; ?>>

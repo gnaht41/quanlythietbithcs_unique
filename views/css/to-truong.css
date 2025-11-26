@@ -1,0 +1,76 @@
+/* ============================
+   THEO DÕI THIẾT BỊ – TỔ TRƯỞNG
+   ============================ */
+
+/* Tiêu đề */
+#theo-doi-thiet-bi h2 {
+    margin-top: 10px;
+    color: #1e293b;
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+/* BỘ LỌC */
+#theo-doi-thiet-bi .bo-loc {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+#theo-doi-thiet-bi .bo-loc select {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background: white;
+    font-size: 14px;
+}
+
+#theo-doi-thiet-bi .bo-loc button {
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* BẢNG KẾT QUẢ */
+#theo-doi-thiet-bi table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#theo-doi-thiet-bi th,
+#theo-doi-thiet-bi td {
+    padding: 12px 15px;
+    font-size: 14px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+}
+
+#theo-doi-thiet-bi thead th {
+    background: #f1f5f9;
+    font-weight: 600;
+    color: #334155;
+}
+
+#theo-doi-thiet-bi tbody tr:hover {
+    background: #f8fafc;
+}
+
+/* Chênh lệch: âm = đỏ, dương = xanh */
+#theo-doi-thiet-bi td.chenh-am {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+#theo-doi-thiet-bi td.chenh-duong {
+    color: #059669;
+    font-weight: 600;
+}
