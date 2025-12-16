@@ -33,10 +33,8 @@ require_once 'partials/header.php'; // Đã load main.css và $css_file
 
         <?php
         // Include các trang con (sections) - PHP sẽ đặt style display dựa vào $active_tab
-        require_once 'pages_quan-tri-vien/tong-quan.php';
         require_once 'pages_quan-tri-vien/danh-sach-thiet-bi.php';
         require_once 'pages_quan-tri-vien/ql-nguoi-dung.php';
-        require_once 'pages_quan-tri-vien/phan-quyen.php';
         require_once 'pages_quan-tri-vien/nhat-ky.php';
         ?>
 

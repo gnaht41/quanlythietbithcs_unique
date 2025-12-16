@@ -1,7 +1,7 @@
 <?php
 // controllers/AuthController.php
 session_start(); // Start session here
-require_once __DIR__ . '/../models/User.php'; // Path to User model
+require_once __DIR__ . '/../models/QT_User.php'; // Path to User model
 
 class AuthController
 {

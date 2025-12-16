@@ -2,7 +2,7 @@
 // index.php (Thư mục gốc)
 // session_start(); // Session đã được start trong AuthController
 
-require_once 'controllers/AuthController.php';
+require_once 'controllers/QT_AuthController.php';
 
 $action = $_GET['action'] ?? 'login'; // Mặc định là hiển thị form login
 

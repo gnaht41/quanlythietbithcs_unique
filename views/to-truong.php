@@ -33,10 +33,9 @@ require_once 'partials/header.php';
 
         <?php // --- INCLUDE CÁC TRANG CON ---
         // Các file này cần được cập nhật điều kiện style như hướng dẫn trước
-        require_once 'pages_to-truong/tong-quan.php';
         require_once 'pages_to-truong/danh-sach-thiet-bi.php'; // Bạn sẽ copy nội dung vào đây
-        require_once 'pages_to-truong/lap-ke-hoach-mua-sam.php';
-        require_once 'pages_to-truong/theo-doi-thiet-bi.php';
+        require_once 'pages_to-truong/ke-hoach-mua-sam.php';
+        require_once 'pages_to-truong/ket-qua-kiem-ke.php';
         ?>
 
     </main>

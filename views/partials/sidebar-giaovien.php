@@ -4,8 +4,6 @@
 ?>
 <aside class="thanh-ben">
     <ul>
-        <li><a href="?tab=tong-quan" class="<?php echo ($active_tab == 'tong-quan') ? 'active' : ''; ?>">Tổng quan</a>
-        </li>
         <li><a href="?tab=danh-sach-thiet-bi"
                 class="<?php echo ($active_tab == 'danh-sach-thiet-bi') ? 'active' : ''; ?>">Danh sách thiết bị</a></li>
         <li><a href="?tab=phieu-muon" class="<?php echo ($active_tab == 'phieu-muon') ? 'active' : ''; ?>">Phiếu

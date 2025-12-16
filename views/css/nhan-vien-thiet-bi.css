@@ -1,0 +1,271 @@
+/* ============================================================= */
+/*  NHÂN VIÊN THIẾT BỊ – ĐỒNG NHẤT HOÀN TOÀN VỚI HEADER/FOOTER   */
+/*  Màu chính: #1a2a44 (header/footer), #10b981 (nút chính)     */
+/* ============================================================= */
+
+section#ke-hoach-thanh-ly h2 {
+    font-size: 24px;
+    color: #1a2a44;
+    margin: 0 0 25px 0;
+    font-weight: 700;
+}
+
+/* Nút mở modal */
+#btn-open-modal.btn-primary {
+    background: #10b981 !important;
+    color: #fff !important;
+    padding: 11px 26px !important;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, .3);
+}
+
+#btn-open-modal.btn-primary:hover {
+    filter: brightness(.95);
+    transform: translateY(-1px);
+}
+
+/* Card */
+.card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+    border: 1px solid #e2e8f0;
+    margin-top: 16px;
+}
+
+/* Bảng chung */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14.5px;
+}
+
+.table thead {
+    background: #1a2a44;
+    /* ĐỒNG NHẤT VỚI HEADER & FOOTER */
+    color: #fff;
+}
+
+.table thead th {
+    padding: 15px 16px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.table tbody td {
+    padding: 15px 16px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Badge */
+.badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+.badge.warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge.success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+/* Nút Xem chi tiết */
+.btn-xem-chitiet {
+    background: #e0e7ff;
+    color: #4338ca;
+    border: 1px solid #c7d2fe;
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    text-decoration: none;
+    transition: all .2s;
+}
+
+.btn-xem-chitiet:hover {
+    background: #c7d2fe;
+    color: #3730a3;
+}
+
+/* ====================== MODAL ====================== */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .25);
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.modal-content {
+    background: #fff;
+    width: 960px;
+    max-width: 94%;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .15);
+    overflow: hidden;
+    max-height: 94vh;
+}
+
+/* Header modal – dùng đúng màu header/footer */
+.modal-header {
+    background: #1a2a44;
+    color: #fff;
+    padding: 18px 28px;
+    position: relative;
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* Nút đóng */
+.modal .close {
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    font-size: 28px;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal .close:hover {
+    background: rgba(255, 255, 255, .2);
+}
+
+.modal-body {
+    padding: 28px;
+    max-height: calc(94vh - 120px);
+    overflow-y: auto;
+}
+
+/* Form */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.modal label {
+    display: block;
+    margin: 16px 0 7px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.modal input[type="text"],
+.modal input[type="date"],
+.modal select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid #d1d9e6;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.modal input:focus,
+.modal select:focus {
+    outline: none;
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, .2);
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: 220px 1fr 120px;
+    gap: 14px;
+    align-items: end;
+}
+
+/* Bảng trong modal */
+.table-container {
+    max-height: 380px;
+    overflow: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.modal .table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #1a2a44;
+}
+
+/* Footer modal */
+.modal-footer {
+    text-align: right;
+    padding-top: 10px;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 20px;
+}
+
+.modal-footer .btn-primary {
+    padding: 13px 32px;
+    font-size: 15.5px;
+}
+
+.modal-footer .btn-secondary {
+    margin-left: 12px;
+    padding: 13px 24px;
+}
+
+/* Alert */
+.alert.error {
+    background: #fef2f2;
+    color: #991b1b;
+    padding: 14px 18px;
+    border-radius: 8px;
+    border-left: 5px solid #ef4444;
+    margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    .grid-2,
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        width: 96%;
+    }
+}

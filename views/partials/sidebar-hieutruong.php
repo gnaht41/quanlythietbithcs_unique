@@ -4,15 +4,13 @@
 ?>
 <aside class="thanh-ben">
     <ul>
-        <li><a href="?tab=tong-quan" class="<?php echo ($active_tab == 'tong-quan') ? 'active' : ''; ?>">Tổng quan</a>
-        </li>
         <li><a href="?tab=danh-sach-thiet-bi"
                 class="<?php echo ($active_tab == 'danh-sach-thiet-bi') ? 'active' : ''; ?>">Danh sách thiết bị</a></li>
-        <li><a href="?tab=duyet-ke-hoach" class="<?php echo ($active_tab == 'duyet-ke-hoach') ? 'active' : ''; ?>">Duyệt
+        <li><a href="?tab=duyet-mua-sam" class="<?php echo ($active_tab == 'duyet-mua-sam') ? 'active' : ''; ?>">Duyệt
                 kế hoạch mua sắm</a></li>
         <li><a href="?tab=duyet-thanh-ly" class="<?php echo ($active_tab == 'duyet-thanh-ly') ? 'active' : ''; ?>">Duyệt
                 thanh lý</a></li>
-        <li><a href="?tab=bao-cao-thong-ke"
-                class="<?php echo ($active_tab == 'bao-cao-thong-ke') ? 'active' : ''; ?>">Báo cáo & Thống kê</a></li>
+        <li><a href="?tab=ket-qua-kiem-ke" class="<?php echo ($active_tab == 'ket-qua-kiem-ke') ? 'active' : ''; ?>">Kết
+                quả kiểm kê</a></li>
     </ul>
 </aside>

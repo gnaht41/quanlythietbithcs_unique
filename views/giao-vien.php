@@ -23,24 +23,23 @@ require_once 'partials/header.php';
 
 <div class="khoi-chua">
 
-  <?php // --- INCLUDE SIDEBAR ---
+    <?php // --- INCLUDE SIDEBAR ---
   // sidebar-giaovien.php cần được cập nhật như hướng dẫn trước
   require_once 'partials/sidebar-giaovien.php';
   ?>
 
-  <main>
-    <h1>Bảng điều khiển Giáo viên</h1>
+    <main>
+        <h1>Bảng điều khiển Giáo viên</h1>
 
-    <?php // --- INCLUDE CÁC TRANG CON ---
+        <?php // --- INCLUDE CÁC TRANG CON ---
     // Các file này cần được cập nhật điều kiện style như hướng dẫn trước
-    require_once 'pages_giao-vien/tong-quan.php';
     require_once 'pages_giao-vien/danh-sach-thiet-bi.php'; // Bạn sẽ copy nội dung vào đây
     require_once 'pages_giao-vien/phieu-muon.php';
     require_once 'pages_giao-vien/lich-su-muon.php';
     require_once 'pages_giao-vien/bao-cao-hu-hong.php';
     ?>
 
-  </main>
+    </main>
 
 </div>
 

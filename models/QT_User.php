@@ -1,6 +1,6 @@
 <?php
 // models/User.php
-require_once 'Database.php';
+require_once 'QT_Database.php';
 
 class User
 {
