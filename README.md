@@ -44,25 +44,22 @@
         ```
 
 4.  **Code Logic:**
-    * Tạo các file Controller và Model mới để xử lý logic backend.
-    * Nên đặt tên file theo chức năng (ví dụ: `models/PhieuMuon.php`, `controllers/PhieuMuonController.php`) để tránh xung đột.
+    * Tạo các file Controller và Model mới để xử lý logic backend, kèm tên viết tắt của mình ở trước
+    (ví dụ: `models/QT_PhieuMuon.php`, `controllers/QT_PhieuMuonController.php`)
 
 5.  **CSS/JS:**
     * Nếu cần thêm CSS hoặc JS đặc thù cho vai trò, hãy thêm vào file CSS/JS riêng của vai trò đó (ví dụ: `css/giao-vien.css`, `js/giao-vien.js`).
-    * Các file này đã được tự động nạp bởi `header.php` và `footer.php`.
+    * Các file này đã được tự động nạp bởi `header.php` và `footer.php` do tui đã include sẵn.
 
-6.  **CSDL:**
-    * Nếu có bất kỳ thay đổi nào về cấu trúc CSDL (thêm/sửa/xóa bảng, cột), hãy xuất file script `.sql` và gửi vào nhóm.
-
-## Sơ đồ cây
-
+5.  **Cây thư mục:**
 ```
 ├── 📁 controllers
-│   └── 🐘 AuthController.php
+│   ├── 🐘 QT_AuthController.php
+│   └── 🐘 QT_LogController.php
 ├── 📁 models
-│   ├── 🐘 Database.php
-│   ├── 🐘 ThietBi.php
-│   └── 🐘 User.php
+│   ├── 🐘 QT_Database.php
+│   ├── 🐘 QT_Log.php
+│   └── 🐘 QT_User.php
 ├── 📁 views
 │   ├── 📁 css
 │   │   ├── 🎨 dang-nhap.css
@@ -72,6 +69,8 @@
 │   │   ├── 🎨 nhan-vien-thiet-bi.css
 │   │   ├── 🎨 quan-tri-vien.css
 │   │   └── 🎨 to-truong.css
+│   ├── 📁 img
+│   │   └── 🖼️ UniqueLogo.jpg
 │   ├── 📁 js
 │   │   ├── 📄 dang-nhap.js
 │   │   ├── 📄 giao-vien.js
@@ -84,33 +83,27 @@
 │   │   ├── 🐘 bao-cao-hu-hong.php
 │   │   ├── 🐘 danh-sach-thiet-bi.php
 │   │   ├── 🐘 lich-su-muon.php
-│   │   ├── 🐘 phieu-muon.php
-│   │   └── 🐘 tong-quan.php
+│   │   └── 🐘 phieu-muon.php
 │   ├── 📁 pages_hieu-truong
-│   │   ├── 🐘 bao-cao-thong-ke.php
 │   │   ├── 🐘 danh-sach-thiet-bi.php
-│   │   ├── 🐘 duyet-ke-hoach.php
+│   │   ├── 🐘 duyet-mua-sam.php
 │   │   ├── 🐘 duyet-thanh-ly.php
-│   │   └── 🐘 tong-quan.php
+│   │   └── 🐘 ket-qua-kiem-ke.php
 │   ├── 📁 pages_nhan-vien-thiet-bi
 │   │   ├── 🐘 danh-sach-thiet-bi.php
-│   │   ├── 🐘 lap-bao-cao.php
+│   │   ├── 🐘 ke-hoach-thanh-ly.php
+│   │   ├── 🐘 ket-qua-kiem-ke.php
 │   │   ├── 🐘 phieu-muon.php
-│   │   ├── 🐘 quan-ly-bao-tri.php
-│   │   ├── 🐘 quan-ly-danh-muc.php
 │   │   ├── 🐘 quan-ly-kiem-ke.php
-│   │   └── 🐘 tong-quan.php
+│   │   └── 🐘 quan-ly-thiet-bi.php
 │   ├── 📁 pages_quan-tri-vien
 │   │   ├── 🐘 danh-sach-thiet-bi.php
 │   │   ├── 🐘 nhat-ky.php
-│   │   ├── 🐘 phan-quyen.php
-│   │   ├── 🐘 ql-nguoi-dung.php
-│   │   └── 🐘 tong-quan.php
+│   │   └── 🐘 ql-nguoi-dung.php
 │   ├── 📁 pages_to-truong
 │   │   ├── 🐘 danh-sach-thiet-bi.php
-│   │   ├── 🐘 lap-ke-hoach-mua-sam.php
-│   │   ├── 🐘 theo-doi-thiet-bi.php
-│   │   └── 🐘 tong-quan.php
+│   │   ├── 🐘 ke-hoach-mua-sam.php
+│   │   └── 🐘 ket-qua-kiem-ke.php
 │   ├── 📁 partials
 │   │   ├── 🐘 footer.php
 │   │   ├── 🐘 header.php
@@ -126,5 +119,6 @@
 │   ├── 🐘 quan-tri-vien.php
 │   └── 🐘 to-truong.php
 ├── 📝 README.md
-└── 🐘 index.php
+├── 🐘 index.php
+└── 📄 qltb.sql
 ```
