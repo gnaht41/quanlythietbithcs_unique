@@ -1,5 +1,5 @@
 <?php
-// controllers/AuthController.php
+// controllers/QT_AuthController.php
 session_start(); // Start session here
 require_once __DIR__ . '/../models/QT_User.php'; // Path to User model
 

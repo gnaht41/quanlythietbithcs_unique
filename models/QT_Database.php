@@ -1,5 +1,5 @@
 <?php
-// models/Database.php
+// models/QT_Database.php
 class Database
 {
     private $host = 'localhost'; // Hoặc IP/hostname của server CSDL

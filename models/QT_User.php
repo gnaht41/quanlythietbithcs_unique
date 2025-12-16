@@ -1,5 +1,5 @@
 <?php
-// models/User.php
+// models/QT_User.php
 require_once 'QT_Database.php';
 
 class User
