@@ -1,25 +1,23 @@
 <?php
 // controllers/QT_AuthController.php
-session_start(); // Start session here
-require_once __DIR__ . '/../models/QT_User.php'; // Path to User model
+session_start();
+
+require_once __DIR__ . '/../models/QT_User.php';
+require_once __DIR__ . '/../models/QT_Log.php';
 
 class AuthController
 {
-
-    // Map role IDs (maVT) to the correct PHP file names in the views directory
-    // mapping chính xác theo qltb.sql
     private $role_pages = [
-        1 => 'quan-tri-vien.php',       // Admin
-        2 => 'giao-vien.php',           // Giáo viên
-        3 => 'nhan-vien-thiet-bi.php',  // Nhân viên
-        4 => 'to-truong.php',           // Tổ trưởng
-        5 => 'hieu-truong.php'          // Ban giám hiệu (Hiệu trưởng)
+        1 => 'quan-tri-vien.php',
+        2 => 'giao-vien.php',
+        3 => 'nhan-vien-thiet-bi.php',
+        4 => 'to-truong.php',
+        5 => 'hieu-truong.php'
     ];
-
 
     public function showLoginForm($error_message = '')
     {
-        require_once __DIR__ . '/../views/dang-nhap.php'; // Path to login view
+        require_once __DIR__ . '/../views/dang-nhap.php';
     }
 
     public function handleLogin()
@@ -39,38 +37,49 @@ class AuthController
             $userData = $loginResult['data'];
             $maVT = $userData['maVT'];
 
-            // Store user info in session
             $_SESSION['loggedin'] = true;
             $_SESSION['username'] = $username;
             $_SESSION['maND'] = $userData['maND'];
             $_SESSION['maVT'] = $maVT;
 
-            // Determine the redirect page based on role ID (maVT)
+            // ===== GHI LOG ĐĂNG NHẬP =====
+            $logModel = new Log();
+            $logModel->ghiLog(
+                $userData['maND'],
+                'LOGIN',
+                'TaiKhoan',
+                $userData['maND'],
+                'Đăng nhập thành công'
+            );
+
             if (isset($this->role_pages[$maVT])) {
-                $redirect_page = $this->role_pages[$maVT];
-
-                // --- !!! CORRECTED REDIRECTION PATH !!! ---
-                // Redirect to the correct PHP file inside the 'views' directory
-                header("Location: views/" . $redirect_page);
-                exit(); // Stop script execution after redirect
-                // --- !!! END CORRECTION !!! ---
-
+                header("Location: views/" . $this->role_pages[$maVT]);
+                exit();
             } else {
-                session_unset();
                 session_destroy();
-                $this->showLoginForm('Vai trò không hợp lệ hoặc chưa được cấu hình.');
+                $this->showLoginForm('Vai trò không hợp lệ.');
             }
         } else {
-            // Show login form again with error message
             $this->showLoginForm($loginResult['message']);
         }
     }
 
     public function handleLogout()
     {
+        if (isset($_SESSION['maND'])) {
+            $logModel = new Log();
+            $logModel->ghiLog(
+                $_SESSION['maND'],
+                'LOGOUT',
+                'TaiKhoan',
+                $_SESSION['maND'],
+                'Đăng xuất hệ thống'
+            );
+        }
+
         session_unset();
         session_destroy();
-        header("Location: index.php?action=login"); // Redirect back to login page
+        header("Location: index.php?action=login");
         exit();
     }
 }

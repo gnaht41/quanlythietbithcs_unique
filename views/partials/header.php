@@ -21,7 +21,10 @@
 
 <body>
     <header>
-        <div class="logo">Trường THCS XYZ</div>
+        <div class="logo">
+            <img src="img/UniqueLogo.jpg" alt="Trường THCS Unique" class="logo-img">
+            <span class="logo-text">UNIQUE MANAGEMENT</span>
+        </div>
         <div class="user-info">
             <span>Xin chào, <?php echo htmlspecialchars($user_name ?? 'Người dùng'); ?>!</span>
 

@@ -30,11 +30,22 @@ require_once 'partials/header.php'; // Đã load main.css và $css_file
 
     <main>
         <h1>Bảng điều khiển Quản trị viên</h1>
+        <?php
+        require_once __DIR__ . '/../models/QT_Log.php';
+
+        // chỉ lấy log khi mở tab nhật ký
+        $logs = [];
+        if ($active_tab === 'nhat-ky') {
+            $logModel = new Log();
+            $logs = $logModel->getAllLogs();
+        }
+        ?>
 
         <?php
         // Include các trang con (sections) - PHP sẽ đặt style display dựa vào $active_tab
         require_once 'pages_quan-tri-vien/danh-sach-thiet-bi.php';
         require_once 'pages_quan-tri-vien/ql-nguoi-dung.php';
+
         require_once 'pages_quan-tri-vien/nhat-ky.php';
         ?>
 

@@ -29,10 +29,25 @@ header {
     top: 0;
     z-index: 100;
     /* Đảm bảo header nằm trên */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
+
+/* Khối logo */
 .logo {
-    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+/* Ảnh logo */
+.logo-img {
+    height: 48px;
+    /* QUAN TRỌNG */
+    width: auto;
+    object-fit: contain;
+    margin-right: 10px;
 }
 
 .user-info {

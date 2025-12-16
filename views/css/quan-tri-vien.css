@@ -1,0 +1,78 @@
+/* ================================
+   BẢNG NHẬT KÝ HỆ THỐNG
+================================ */
+
+#nhat-ky {
+    margin-top: 20px;
+}
+
+#nhat-ky h2 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+/* Table */
+#nhat-ky table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Header */
+#nhat-ky thead {
+    background-color: #34495e;
+    color: #ffffff;
+}
+
+#nhat-ky thead th {
+    padding: 12px 10px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* Body */
+#nhat-ky tbody td {
+    padding: 10px;
+    font-size: 14px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+}
+
+/* Zebra stripe */
+#nhat-ky tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* Hover */
+#nhat-ky tbody tr:hover {
+    background-color: #eaf3ff;
+    transition: background-color 0.2s ease;
+}
+
+/* Cột hành động */
+#nhat-ky td:nth-child(3) {
+    font-weight: 600;
+    color: #2980b9;
+}
+
+/* Cột thời gian */
+#nhat-ky td:first-child {
+    color: #555;
+    font-size: 13px;
+}
+
+/* Không có dữ liệu */
+#nhat-ky tbody tr td[colspan] {
+    text-align: center;
+    padding: 20px;
+    color: #888;
+    font-style: italic;
+}
