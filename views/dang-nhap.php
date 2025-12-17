@@ -18,7 +18,7 @@
         <main class="login-panel">
             <section class="card">
                 <div class="brand-header">
-                    <div class="logo">Trường THCS XYZ</div>
+                    <div class="logo">Trường THCS Unique</div>
                     <p class="tagline">Hệ thống Quản lý Thiết bị</p>
                 </div>
                 <h1>Đăng nhập</h1>
@@ -51,7 +51,7 @@
                     </p>
                     <p class="sub">Quên mật khẩu? <a href="#" id="contact-admin">Liên hệ Quản trị viên</a></p>
                 </form>
-                <div class="footer-note-card">© 2025 THCS XYZ</div>
+                <div class="footer-note-card">© 2025 THCS Unique</div>
             </section>
         </main>
     </div>
