@@ -11,6 +11,10 @@
     <title>Đăng nhập - Hệ thống Quản lý Thiết bị THCS</title>
     <link rel="stylesheet" href="views/css/dang-nhap.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- FAVICON - LOGO NHỎ TRÊN TAB TRÌNH DUYỆT -->
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+    <!-- Nếu bạn dùng file PNG thì thay bằng dòng dưới -->
+    <link rel="icon" type="image/png" href="views/img/UniqueLogo.jpg">
 </head>
 
 <body>

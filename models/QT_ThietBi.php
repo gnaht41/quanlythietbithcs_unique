@@ -26,6 +26,27 @@ class ThietBi
         }
         return $data;
     }
+    public function getAll()
+    {
+        $sql = "
+        SELECT 
+            tb.maTB,
+            tb.tenTB,
+            tb.donVi,
+            tb.lop,
+            tb.soLuongTong,
+            tb.soLuongKhaDung,
+            tb.tinhTrang,
+            mh.tenMonHoc
+        FROM ThietBi tb
+        LEFT JOIN MonHoc mh ON tb.maMH = mh.maMH
+        WHERE tb.isHidden = 0
+        ORDER BY tb.tenTB
+    ";
+
+        $result = $this->conn->query($sql);
+        return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
+    }
 
     // Tìm kiếm / tra cứu thiết bị
     public function search($filters = [])
@@ -87,5 +108,11 @@ class ThietBi
 
         $stmt->close();
         return $data;
+    }
+    public function getListForSelect()
+    {
+        $sql = "SELECT maTB, tenTB, donVi FROM ThietBi WHERE isHidden = 0 ORDER BY tenTB";
+        $result = $this->conn->query($sql);
+        return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 }
