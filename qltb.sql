@@ -13,12 +13,12 @@ CREATE TABLE VaiTro (
   tenVT VARCHAR(50) NOT NULL UNIQUE
 );
 
-INSERT INTO VaiTro (tenVT) VALUES
-('Admin'),
-('Giáo viên'),
-('Nhân viên'),
-('Tổ trưởng'),
-('Ban giám hiệu');
+INSERT INTO VaiTro VALUES
+(1,'Admin'),
+(2,'Giáo viên'),
+(3,'Nhân viên'),
+(4,'Tổ trưởng'),
+(5,'Ban giám hiệu');
 
 -- =====================================================
 -- NGƯỜI DÙNG
@@ -31,12 +31,12 @@ CREATE TABLE NguoiDung (
   FOREIGN KEY (maVT) REFERENCES VaiTro(maVT)
 );
 
-INSERT INTO NguoiDung (hoTen,email,maVT) VALUES
-('Quản trị hệ thống','admin@thcs.edu.vn',1),
-('Nguyễn Văn Giáo','giaovien@thcs.edu.vn',2),
-('Trần Thị Thiết Bị','nhanvien@thcs.edu.vn',3),
-('Lê Văn Tổ Trưởng','totruong@thcs.edu.vn',4),
-('Phạm Thị Hiệu Trưởng','hieutruong@thcs.edu.vn',5);
+INSERT INTO NguoiDung VALUES
+(1,'Quản trị hệ thống','admin@thcs.edu.vn',1),
+(2,'Nguyễn Văn Giáo','giaovien@thcs.edu.vn',2),
+(3,'Trần Thị Thiết Bị','nhanvien@thcs.edu.vn',3),
+(4,'Lê Văn Tổ Trưởng','totruong@thcs.edu.vn',4),
+(5,'Phạm Thị Hiệu Trưởng','hieutruong@thcs.edu.vn',5);
 
 -- =====================================================
 -- TÀI KHOẢN (PASS = 123)
@@ -64,19 +64,21 @@ CREATE TABLE MonHoc (
   tenMonHoc VARCHAR(100) NOT NULL
 );
 
-INSERT INTO MonHoc (tenMonHoc) VALUES
-('Toán'),
-('Tin học'),
-('Vật lý'),
-('Âm nhạc'),
-('Sinh học');
+INSERT INTO MonHoc VALUES
+(1,'Toán'),
+(2,'Tin học'),
+(3,'Vật lý'),
+(4,'Âm nhạc'),
+(5,'Sinh học');
 
 -- =====================================================
--- THIẾT BỊ
+-- THIẾT BỊ (CÓ ĐƠN VỊ + KHỐI LỚP 6–9)
 -- =====================================================
 CREATE TABLE ThietBi (
   maTB INT AUTO_INCREMENT PRIMARY KEY,
   tenTB VARCHAR(150) NOT NULL,
+  donVi VARCHAR(20),
+  lop ENUM('6','7','8','9'),
   soLuongTong INT DEFAULT 0,
   soLuongKhaDung INT DEFAULT 0,
   tinhTrang ENUM('Tốt','Hư nhẹ','Hư nặng','Đang sửa') DEFAULT 'Tốt',
@@ -86,11 +88,11 @@ CREATE TABLE ThietBi (
 );
 
 INSERT INTO ThietBi VALUES
-(1,'Máy chiếu',3,3,'Tốt',1,0),
-(2,'Máy tính',10,9,'Tốt',2,0),
-(3,'Loa kéo',2,1,'Hư nhẹ',4,0),
-(4,'Micro',5,4,'Tốt',4,0),
-(5,'Camera',1,1,'Tốt',2,0);
+(1,'Máy chiếu Epson EB-X06','Cái','6',3,3,'Tốt',1,0),
+(2,'Máy tính để bàn','Bộ','8',10,9,'Tốt',2,0),
+(3,'Loa kéo','Cái','7',2,1,'Hư nhẹ',4,0),
+(4,'Micro không dây','Cái','9',5,4,'Tốt',4,0),
+(5,'Camera quan sát','Cái','8',1,1,'Tốt',2,0);
 
 -- =====================================================
 -- PHIẾU MƯỢN
@@ -100,14 +102,7 @@ CREATE TABLE PhieuMuon (
   ngayMuon DATE,
   ngayTraDuKien DATE,
   ngayTraThucTe DATE,
-  trangThai ENUM(
-    'Chờ duyệt',
-    'Đã duyệt',
-    'Đang mượn',
-    'Đã trả',
-    'Đã hủy',
-    'Từ chối'
-  ) DEFAULT 'Chờ duyệt',
+  trangThai ENUM('Chờ duyệt','Đã duyệt','Đang mượn','Đã trả','Đã hủy','Từ chối'),
   maND INT,
   FOREIGN KEY (maND) REFERENCES NguoiDung(maND)
 );
@@ -145,7 +140,7 @@ INSERT INTO ChiTietPhieuMuon VALUES
 CREATE TABLE KiemKe (
   maKK INT AUTO_INCREMENT PRIMARY KEY,
   ngayKK DATE,
-  loaiKiemKe ENUM('Cuối kỳ','Cuối năm','Đột xuất') DEFAULT 'Cuối kỳ',
+  loaiKiemKe ENUM('Cuối kỳ','Cuối năm','Đột xuất'),
   maND INT,
   FOREIGN KEY (maND) REFERENCES NguoiDung(maND)
 );
@@ -183,19 +178,12 @@ INSERT INTO ChiTietKiemKe VALUES
 CREATE TABLE KeHoachMuaSam (
   maMS INT AUTO_INCREMENT PRIMARY KEY,
   ngayLap DATE,
-  trangThai ENUM('Chờ duyệt','Đã duyệt','Từ chối') DEFAULT 'Chờ duyệt',
+  trangThai ENUM('Chờ duyệt','Đã duyệt','Từ chối'),
   nguoiLap INT,
   nguoiDuyet INT,
   FOREIGN KEY (nguoiLap) REFERENCES NguoiDung(maND),
   FOREIGN KEY (nguoiDuyet) REFERENCES NguoiDung(maND)
 );
-
-INSERT INTO KeHoachMuaSam VALUES
-(1,'2024-06-20','Đã duyệt',4,5),
-(2,'2024-07-10','Chờ duyệt',4,NULL),
-(3,'2024-08-01','Từ chối',4,5),
-(4,'2024-09-01','Đã duyệt',4,5),
-(5,'2024-10-01','Chờ duyệt',4,NULL);
 
 CREATE TABLE ChiTietMuaSam (
   maCTMS INT AUTO_INCREMENT PRIMARY KEY,
@@ -205,6 +193,13 @@ CREATE TABLE ChiTietMuaSam (
   FOREIGN KEY (maKH) REFERENCES KeHoachMuaSam(maMS),
   FOREIGN KEY (maTB) REFERENCES ThietBi(maTB)
 );
+
+INSERT INTO KeHoachMuaSam VALUES
+(1,'2024-06-20','Đã duyệt',4,5),
+(2,'2024-07-10','Chờ duyệt',4,NULL),
+(3,'2024-08-01','Từ chối',4,5),
+(4,'2024-09-01','Đã duyệt',4,5),
+(5,'2024-10-01','Chờ duyệt',4,NULL);
 
 INSERT INTO ChiTietMuaSam VALUES
 (1,1,2,3),
@@ -219,19 +214,12 @@ INSERT INTO ChiTietMuaSam VALUES
 CREATE TABLE KeHoachThanhLy (
   maTL INT AUTO_INCREMENT PRIMARY KEY,
   ngayLap DATE,
-  trangThai ENUM('Chờ duyệt','Đã duyệt','Từ chối') DEFAULT 'Chờ duyệt',
+  trangThai ENUM('Chờ duyệt','Đã duyệt','Từ chối'),
   nguoiLap INT,
   nguoiDuyet INT,
   FOREIGN KEY (nguoiLap) REFERENCES NguoiDung(maND),
   FOREIGN KEY (nguoiDuyet) REFERENCES NguoiDung(maND)
 );
-
-INSERT INTO KeHoachThanhLy VALUES
-(1,'2024-06-25','Đã duyệt',3,5),
-(2,'2024-07-20','Chờ duyệt',3,NULL),
-(3,'2024-08-15','Từ chối',3,5),
-(4,'2024-09-10','Đã duyệt',3,5),
-(5,'2024-10-05','Chờ duyệt',3,NULL);
 
 CREATE TABLE ChiTietThanhLy (
   maCTTL INT AUTO_INCREMENT PRIMARY KEY,
@@ -244,6 +232,13 @@ CREATE TABLE ChiTietThanhLy (
   FOREIGN KEY (maTB) REFERENCES ThietBi(maTB)
 );
 
+INSERT INTO KeHoachThanhLy VALUES
+(1,'2024-06-25','Đã duyệt',3,5),
+(2,'2024-07-20','Chờ duyệt',3,NULL),
+(3,'2024-08-15','Từ chối',3,5),
+(4,'2024-09-10','Đã duyệt',3,5),
+(5,'2024-10-05','Chờ duyệt',3,NULL);
+
 INSERT INTO ChiTietThanhLy VALUES
 (1,1,3,1,'Loa hư không sửa được','Hư nặng'),
 (2,1,4,1,'Micro bị mất','Mất'),
@@ -252,7 +247,7 @@ INSERT INTO ChiTietThanhLy VALUES
 (5,5,5,1,'Camera hỏng','Hư nặng');
 
 -- =====================================================
--- NHẬT KÝ HỆ THỐNG (KHÔNG CÓ ghiChu)
+-- NHẬT KÝ HỆ THỐNG
 -- =====================================================
 CREATE TABLE BangGhiLog (
   maLog INT AUTO_INCREMENT PRIMARY KEY,
@@ -264,9 +259,9 @@ CREATE TABLE BangGhiLog (
   FOREIGN KEY (maND) REFERENCES NguoiDung(maND)
 );
 
-INSERT INTO BangGhiLog (maND,hanhDong,doiTuong,doiTuongId) VALUES
-(1,'LOGIN','TaiKhoan',1),
-(2,'INSERT','PhieuMuon',1),
-(3,'INSERT','KiemKe',1),
-(4,'INSERT','KeHoachMuaSam',1),
-(5,'DUYET','KeHoachThanhLy',1);
+INSERT INTO BangGhiLog VALUES
+(1,NOW(),1,'LOGIN','TaiKhoan',1),
+(2,NOW(),2,'INSERT','PhieuMuon',1),
+(3,NOW(),3,'INSERT','KiemKe',1),
+(4,NOW(),4,'INSERT','KeHoachMuaSam',1),
+(5,NOW(),5,'DUYET','KeHoachThanhLy',1);
