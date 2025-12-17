@@ -1,23 +1,19 @@
 <?php
-<<<<<<< Updated upstream
 require_once __DIR__ . '/../../controllers/TV_duyet-mua-sam.php';
 
 $ctrl = new TV_DuyetMuaSamController();
 $vm = $ctrl->getViewModel();
-=======
 // views/pages_hieu-truong/duyet-mua-sam.php
 
 require_once __DIR__ . '/../../controllers/TV_duyet-mua-sam.php';
 
 $ctrl = new TV_DuyetMuaSamController();
 $vm   = $ctrl->getViewModel();
->>>>>>> Stashed changes
 
 $keyword = $vm['keyword'] ?? '';
 $status  = $vm['status'] ?? '';
 $list    = $vm['list'] ?? [];
 
-<<<<<<< Updated upstream
 function formatMaKeHoach($maMS, $ngayLap): string {
   $year = $ngayLap ? (int)date('Y', strtotime($ngayLap)) : (int)date('Y');
   return sprintf('KHM-%d-%03d', $year, (int)$maMS);
@@ -31,7 +27,6 @@ function lyDoMucDich($row): string {
   if (!empty($row['lyDo'])) return (string)$row['lyDo'];
   if (!empty($row['mucDich'])) return (string)$row['mucDich'];
   return '-';
-=======
 function tinhNamHocFromNgayLap($ngayLap): string {
     if (empty($ngayLap)) return '-';
     $y = (int)date('Y', strtotime($ngayLap));
@@ -41,13 +36,11 @@ function tinhNamHocFromNgayLap($ngayLap): string {
 function formatMaKeHoach($maMS, $ngayLap): string {
     $y = !empty($ngayLap) ? (int)date('Y', strtotime($ngayLap)) : (int)date('Y');
     return sprintf('KHM-%d-%03d', $y, (int)$maMS);
->>>>>>> Stashed changes
 }
 ?>
 
 <section id="duyet-mua-sam" class="trang-an" <?php echo ($active_tab != 'duyet-mua-sam') ? 'style="display:none;"' : ''; ?>>
 
-<<<<<<< Updated upstream
   <!-- CSS chỉ cho tab này -->
   <style>
     #duyet-mua-sam .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
@@ -171,7 +164,6 @@ function formatMaKeHoach($maMS, $ngayLap): string {
         </div>
       </form>
 
-=======
   <div class="head" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
     <div>
       <h2 style="margin:0 0 6px 0;">Duyệt kế hoạch mua sắm</h2>
@@ -300,12 +292,10 @@ function formatMaKeHoach($maMS, $ngayLap): string {
         </button>
         <span id="ms_msg" style="color:#ef4444;margin-left:8px;"></span>
       </div>
->>>>>>> Stashed changes
     </div>
   </div>
 
   <script>
-<<<<<<< Updated upstream
     // đường dẫn tới controller 
     var AJAX_URL = '../controllers/TV_duyet-mua-sam.php';
 
@@ -430,7 +420,6 @@ function formatMaKeHoach($maMS, $ngayLap): string {
 
       xhr.send(body);
     }
-=======
     // Đổi về absolute path nếu bạn bị sai đường dẫn
     const AJAX_URL_MS = '/quanlythietbithcs_unique/controllers/TV_duyet-mua-sam.php';
 
@@ -542,7 +531,6 @@ function formatMaKeHoach($maMS, $ngayLap): string {
     document.getElementById('msModalOverlay').addEventListener('click', function(e){
       if (e.target === this) closeMSModal();
     });
->>>>>>> Stashed changes
   </script>
 
 </section>
