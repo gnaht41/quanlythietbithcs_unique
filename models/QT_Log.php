@@ -12,30 +12,37 @@ class Log
         $this->conn = $db->getConnection();
     }
 
-    public function ghiLog($maND, $hanhDong, $doiTuong, $doiTuongId = null, $ghiChu = '')
+    public function ghiLog($maND, $hanhDong, $doiTuong, $doiTuongId = null)
     {
         if (!$this->conn) return false;
 
         $sql = "INSERT INTO BangGhiLog
-                (maND, hanhDong, doiTuong, doiTuongId, ghiChu)
-                VALUES (?, ?, ?, ?, ?)";
+            (maND, hanhDong, doiTuong, doiTuongId)
+            VALUES (?, ?, ?, ?)";
 
         $stmt = $this->conn->prepare($sql);
         if ($stmt === false) return false;
 
+        $doiTuongId = $doiTuongId ?? 0;
+
         $stmt->bind_param(
-            "issis",
+            "issi",
             $maND,
             $hanhDong,
             $doiTuong,
-            $doiTuongId,
-            $ghiChu
+            $doiTuongId
         );
 
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            // debug khi cần
+            // die($stmt->error);
+            return false;
+        }
+
         $stmt->close();
         return true;
     }
+
     public function getAllLogs()
     {
         if (!$this->conn) return [];
@@ -45,8 +52,7 @@ class Log
             l.thoiGian,
             nd.hoTen,
             l.hanhDong,
-            l.doiTuong,
-            l.ghiChu
+            l.doiTuong
         FROM BangGhiLog l
         LEFT JOIN NguoiDung nd ON l.maND = nd.maND
         ORDER BY l.thoiGian DESC
