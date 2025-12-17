@@ -1,0 +1,159 @@
+/* Duyệt mua sắm - đơn giản & đẹp */
+#duyet-mua-sam .ds-phieu {
+    margin-top: 24px;
+    display: grid;
+    gap: 16px;
+}
+
+#duyet-mua-sam .phieu-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: box-shadow 0.2s;
+}
+
+#duyet-mua-sam .phieu-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+#duyet-mua-sam .phieu-info strong {
+    font-size: 1.2rem;
+    color: #1e40af;
+    font-weight: 600;
+}
+
+#duyet-mua-sam .phieu-info small {
+    display: block;
+    color: #64748b;
+    margin-top: 5px;
+    font-size: 0.95rem;
+}
+
+#duyet-mua-sam .trang-thai {
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+}
+
+/* Class không dấu - nhất quán PHP + JS */
+#duyet-mua-sam .trang-thai.cho-duyet {
+    background: #fffbeb;
+    color: #92400e;
+}
+
+#duyet-mua-sam .trang-thai.da-duyet {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+#duyet-mua-sam .trang-thai.tu-choi {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+#duyet-mua-sam .phieu-actions {
+    display: flex;
+    gap: 10px;
+}
+
+#duyet-mua-sam .btn-primary,
+#duyet-mua-sam .btn-secondary {
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#duyet-mua-sam .btn-primary {
+    background: #3b82f6;
+    color: white;
+    border: none;
+}
+
+#duyet-mua-sam .btn-secondary {
+    background: #f8fafc;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+/* Modal */
+#duyet-mua-sam .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+#duyet-mua-sam .modal.open {
+    display: flex;
+}
+
+#duyet-mua-sam .noi-dung-modal {
+    background: white;
+    width: 740px;
+    max-width: 95%;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    position: relative;
+}
+
+#duyet-mua-sam .dong-x {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-size: 26px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+}
+
+#duyet-mua-sam table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+}
+
+#duyet-mua-sam th {
+    background: #f8fafc;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #334155;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+#duyet-mua-sam td {
+    padding: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+#duyet-mua-sam select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    margin-top: 8px;
+}
+
+#duyet-mua-sam .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
