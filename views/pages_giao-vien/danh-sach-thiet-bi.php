@@ -51,7 +51,7 @@ $monHocs  = $model->getAllMonHoc();
     <table>
         <thead>
             <tr>
-                <th>#</th>
+                <th>STT</th>
                 <th>Tên thiết bị</th>
                 <th>Đơn vị</th>
                 <th>Khối</th>
