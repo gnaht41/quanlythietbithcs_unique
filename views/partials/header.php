@@ -15,12 +15,13 @@
     <title><?php echo htmlspecialchars($page_title ?? 'Bảng điều khiển'); ?></title>
     <link rel="stylesheet" href="css/main.css" />
     <?php if (isset($css_file) && !empty($css_file)): ?>
-    <link rel="stylesheet" href="css/<?php echo htmlspecialchars($css_file); ?>" />
+        <link rel="stylesheet" href="css/<?php echo htmlspecialchars($css_file); ?>" />
     <?php endif; ?>
     <!-- FAVICON - LOGO NHỎ TRÊN TAB TRÌNH DUYỆT -->
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
     <!-- Nếu bạn dùng file PNG thì thay bằng dòng dưới -->
     <link rel="icon" type="image/png" href="img/UniqueLogo.jpg">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>

@@ -135,44 +135,6 @@ INSERT INTO ChiTietPhieuMuon VALUES
 (5,4,5,1,NULL);
 
 -- =====================================================
--- KIỂM KÊ
--- =====================================================
-CREATE TABLE KiemKe (
-  maKK INT AUTO_INCREMENT PRIMARY KEY,
-  ngayKK DATE,
-  loaiKiemKe ENUM('Cuối kỳ','Cuối năm','Đột xuất'),
-  maND INT,
-  FOREIGN KEY (maND) REFERENCES NguoiDung(maND)
-);
-
-INSERT INTO KiemKe VALUES
-(1,'2024-05-31','Cuối kỳ',3),
-(2,'2024-06-30','Cuối năm',3),
-(3,'2024-07-15','Đột xuất',3),
-(4,'2024-08-31','Cuối kỳ',3),
-(5,'2024-12-31','Cuối năm',3);
-
--- =====================================================
--- CHI TIẾT KIỂM KÊ
--- =====================================================
-CREATE TABLE ChiTietKiemKe (
-  maCTKK INT AUTO_INCREMENT PRIMARY KEY,
-  maKK INT,
-  maTB INT,
-  soLuongTruoc INT,
-  soLuongThucTe INT,
-  FOREIGN KEY (maKK) REFERENCES KiemKe(maKK),
-  FOREIGN KEY (maTB) REFERENCES ThietBi(maTB)
-);
-
-INSERT INTO ChiTietKiemKe VALUES
-(1,1,1,3,3),
-(2,1,2,10,9),
-(3,2,3,2,1),
-(4,2,4,5,4),
-(5,3,5,1,1);
-
--- =====================================================
 -- KẾ HOẠCH MUA SẮM
 -- =====================================================
 CREATE TABLE KeHoachMuaSam (
@@ -262,6 +224,5 @@ CREATE TABLE BangGhiLog (
 INSERT INTO BangGhiLog VALUES
 (1,NOW(),1,'LOGIN','TaiKhoan',1),
 (2,NOW(),2,'INSERT','PhieuMuon',1),
-(3,NOW(),3,'INSERT','KiemKe',1),
 (4,NOW(),4,'INSERT','KeHoachMuaSam',1),
 (5,NOW(),5,'DUYET','KeHoachThanhLy',1);
