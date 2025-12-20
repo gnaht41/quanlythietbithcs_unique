@@ -1,2363 +1,646 @@
-/* CSS cho phiếu mượn */
+/* =================================================
+   File: giaovien.css
+   PHIÊN BẢN HOÀN CHỈNH - FIX HOÀN TOÀN NÚT THÁNG
+================================================= */
 
-/* Tăng font size tổng quát cho toàn bộ trang - CỠ CHỮ RẤT LỚN */
-body, html {
-    font-size: 24px !important;
-    line-height: 1.7 !important;
-}
-
-/* Tăng font size cho các element cơ bản */
-p, div, span, td, th, li, a {
-    font-size: 24px !important;
-}
-
-/* Tăng font size cho text input và select */
-input[type="text"], 
-input[type="email"], 
-input[type="password"], 
-input[type="number"], 
-input[type="date"], 
-textarea, 
-select {
-    font-size: 24px !important;
-    padding: 16px 20px !important;
-    min-height: 60px !important;
-}
-
-/* Tăng font size cho buttons */
-button, .btn {
-    font-size: 24px !important;
-    padding: 16px 28px !important;
-    min-height: 60px !important;
-}
-
-/* Override any purple/gradient backgrounds - EXCEPT buttons */
-#phieu-muon,
-.page-header,
-.content-section,
-section[id="phieu-muon"] {
-    background: white !important;
-    background-color: white !important;
-    background-image: none !important;
-}
-
-/* Override for specific elements but NOT buttons */
-section[id="phieu-muon"] *:not(.btn-mini):not(.btn-view):not(.btn-edit):not(.btn-cancel) {
-    background: white !important;
-    background-color: white !important;
-    background-image: none !important;
-}
-
-/* Specific override for any gradient or purple elements */
-.page-header::before,
-.page-header::after,
-.content-section::before,
-.content-section::after {
-    display: none !important;
-}
-
-/* Page header */
-.page-header {
-    margin-bottom: 30px;
-    padding: 30px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    background: white !important;
-    background-color: white !important;
-    background-image: none !important;
-}
-
-.page-header h1 {
-    font-size: 48px;
-    color: #333 !important;
-    margin: 0 0 15px 0;
-    font-weight: 600;
-    background: transparent !important;
-}
-
-.page-header h2 {
-    font-size: 36px;
-    color: #666 !important;
-    margin: 0;
-    font-weight: 400;
-    background: transparent !important;
-}
-
-/* Content section */
-.content-section {
-    background: white;
-    border-radius: 8px;
-    padding: 25px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-.section-header h3 {
-    font-size: 32px;
-    color: #333;
-    margin: 0;
-    font-weight: 500;
-}
-
-/* Filter section */
-.filter-section {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 6px;
-}
-
-.filter-select {
-    padding: 16px 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: white;
-    font-size: 24px;
-    min-width: 250px;
-    min-height: 60px;
-}
-
-.filter-select:focus {
-    outline: none;
-    border-color: #999;
-}
-
-/* Table wrapper */
-.table-wrapper {
-    overflow-x: auto;
-    border: 2px solid #333;
-    border-radius: 6px;
-}
-
-/* Data table */
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    font-size: 18px;
-}
-
-.data-table th {
-    background: #f8f9fa;
-    padding: 16px 20px;
-    text-align: left;
-    font-weight: 600;
-    color: #333;
-    border-bottom: 2px solid #333;
-    border-right: 1px solid #ddd;
-    font-size: 18px;
-}
-
-.data-table th:last-child {
-    border-right: none;
-}
-
-.data-table td {
-    padding: 16px 20px;
-    border-bottom: 1px solid #eee;
-    border-right: 1px solid #ddd;
-    vertical-align: middle;
-    font-size: 18px;
-}
-
-.data-table td:last-child {
-    border-right: none;
-}
-
-.data-table tbody tr:hover {
-    background: #f8f9fa;
-}
-
-.data-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-/* Header actions */
-.header-actions {
-    margin-bottom: 20px;
-    display: flex;
-    gap: 10px;
-}
-
-/* Buttons */
-.btn {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 18px;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
-
-/* Nút Primary - Màu xanh dương đẹp cho tất cả */
-.btn-primary,
-#btn-tao-phieu-muon,
-#btn-luu-phieu,
-#btn-xac-nhan-chon,
-button.btn-primary,
-.btn.btn-primary {
-    background: linear-gradient(135deg, #007bff, #0056b3) !important;
-    background-color: #007bff !important;
-    background-image: linear-gradient(135deg, #007bff, #0056b3) !important;
-    color: white !important;
-    border: 1px solid #0056b3 !important;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,123,255,0.2);
-    padding: 10px 20px;
-    border-radius: 6px;
-    cursor: pointer;
+/* =========================
+   TAB ĐIỀU HƯỚNG BÊN TRÁI
+========================= */
+.thanh-ben .tab-button {
+    color: #ecf0f1;
     text-decoration: none;
+    padding: 14px 25px;
+    display: block;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.thanh-ben .tab-button:hover {
+    background: #34495e;
+    color: #fff;
+}
+
+.thanh-ben .tab-button.active {
+    background: #34495e;
+    border-left: 4px solid #0dcaf0;
+    color: #0dcaf0;
+    font-weight: 600;
+}
+
+/* =========================
+   NÚT TẠO MỚI / TẠO BÁO CÁO
+========================= */
+.btn-create,
+button.btn-primary:not(table button):not(.modal-content button):not(.nav button):not(#danh-sach-thiet-bi button) {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-}
-
-.btn-primary:hover,
-#btn-tao-phieu-muon:hover,
-#btn-luu-phieu:hover,
-#btn-xac-nhan-chon:hover,
-button.btn-primary:hover,
-.btn.btn-primary:hover {
-    background: linear-gradient(135deg, #0056b3, #004085) !important;
-    background-color: #0056b3 !important;
-    background-image: linear-gradient(135deg, #0056b3, #004085) !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
-}
-
-.btn-primary:active,
-#btn-tao-phieu-muon:active,
-#btn-luu-phieu:active,
-#btn-xac-nhan-chon:active,
-button.btn-primary:active,
-.btn.btn-primary:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0,123,255,0.2);
-}
-
-/* Nút Secondary - Màu xám đẹp */
-.btn-secondary,
-#btn-huy,
-#btn-dong-chon-thiet-bi,
-#btn-dong-chi-tiet,
-button.btn-secondary,
-.btn.btn-secondary,
-.modal .btn-secondary,
-.modal #btn-huy,
-#modal-phieu-muon .btn-secondary,
-#modal-phieu-muon #btn-huy {
-    background: linear-gradient(135deg, #6c757d, #495057) !important;
-    background-color: #6c757d !important;
-    background-image: linear-gradient(135deg, #6c757d, #495057) !important;
+    background: #10b981;
     color: white !important;
-    border: 1px solid #495057 !important;
-    font-weight: 500 !important;
-    transition: all 0.3s ease !important;
-    box-shadow: 0 2px 4px rgba(108,117,125,0.2) !important;
-    padding: 10px 20px !important;
-    border-radius: 6px !important;
-    cursor: pointer !important;
-    text-decoration: none !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 8px !important;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    margin: 10px 0 24px 0;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
 }
 
-.btn-secondary:hover,
-#btn-huy:hover,
-#btn-dong-chon-thiet-bi:hover,
-#btn-dong-chi-tiet:hover,
-button.btn-secondary:hover,
-.btn.btn-secondary:hover,
-.modal .btn-secondary:hover,
-.modal #btn-huy:hover,
-#modal-phieu-muon .btn-secondary:hover,
-#modal-phieu-muon #btn-huy:hover {
-    background: linear-gradient(135deg, #495057, #343a40) !important;
-    background-color: #495057 !important;
-    background-image: linear-gradient(135deg, #495057, #343a40) !important;
+.btn-create:hover,
+button.btn-primary:not(table button):not(.modal-content button):not(.nav button):not(#danh-sach-thiet-bi button):hover {
+    background: #059669;
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(108,117,125,0.3);
+    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
 }
 
-/* Nút Outline - Màu viền đẹp */
-.btn-outline,
-#btn-them-thiet-bi,
-#btn-xoa-loc,
-button.btn-outline,
-.btn.btn-outline,
-.modal .btn-outline,
-.modal #btn-them-thiet-bi,
-#modal-phieu-muon .btn-outline,
-#modal-phieu-muon #btn-them-thiet-bi {
-    background: transparent !important;
-    background-color: transparent !important;
-    background-image: none !important;
-    color: #007bff !important;
-    border: 2px solid #007bff !important;
-    font-weight: 500 !important;
-    transition: all 0.3s ease !important;
-    padding: 8px 16px !important;
-    border-radius: 6px !important;
-    cursor: pointer !important;
-    text-decoration: none !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 8px !important;
+/* =========================
+   BẢNG - HEADER MÀU ĐẸP (CHỈ ÁP DỤNG CHO PHIẾU MƯỢN & BÁO CÁO)
+========================= */
+/* CHỈ áp dụng cho bảng KHÔNG PHẢI trong #danh-sach-thiet-bi */
+main table:not(#danh-sach-thiet-bi table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    font-size: 15px;
 }
 
-.btn-outline:hover,
-#btn-them-thiet-bi:hover,
-#btn-xoa-loc:hover,
-button.btn-outline:hover,
-.btn.btn-outline:hover,
-.modal .btn-outline:hover,
-.modal #btn-them-thiet-bi:hover,
-#modal-phieu-muon .btn-outline:hover,
-#modal-phieu-muon #btn-them-thiet-bi:hover {
-    background: linear-gradient(135deg, #007bff, #0056b3) !important;
-    background-color: #007bff !important;
-    background-image: linear-gradient(135deg, #007bff, #0056b3) !important;
+/* HEADER BẢNG - MÀU XANH ĐẬM ĐẸP */
+main table:not(#danh-sach-thiet-bi table) thead tr {
+    background: #1e40af !important;
+}
+
+main table:not(#danh-sach-thiet-bi table) thead th {
+    background: #1e40af !important;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 16px;
+    text-align: left;
     color: white !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+    border-bottom: 2px solid #1e3a8a;
 }
 
-.btn:hover {
+/* Cho bảng có <tr> chứa <th> trực tiếp (không có thead) */
+main table:not(#danh-sach-thiet-bi table)>tr:first-child {
+    background: #1e40af !important;
+}
+
+main table:not(#danh-sach-thiet-bi table)>tr:first-child>th {
+    background: #1e40af !important;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 16px;
+    text-align: left;
+    color: white !important;
+    border-bottom: 2px solid #1e3a8a;
+}
+
+/* Cho bảng có tbody > tr đầu tiên chứa th */
+main table:not(#danh-sach-thiet-bi table) tbody>tr:first-child>th {
+    background: #1e40af !important;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 16px;
+    text-align: left;
+    color: white !important;
+    border-bottom: 2px solid #1e3a8a;
+}
+
+/* Dòng xen kẽ trong tbody */
+main table:not(#danh-sach-thiet-bi table) tbody tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+/* Cell body */
+main table:not(#danh-sach-thiet-bi table) tbody td,
+main table:not(#danh-sach-thiet-bi table) tr td {
+    padding: 14px 16px;
+    vertical-align: middle;
+    color: #334155;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+main table:not(#danh-sach-thiet-bi table) tbody tr:last-child td,
+main table:not(#danh-sach-thiet-bi table) tr:last-child td {
+    border-bottom: none;
+}
+
+/* Cột thao tác */
+main table:not(#danh-sach-thiet-bi table) td:last-child {
+    white-space: nowrap;
+    text-align: center;
+    padding-right: 20px;
+}
+
+/* Style cho trường hợp không có dữ liệu */
+main table:not(#danh-sach-thiet-bi table) td[colspan] {
+    text-align: center;
+    color: #64748b;
+    font-style: italic;
+    padding: 30px;
+}
+
+/* NÚT THAO TÁC TRONG BẢNG */
+main table:not(#danh-sach-thiet-bi table) button,
+main table:not(#danh-sach-thiet-bi table) .btn {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 0 4px;
+    min-width: 70px;
+    color: white;
+    transition: all 0.2s;
+}
+
+main table:not(#danh-sach-thiet-bi table) button:hover:not(:disabled),
+main table:not(#danh-sach-thiet-bi table) .btn:hover:not(:disabled) {
+    transform: translateY(-1px);
     opacity: 0.9;
 }
 
-/* Small buttons - nhưng vẫn đủ lớn để dễ nhấn */
-.btn-sm {
-    padding: 8px 14px !important;
-    font-size: 13px !important;
-    min-width: 40px !important;
-    min-height: 36px !important;
+main table:not(#danh-sach-thiet-bi table) .btn-info {
+    background: #0ea5e9;
 }
 
-/* Đặc biệt cho btn-danger.btn-sm - nút xóa thiết bị */
-.btn-danger.btn-sm,
-button.btn-danger.btn-sm {
-    padding: 10px 14px !important;
-    font-size: 14px !important;
-    min-width: 45px !important;
-    min-height: 40px !important;
-    border-radius: 8px !important;
+main table:not(#danh-sach-thiet-bi table) .btn-warning {
+    background: #f59e0b;
 }
 
-.btn-action {
-    padding: 4px 8px;
-    font-size: 12px;
-    margin-right: 5px;
+main table:not(#danh-sach-thiet-bi table) .btn-danger {
+    background: #ef4444;
 }
 
-.btn-info {
-    background-color: white;
-    color: #333;
-    border: 1px solid #ddd;
+main table:not(#danh-sach-thiet-bi table) .btn-secondary {
+    background: #6b7280;
 }
 
-.btn-warning {
-    background-color: white;
-    color: #333;
-    border: 1px solid #ddd;
+main table:not(#danh-sach-thiet-bi table) button:disabled,
+main table:not(#danh-sach-thiet-bi table) .btn-secondary[disabled] {
+    background: #d1d5db !important;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
-/* Nút Danger - Màu đỏ nổi bật với chữ đen */
-.btn-danger,
-button.btn-danger,
-.btn.btn-danger,
-.modal .btn-danger,
-#modal-phieu-muon .btn-danger {
-    background: linear-gradient(135deg, #ff6b6b, #ff5252) !important;
-    background-color: #ff6b6b !important;
-    background-image: linear-gradient(135deg, #ff6b6b, #ff5252) !important;
-    color: #000 !important;
-    border: 2px solid #ff3333 !important;
-    font-weight: 700 !important;
-    transition: all 0.3s ease !important;
-    box-shadow: 0 3px 6px rgba(255,107,107,0.3) !important;
-    padding: 12px 18px !important;
-    border-radius: 8px !important;
-    cursor: pointer !important;
-    text-decoration: none !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    font-size: 15px !important;
-    min-width: 50px !important;
-    min-height: 42px !important;
-    text-shadow: 0 1px 2px rgba(255,255,255,0.3) !important;
+main table:not(#danh-sach-thiet-bi table) button:disabled:hover,
+main table:not(#danh-sach-thiet-bi table) .btn-secondary[disabled]:hover {
+    transform: none;
 }
 
-.btn-danger:hover,
-button.btn-danger:hover,
-.btn.btn-danger:hover,
-.modal .btn-danger:hover,
-#modal-phieu-muon .btn-danger:hover {
-    background: linear-gradient(135deg, #ff5252, #ff3333) !important;
-    background-color: #ff5252 !important;
-    background-image: linear-gradient(135deg, #ff5252, #ff3333) !important;
-    color: #000 !important;
-    transform: translateY(-2px) scale(1.08);
-    box-shadow: 0 6px 12px rgba(255,107,107,0.5);
-    border-color: #ff1a1a !important;
-}
-
-.btn-danger:active,
-button.btn-danger:active,
-.btn.btn-danger:active {
-    transform: translateY(0) scale(1.03);
-    box-shadow: 0 3px 6px rgba(255,107,107,0.4);
-    color: #000 !important;
-}
-
-/* Table */
-.table-container {
-    background: red !important;
-    border: 10px solid #000 !important;
-    border-radius: 0;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0;
-}
-
-.table th,
-.table td {
-    padding: 15px 25px;
-    text-align: left;
-    border: 2px solid #000;
-    vertical-align: middle;
-}
-
-.table th {
-    background-color: #f8f9fa;
+/* Trạng thái */
+.status-chờ-duyệt,
+.status-cho-duyet {
+    color: #f59e0b;
     font-weight: 600;
 }
 
-/* Modal */
-.modal {
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    display: none;
+.status-đang-mượn,
+.status-dang-muon {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.status-text,
+.status-đang-xử-lý,
+.status-dang-xu-ly {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.status-đã-trả,
+.status-da-tra {
+    color: #6366f1;
+    font-weight: 600;
+}
+
+/* =========================
+   NAV LỊCH - FIX HOÀN TOÀN
+========================= */
+.nav {
+    display: flex;
     align-items: center;
     justify-content: center;
+    gap: 20px;
+    margin: 30px 0;
+    overflow: hidden;
 }
 
-.modal-content {
-    background-color: white !important;
-    border-radius: 8px;
-    width: 95%;
-    max-width: 1000px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+/* ẨN TẤT CẢ TEXT TRONG .NAV */
+.nav * {
+    font-size: 0 !important;
 }
 
-.modal-header {
-    padding: 30px 40px;
-    border-bottom: 2px solid #007bff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
-    background-color: #f8f9fa !important;
-}
-
-.modal-header h3 {
-    color: #007bff !important;
-    background: transparent !important;
-    margin: 0;
-    font-weight: 600;
-    font-size: 26px;
-}
-
-.close {
-    font-size: 24px;
-    cursor: pointer;
-    color: #aaa;
-}
-
-.close:hover {
-    color: #000;
-}
-
-/* Form */
-.form-row {
-    display: flex;
-    gap: 30px;
-    padding: 0 40px;
-}
-
-.form-group {
-    margin-bottom: 25px;
-    flex: 1;
-    padding: 0 40px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #333 !important;
-    font-size: 18px;
-}
-
-.required {
-    color: #999;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 14px 18px;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    font-size: 18px;
-    background: white;
-    transition: all 0.3s ease;
-    color: #333;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
-    transform: translateY(-1px);
-}
-
-.char-count {
-    color: #999;
-    font-size: 12px;
-}
-
-/* Purpose input container */
-.purpose-input-container {
-    position: relative;
-}
-
-.purpose-hint {
-    color: #007bff;
-    font-size: 12px;
-    font-style: italic;
-    margin-top: 5px;
-    display: block;
-}
-
-/* Purpose suggestions dropdown */
-.purpose-suggestions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: white;
-    border: 2px solid #007bff;
-    border-top: none;
-    border-radius: 0 0 8px 8px;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0,123,255,0.15);
-}
-
-.purpose-suggestion-item {
-    padding: 12px 16px;
-    cursor: pointer;
-    border-bottom: 1px solid #f0f0f0;
-    transition: all 0.2s ease;
-}
-
-.purpose-suggestion-item:last-child {
-    border-bottom: none;
-}
-
-.purpose-suggestion-item:hover {
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    color: #007bff;
-}
-
-.purpose-suggestion-item.active {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: white;
-}
-
-.purpose-suggestion-title {
-    font-weight: 600;
-    font-size: 14px;
-    margin-bottom: 4px;
-}
-
-.purpose-suggestion-desc {
-    font-size: 12px;
-    color: #666;
-    line-height: 1.3;
-}
-
-.purpose-suggestion-item.active .purpose-suggestion-desc {
-    color: rgba(255,255,255,0.8);
-}
-
-.purpose-suggestion-usage {
-    font-size: 11px;
-    color: #999;
-    margin-top: 4px;
-}
-
-.purpose-suggestion-item.active .purpose-suggestion-usage {
-    color: rgba(255,255,255,0.6);
-}
-
-/* Equipment list */
-.equipment-list {
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    min-height: 100px;
-    padding: 10px;
-    background: white;
-}
-
-.equipment-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    background-color: #f8f9fa;
-}
-
-/* Equipment grid */
-.equipment-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 15px;
-    padding: 20px;
-    max-height: 500px;
-    overflow-y: auto;
-}
-
-.equipment-card {
-    border: 2px solid #ddd;
-    border-radius: 12px;
-    padding: 0;
-    transition: all 0.3s;
-    background: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.equipment-card:hover {
-    border-color: #007bff;
-    box-shadow: 0 4px 12px rgba(0,123,255,0.15);
-    transform: translateY(-2px);
-}
-
-.equipment-checkbox {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 15px;
-    height: 100%;
-}
-
-.equipment-checkbox input[type="checkbox"] {
-    margin-top: 8px;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    accent-color: white;
-}
-
-.equipment-checkbox label {
-    flex: 1;
-    cursor: pointer;
-    margin: 0;
-    display: block;
-}
-
-.equipment-info h4 {
-    margin: 0 0 10px 0;
-    color: #333;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 1.3;
-}
-
-.equipment-info p {
-    margin: 6px 0;
-    font-size: 13px;
-    color: #666;
-    line-height: 1.4;
-}
-
-.equipment-info p strong {
-    color: #333;
-    font-weight: 500;
-}
-
-.quantity-display {
-    margin-top: 12px;
-    padding: 10px;
-    background-color: #f8f9fa;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.qty-label {
-    font-weight: 500;
-    color: #333;
-    font-size: 13px;
-}
-
-.qty-input {
-    width: 60px;
-    padding: 4px 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    text-align: center;
-    background: white;
-}
-
-.qty-input:focus {
-    outline: none;
-    border-color: #999;
-}
-
-.equipment-card:has(input[type="checkbox"]:checked) {
-    border-color: #999;
-    background-color: #f8f9fa;
-}
-
-.equipment-card:has(input[type="checkbox"]:checked) .equipment-info h4 {
-    color: #333;
-}
-
-/* Form actions */
-.form-actions {
-    padding: 30px 40px;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-    background: white !important;
-}
-
-/* Status badges - Màu sắc đậm và nổi bật với selector mạnh */
-.status-badge,
-#phieu-muon .status-badge,
-section[id="phieu-muon"] .status-badge,
-.data-table .status-badge {
-    padding: 8px 16px !important;
-    border-radius: 20px !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    text-align: center !important;
-    min-width: 90px !important;
-    display: inline-block !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+/* Nút chuyển tháng - CHỈ HIỂN THỊ DẤU MŨI TÊN */
+.nav button {
+    background: #3b82f6 !important;
+    color: white !important;
     border: none !important;
-}
-
-/* Chờ duyệt - Màu cam đậm */
-.status-cho-duyet,
-#phieu-muon .status-cho-duyet,
-section[id="phieu-muon"] .status-cho-duyet,
-.data-table .status-cho-duyet {
-    background: linear-gradient(135deg, #ff6b00, #e55100) !important;
-    background-color: #ff6b00 !important;
-    background-image: linear-gradient(135deg, #ff6b00, #e55100) !important;
-    color: white !important;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4) !important;
-}
-
-/* Đã duyệt - Màu xanh lá đậm */
-.status-da-duyet,
-#phieu-muon .status-da-duyet,
-section[id="phieu-muon"] .status-da-duyet,
-.data-table .status-da-duyet {
-    background: linear-gradient(135deg, #2e7d32, #1b5e20) !important;
-    background-color: #2e7d32 !important;
-    background-image: linear-gradient(135deg, #2e7d32, #1b5e20) !important;
-    color: white !important;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4) !important;
-}
-
-/* Đã hủy - Màu đỏ đậm */
-.status-da-huy,
-#phieu-muon .status-da-huy,
-section[id="phieu-muon"] .status-da-huy,
-.data-table .status-da-huy {
-    background: linear-gradient(135deg, #1565c0, #0d47a1) !important;
-    background-color: #1565c0 !important;
-    background-image: linear-gradient(135deg, #1565c0, #0d47a1) !important;
-    color: white !important;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4) !important;
-}
-
-/* Từ chối - Màu đỏ tím đậm */
-.status-tu-choi,
-#phieu-muon .status-tu-choi,
-section[id="phieu-muon"] .status-tu-choi,
-.data-table .status-tu-choi {
-    background: linear-gradient(135deg, #ad1457, #880e4f) !important;
-    background-color: #ad1457 !important;
-    background-image: linear-gradient(135deg, #ad1457, #880e4f) !important;
-    color: white !important;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4) !important;
-}
-
-/* Đang mượn - Màu xanh dương đậm */
-.status-dang-muon,
-#phieu-muon .status-dang-muon,
-section[id="phieu-muon"] .status-dang-muon,
-.data-table .status-dang-muon {
-    background: linear-gradient(135deg, #2e7d32, #1b5e20) !important;
-    background-color: #2e7d32 !important;
-    background-image: linear-gradient(135deg, #2e7d32, #1b5e20) !important;
-    color: white !important;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4) !important;
-}
-
-/* Đã trả - Màu xám đậm */
-.status-da-tra,
-#phieu-muon .status-da-tra,
-section[id="phieu-muon"] .status-da-tra,
-.data-table .status-da-tra {
-    background: linear-gradient(135deg, #f57c00, #e65100) !important;
-    background-color: #f57c00 !important;
-    background-image: linear-gradient(135deg, #f57c00, #e65100) !important;
-    color: white !important;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4) !important;
-}
-
-/* Hiệu ứng hover cho status badges */
-.status-badge:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-/* Quantity display */
-.quantity-display {
-    color: #007bff;
-    font-weight: 600;
-    text-align: center;
-}
-
-/* Action buttons */
-.action-buttons {
-    text-align: center;
-    white-space: nowrap;
-}
-
-/* Base style cho tất cả btn-mini */
-.btn-mini,
-#phieu-muon .btn-mini,
-section[id="phieu-muon"] .btn-mini,
-.data-table .btn-mini,
-.action-buttons .btn-mini {
-    display: inline-block !important;
-    padding: 6px 12px !important;
-    margin: 2px !important;
-    border: none !important;
-    border-radius: 6px !important;
-    cursor: pointer !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    text-align: center !important;
-    transition: all 0.3s ease !important;
-    text-decoration: none !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-    color: white !important;
-    min-width: 50px !important;
-}
-
-/* Nút Xem - Màu xanh dương - Selector cực mạnh */
-.btn-view,
-.btn-mini.btn-view,
-#phieu-muon .btn-view,
-#phieu-muon .btn-mini.btn-view,
-section[id="phieu-muon"] .btn-view,
-section[id="phieu-muon"] .btn-mini.btn-view,
-.data-table .btn-view,
-.data-table .btn-mini.btn-view,
-.action-buttons .btn-view,
-.action-buttons .btn-mini.btn-view {
-    background: linear-gradient(135deg, #007bff, #0056b3) !important;
-    background-color: #007bff !important;
-    background-image: linear-gradient(135deg, #007bff, #0056b3) !important;
-    color: white !important;
-    border: 1px solid #0056b3 !important;
-}
-
-.btn-view:hover,
-.btn-mini.btn-view:hover,
-#phieu-muon .btn-view:hover,
-#phieu-muon .btn-mini.btn-view:hover,
-section[id="phieu-muon"] .btn-view:hover,
-section[id="phieu-muon"] .btn-mini.btn-view:hover,
-.data-table .btn-view:hover,
-.data-table .btn-mini.btn-view:hover,
-.action-buttons .btn-view:hover,
-.action-buttons .btn-mini.btn-view:hover {
-    background: linear-gradient(135deg, #0056b3, #004085) !important;
-    background-color: #0056b3 !important;
-    background-image: linear-gradient(135deg, #0056b3, #004085) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
-}
-
-/* Nút Sửa - Màu cam vàng - Selector cực mạnh */
-.btn-edit,
-.btn-mini.btn-edit,
-#phieu-muon .btn-edit,
-#phieu-muon .btn-mini.btn-edit,
-section[id="phieu-muon"] .btn-edit,
-section[id="phieu-muon"] .btn-mini.btn-edit,
-.data-table .btn-edit,
-.data-table .btn-mini.btn-edit,
-.action-buttons .btn-edit,
-.action-buttons .btn-mini.btn-edit {
-    background: linear-gradient(135deg, #fd7e14, #e55a00) !important;
-    background-color: #fd7e14 !important;
-    background-image: linear-gradient(135deg, #fd7e14, #e55a00) !important;
-    color: white !important;
-    border: 1px solid #e55a00 !important;
-}
-
-.btn-edit:hover,
-.btn-mini.btn-edit:hover,
-#phieu-muon .btn-edit:hover,
-#phieu-muon .btn-mini.btn-edit:hover,
-section[id="phieu-muon"] .btn-edit:hover,
-section[id="phieu-muon"] .btn-mini.btn-edit:hover,
-.data-table .btn-edit:hover,
-.data-table .btn-mini.btn-edit:hover,
-.action-buttons .btn-edit:hover,
-.action-buttons .btn-mini.btn-edit:hover {
-    background: linear-gradient(135deg, #e55a00, #cc4900) !important;
-    background-color: #e55a00 !important;
-    background-image: linear-gradient(135deg, #e55a00, #cc4900) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(253,126,20,0.3);
-}
-
-/* Nút Hủy - Màu đỏ - Selector cực mạnh */
-.btn-cancel,
-.btn-mini.btn-cancel,
-#phieu-muon .btn-cancel,
-#phieu-muon .btn-mini.btn-cancel,
-section[id="phieu-muon"] .btn-cancel,
-section[id="phieu-muon"] .btn-mini.btn-cancel,
-.data-table .btn-cancel,
-.data-table .btn-mini.btn-cancel,
-.action-buttons .btn-cancel,
-.action-buttons .btn-mini.btn-cancel {
-    background: linear-gradient(135deg, #dc3545, #c82333) !important;
-    background-color: #dc3545 !important;
-    background-image: linear-gradient(135deg, #dc3545, #c82333) !important;
-    color: white !important;
-    border: 1px solid #c82333 !important;
-}
-
-.btn-cancel:hover,
-.btn-mini.btn-cancel:hover,
-#phieu-muon .btn-cancel:hover,
-#phieu-muon .btn-mini.btn-cancel:hover,
-section[id="phieu-muon"] .btn-cancel:hover,
-section[id="phieu-muon"] .btn-mini.btn-cancel:hover,
-.data-table .btn-cancel:hover,
-.data-table .btn-mini.btn-cancel:hover,
-.action-buttons .btn-cancel:hover,
-.action-buttons .btn-mini.btn-cancel:hover {
-    background: linear-gradient(135deg, #c82333, #a71e2a) !important;
-    background-color: #c82333 !important;
-    background-image: linear-gradient(135deg, #c82333, #a71e2a) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(220,53,69,0.3);
-}
-
-/* Hiệu ứng khi nhấn */
-.btn-mini:active {
-    transform: translateY(0);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-}
-
-/* Responsive cho mobile */
-@media (max-width: 768px) {
-    .btn-mini {
-        padding: 8px 10px;
-        font-size: 11px;
-        margin: 1px;
-    }
-}
-
-/* Loading */
-.loading {
-    text-align: center;
-    padding: 40px;
-    color: #999;
-    background: white;
-}
-
-/* Search box */
-.search-box {
-    padding: 20px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    flex-wrap: wrap;
-    background: white;
-}
-
-.search-box input {
-    flex: 1;
-    min-width: 200px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: white;
-}
-
-.search-box input:focus {
-    outline: none;
-    border-color: #999;
-}
-
-.bulk-actions {
-    display: flex;
-    gap: 8px;
-}
-
-/* Detail content */
-.detail-content {
-    padding: 20px;
-    background: white;
-}
-
-.detail-row {
-    margin-bottom: 15px;
-    padding: 10px 0;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.detail-row:last-child {
-    border-bottom: none;
-}
-
-.detail-row strong {
-    color: #333;
-    font-weight: 500;
-}
-
-.detail-row ul {
-    margin: 10px 0 0 20px;
-    color: #666;
-}
-
-.detail-row li {
-    margin-bottom: 5px;
-}
-
-/* Simple detail modal */
-.modal-simple {
-    max-width: 600px;
-}
-
-.detail-content-simple {
-    padding: 20px 40px;
-}
-
-.detail-item {
-    display: flex;
-    margin-bottom: 15px;
-    align-items: flex-start;
-}
-
-.detail-item label {
-    font-weight: 600;
-    color: #333;
-    min-width: 140px;
-    margin-right: 15px;
-}
-
-.detail-item span {
-    color: #666;
-    flex: 1;
-}
-
-#detail-thiet-bi {
-    flex: 1;
-}
-
-.equipment-detail {
-    background: #f8f9fa;
-    padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 8px;
-    border-left: 3px solid #007bff;
-}
-
-.equipment-detail .name {
-    font-weight: 500;
-    color: #333;
-}
-
-.equipment-detail .quantity {
-    color: #007bff;
-    font-size: 14px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .equipment-grid {
-        grid-template-columns: 1fr;
-        padding: 15px;
-    }
-    
-    .equipment-card {
-        margin-bottom: 10px;
-    }
-    
-    .form-row {
-        flex-direction: column;
-        gap: 0;
-    }
-    
-    .search-box {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .bulk-actions {
-        justify-content: center;
-    }
-}
-
-/* Text utilities */
-.text-center {
-    text-align: center;
-}
-
-.text-muted {
-    color: #999;
-}
-
-/* =====================================================
-   LỊCH SỬ MƯỢN - CALENDAR STYLES
-   ===================================================== */
-
-.header-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.calendar-controls {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.calendar-controls h3 {
-    margin: 0;
-    min-width: 150px;
-    text-align: center;
-    color: #333;
-    font-weight: 600;
-}
-
-/* Nút mũi tên điều hướng tháng */
-.btn-arrow {
-    background: #f8f9fa !important;
-    border: 2px solid #007bff !important;
-    color: #007bff !important;
-    font-size: 24px !important;
-    font-weight: bold !important;
     width: 50px !important;
     height: 50px !important;
-    border-radius: 50% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transition: all 0.3s ease !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: background 0.2s ease !important;
+    flex-shrink: 0 !important;
     padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    position: relative !important;
 }
 
-.btn-arrow:hover {
-    background: #007bff !important;
-    color: white !important;
-    transform: scale(1.1) !important;
-    box-shadow: 0 4px 8px rgba(0,123,255,0.3) !important;
+/* Thêm dấu mũi tên bằng ::before */
+.nav button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 28px !important;
+    color: white;
+    line-height: 1;
 }
 
-.btn-arrow:active {
-    transform: scale(0.95) !important;
+.nav button:first-of-type::before {
+    content: '‹';
 }
 
-/* Style cho ngày trả trong lịch sử */
-.loan-return-date .return-date {
-    color: #28a745;
-    font-weight: 600;
-    background: #d4edda;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 12px;
+.nav button:last-of-type::before {
+    content: '›';
 }
 
-.loan-return-date .no-return {
-    color: #dc3545;
-    font-weight: 500;
-    background: #f8d7da;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 12px;
+.nav button:hover {
+    background: #2563eb !important;
 }
 
-.loan-due-date {
-    color: #007bff;
-    font-weight: 500;
+.nav button:active {
+    background: #1d4ed8 !important;
 }
 
-.filter-section {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 25px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    flex-wrap: wrap;
+/* Tháng hiện tại - PHẢI RESET FONT-SIZE */
+.nav span#month-year,
+.nav #month-year {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    text-align: center !important;
+    min-width: 200px !important;
+    display: inline-block !important;
 }
 
-.filter-group {
-    display: flex;
-    align-items: center;
+/* =========================
+   LỊCH CALENDAR
+========================= */
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
     gap: 8px;
-}
-
-.filter-group label {
-    font-weight: 500;
-    color: #555;
-    white-space: nowrap;
-}
-
-.filter-group select,
-.filter-group input {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    min-width: 150px;
-}
-
-.filter-group input {
-    min-width: 200px;
-}
-
-/* Calendar Container */
-.calendar-container {
-    background: white;
+    background: #f1f5f9;
     border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     overflow: hidden;
-    margin-bottom: 25px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.calendar-header {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    background: #f8f9fa;
-    color: #333;
-    border-bottom: 2px solid #dee2e6;
-}
-
-.weekday {
-    padding: 15px 10px;
-    text-align: center;
+.day-header {
+    background: #3b82f6;
+    color: #fff;
+    padding: 12px;
     font-weight: 600;
+    text-align: center;
     font-size: 14px;
-    border-right: 1px solid #dee2e6;
+    border-radius: 6px;
 }
 
-.weekday:last-child {
-    border-right: none;
-}
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 1px;
-    background: #e9ecef;
-}
-
-.calendar-day {
-    background: white;
-    min-height: 140px;
-    padding: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    border: 2px solid transparent;
-    overflow: visible;
-    display: flex;
-    flex-direction: column;
-}
-
-.calendar-day.has-many-loans {
-    min-height: 180px;
-}
-
-.calendar-day:hover {
-    background: #f8f9fa;
-    transform: translateY(-1px);
-}
-
-.calendar-day.selected {
-    border-color: #007bff;
-    background: #e3f2fd;
-}
-
-.calendar-day.other-month {
-    background: #f8f9fa;
-    color: #adb5bd;
-}
-
-.calendar-day.today {
-    background: #fff3cd;
-    border: 2px solid #ffc107;
-    font-weight: bold;
-}
-
-.calendar-day.has-loans {
-    background: #d1ecf1;
-    border-left: 4px solid #17a2b8;
-}
-
-.calendar-day.has-loans.selected {
-    background: #cce5ff;
-    border: 2px solid #007bff;
+.day {
+    background: #ffffff;
+    min-height: 120px;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .day-number {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 16px;
-    margin-bottom: 6px;
-    flex-shrink: 0;
-}
-
-.day-loans {
-    font-size: 11px;
-    color: #666;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-}
-
-.loan-code-mini {
-    display: block;
-    font-size: 11px;
-    padding: 2px 4px;
-    margin: 2px 0;
-    border-radius: 4px;
-    color: white;
-    font-weight: 600;
-    text-align: center;
-    line-height: 1.3;
-}
-
-.loan-code-mini.cho-duyet { background: #ff6b00; color: white; }
-.loan-code-mini.da-duyet { background: #2e7d32; color: white; }
-.loan-code-mini.da-huy { background: #1565c0; color: white; }
-.loan-code-mini.tu-choi { background: #ad1457; color: white; }
-.loan-code-mini.dang-muon { background: #2e7d32; color: white; }
-.loan-code-mini.da-tra { background: #1565c0; color: white; }
-
-.more-loans {
-    font-size: 10px;
-    color: #666;
-    text-align: center;
-    margin-top: 3px;
-    font-style: italic;
-    font-weight: 500;
-}
-
-.loan-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    display: inline-block;
-    margin: 1px;
-}
-
-.loan-dot.pending { background: #ffc107; }
-.loan-dot.approved { background: #28a745; }
-.loan-dot.cancelled { background: #dc3545; }
-.loan-dot.rejected { background: #e83e8c; }
-.loan-dot.active { background: #007bff; }
-.loan-dot.returned { background: #6c757d; }
-
-/* Selected Date Details */
-.selected-date-details {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    margin-bottom: 25px;
-}
-
-.selected-date-details h3 {
-    margin: 0 0 15px 0;
-    color: #333;
-    font-size: 18px;
-}
-
-.loans-list {
-    overflow-x: auto;
-}
-
-.loans-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.loans-table thead {
-    background: #f8f9fa;
-}
-
-.loans-table th {
-    padding: 12px 15px;
-    text-align: left;
-    font-weight: 600;
-    color: #495057;
-    border-bottom: 2px solid #dee2e6;
-    font-size: 14px;
-}
-
-.loans-table td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #dee2e6;
-    font-size: 14px;
-    vertical-align: middle;
-}
-
-.loans-table tbody tr:hover {
-    background: #f8f9fa;
-}
-
-.loans-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.loan-row.cho-duyet { border-left: 4px solid #ff6b00; }
-.loan-row.da-duyet { border-left: 4px solid #2e7d32; }
-.loan-row.da-huy { border-left: 4px solid #1565c0; }
-.loan-row.tu-choi { border-left: 4px solid #ad1457; }
-.loan-row.dang-muon { border-left: 4px solid #2e7d32; }
-.loan-row.da-tra { border-left: 4px solid #1565c0; }
-
-.loan-code {
-    font-weight: 600;
-    color: #333;
-    font-family: 'Courier New', monospace;
-}
-
-.loan-equipment {
-    color: #495057;
-    max-width: 250px;
-    word-wrap: break-word;
-}
-
-.loan-purpose {
-    color: #6c757d;
-    font-style: italic;
-    max-width: 200px;
-    word-wrap: break-word;
-}
-
-/* Removed loan-actions styles since they're no longer needed */
-
-/* Statistics Section */
-.statistics-section {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.statistics-section h3 {
-    margin: 0 0 20px 0;
-    color: #333;
-    font-size: 18px;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-}
-
-.stat-card {
-    background: white;
-    color: #333;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    transition: transform 0.2s ease;
-    border: 1px solid #dee2e6;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-.stat-card:nth-child(1) {
-    border-left: 4px solid #6c757d;
-}
-
-.stat-card:nth-child(2) {
-    border-left: 4px solid #ffc107;
-}
-
-.stat-card:nth-child(3) {
-    border-left: 4px solid #28a745;
-}
-
-.stat-card:nth-child(4) {
-    border-left: 4px solid #007bff;
-}
-
-.stat-number {
-    font-size: 32px;
-    font-weight: bold;
+    color: #1e293b;
     margin-bottom: 8px;
-    color: #495057;
 }
 
-.stat-label {
-    font-size: 14px;
-    color: #6c757d;
-}
-
-/* Empty State */
-.empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    color: #666;
-}
-
-.empty-state i {
-    font-size: 48px;
-    color: #ddd;
-    margin-bottom: 15px;
-}
-
-.empty-state h4 {
-    margin: 0 0 10px 0;
-    color: #999;
-}
-
-.empty-state p {
-    margin: 0;
-    font-size: 14px;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .header-section {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .calendar-controls {
-        justify-content: center;
-    }
-    
-    .filter-section {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-    }
-    
-    .filter-group {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 5px;
-    }
-    
-    .filter-group select,
-    .filter-group input {
-        min-width: auto;
-        width: 100%;
-    }
-    
-    .calendar-day {
-        min-height: 100px;
-        padding: 4px;
-    }
-    
-    .day-number {
-        font-size: 14px;
-    }
-    
-    .loan-code-mini {
-        font-size: 8px;
-        padding: 1px 2px;
-    }
-    
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .loans-table {
-        font-size: 12px;
-    }
-    
-    .loans-table th,
-    .loans-table td {
-        padding: 8px 10px;
-    }
-    
-    .loan-equipment,
-    .loan-purpose {
-        max-width: 150px;
-    }
-}
-
-@media (max-width: 480px) {
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .calendar-day {
-        min-height: 80px;
-        padding: 3px;
-    }
-    
-    .day-number {
-        font-size: 12px;
-    }
-    
-    .day-loans {
-        font-size: 10px;
-    }
-    
-    .loan-code-mini {
-        font-size: 7px;
-        padding: 1px;
-    }
-    
-    .more-loans {
-        font-size: 7px;
-    }
-}
-/* =====================================================
-   TRẠNG THÁI TRONG LỊCH SỬ MƯỢN - GIỐNG PHIẾU MƯỢN
-   ===================================================== */
-
-/* Chờ duyệt - Màu cam đậm */
-#lich-su-muon .status-cho-duyet,
-.loans-table .status-cho-duyet {
-    color: white !important;
-    background: linear-gradient(135deg, #ff6b00, #e55100) !important;
-    background-color: #ff6b00 !important;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important;
-}
-
-/* Đã duyệt - Màu xanh lá đậm */
-#lich-su-muon .status-da-duyet,
-.loans-table .status-da-duyet {
-    color: white !important;
-    background: linear-gradient(135deg, #2e7d32, #1b5e20) !important;
-    background-color: #2e7d32 !important;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important;
-}
-
-/* Đã hủy - Màu xanh dương đậm */
-#lich-su-muon .status-da-huy,
-.loans-table .status-da-huy {
-    color: white !important;
-    background: linear-gradient(135deg, #1565c0, #0d47a1) !important;
-    background-color: #1565c0 !important;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important;
-}
-
-/* Từ chối - Màu hồng đậm */
-#lich-su-muon .status-tu-choi,
-.loans-table .status-tu-choi {
-    color: white !important;
-    background: linear-gradient(135deg, #ad1457, #880e4f) !important;
-    background-color: #ad1457 !important;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important;
-}
-
-/* Đang mượn - Màu xanh lá đậm */
-#lich-su-muon .status-dang-muon,
-.loans-table .status-dang-muon {
-    color: white !important;
-    background: linear-gradient(135deg, #2e7d32, #1b5e20) !important;
-    background-color: #2e7d32 !important;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important;
-}
-
-/* Đã trả - Màu xanh dương đậm */
-#lich-su-muon .status-da-tra,
-.loans-table .status-da-tra {
-    color: white !important;
-    background: linear-gradient(135deg, #1565c0, #0d47a1) !important;
-    background-color: #1565c0 !important;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important;
-}
-
-/* Đảm bảo status badge có style cơ bản */
-#lich-su-muon .status-badge,
-.loans-table .status-badge {
-    padding: 4px 8px;
-    border-radius: 4px;
+.phieu {
+    display: block;
+    background: #fbbf24;
+    color: #000;
+    padding: 6px 10px;
+    border-radius: 6px;
     font-size: 12px;
     font-weight: 600;
+    margin-bottom: 6px;
+    cursor: pointer;
     text-align: center;
-    display: inline-block;
-    min-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.2s;
 }
 
-/* =====================================================
-   BÁO CÁO HƯ HỎNG STYLES
-   ===================================================== */
+.phieu:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
 
-/* Equipment selection */
-.equipment-selection {
+.phieu.tra {
+    background: #10b981;
+    color: #fff;
+}
+
+/* =========================
+   MODAL
+========================= */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal.open {
+    display: flex !important;
+}
+
+.modal>.modal-content {
+    background: #ffffff;
+    width: 560px;
+    max-width: 95%;
+    max-height: 90vh;
+    padding: 28px;
+    border-radius: 12px;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: modalFadeIn 0.3s ease;
+    margin: auto;
+}
+
+@keyframes modalFadeIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-content h3 {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+    color: #1e293b;
+    font-weight: 700;
+}
+
+.modal-content p {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.modal-content label {
+    display: block;
+    margin: 16px 0 6px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #374151;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    box-sizing: border-box;
+}
+
+.modal-content input:focus,
+.modal-content select:focus,
+.modal-content textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.modal-content .form-buttons {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.modal-content .btn-primary,
+.modal-content .btn-danger,
+.modal-content button {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    transition: all 0.2s;
+}
+
+.modal-content .btn-primary,
+.modal-content button[type="submit"],
+.modal-content button.btn-primary {
+    background: #3b82f6;
+}
+
+.modal-content .btn-primary:hover,
+.modal-content button[type="submit"]:hover,
+.modal-content button.btn-primary:hover {
+    background: #2563eb;
+}
+
+.modal-content .btn-danger,
+.modal-content button[type="button"] {
+    background: #ef4444;
+}
+
+.modal-content .btn-danger:hover,
+.modal-content button[type="button"]:hover {
+    background: #dc2626;
+}
+
+/* Equipment list trong modal */
+#equipment-list {
     max-height: 300px;
     overflow-y: auto;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    padding: 15px;
-    background: #f8f9fa;
+    margin-bottom: 12px;
 }
 
-.equipment-item-selection {
-    display: flex;
+#equipment-list .equipment {
+    display: grid;
+    grid-template-columns: 24px 1fr auto;
     align-items: center;
+    gap: 12px;
     padding: 12px;
     margin-bottom: 10px;
-    background: white;
-    border: 2px solid #dee2e6;
     border-radius: 8px;
-    transition: all 0.3s ease;
+    border: 2px solid #e5e7eb;
+    background: #f9fafb;
     cursor: pointer;
+    transition: all 0.2s;
 }
 
-.equipment-item-selection:hover {
-    border-color: #007bff;
-    box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+#equipment-list .equipment:hover {
+    background: #f0f9ff;
+    border-color: #3b82f6;
 }
 
-.equipment-item-selection.selected {
-    border-color: #007bff;
-    background: #e3f2fd;
+#equipment-list .equipment.selected {
+    background: #dbeafe;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.equipment-item-selection input[type="radio"] {
-    margin-right: 12px;
-    width: 18px;
-    height: 18px;
-    accent-color: #007bff;
+#equipment-list .no-equipment {
+    padding: 20px;
+    text-align: center;
+    color: #64748b;
+    font-style: italic;
 }
 
-.equipment-item-info {
-    flex: 1;
-}
-
-.equipment-item-info h4 {
-    margin: 0 0 5px 0;
-    color: #333;
-    font-size: 16px;
+#selected-equipment {
+    margin-top: 12px;
+    padding: 12px;
+    background: #f0fdf4;
+    border: 2px dashed #86efac;
+    border-radius: 8px;
+    font-size: 14px;
+    min-height: 60px;
+    color: #166534;
     font-weight: 500;
 }
 
-.equipment-item-info p {
-    margin: 3px 0;
-    color: #666;
+/* Form tìm kiếm thiết bị - CHỈ cho các section KHÔNG PHẢI danh-sach-thiet-bi */
+section:not(#danh-sach-thiet-bi) .bo-loc {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+section:not(#danh-sach-thiet-bi) .bo-loc input,
+section:not(#danh-sach-thiet-bi) .bo-loc select {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    flex: 1;
+    min-width: 180px;
     font-size: 14px;
 }
 
-.equipment-item-info .loan-info {
-    color: #007bff;
-    font-weight: 500;
-    font-size: 13px;
+section:not(#danh-sach-thiet-bi) .bo-loc input:focus,
+section:not(#danh-sach-thiet-bi) .bo-loc select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Status badges cho báo cáo */
-.status-dang-xu-ly {
-    background: linear-gradient(135deg, #ffc107, #e0a800) !important;
-    color: #000 !important;
-    text-shadow: 0 1px 2px rgba(255,255,255,0.3) !important;
-}
-
-.status-da-xu-ly {
-    background: linear-gradient(135deg, #28a745, #1e7e34) !important;
-    color: white !important;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4) !important;
-}
-
-.status-huy-bo {
-    background: linear-gradient(135deg, #6c757d, #495057) !important;
-    color: white !important;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4) !important;
-}
-
-/* Status cho báo cáo hư hỏng */
-.status-dang-xu-ly {
-    background: linear-gradient(135deg, #ffc107, #e0a800) !important;
-    color: #000 !important;
-    text-shadow: 0 1px 2px rgba(255,255,255,0.3) !important;
-}
-
-/* Đảm bảo text hiển thị trên buttons trong báo cáo hư hỏng */
-#bao-cao-hu-hong .btn,
-#bao-cao-hu-hong button,
-.modal .btn,
-.modal button {
-    font-size: 24px !important;
-    padding: 16px 28px !important;
-    min-height: 60px !important;
-    line-height: 1.5 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center !important;
-    white-space: nowrap !important;
-    overflow: visible !important;
-}
-
-/* Đặc biệt cho nút nhỏ trong bảng */
-#bao-cao-hu-hong .btn-sm {
-    font-size: 20px !important;
-    padding: 12px 20px !important;
-    min-height: 50px !important;
-    min-width: 120px !important;
-}
-
-/* FORCE TEXT DISPLAY - Chỉ hiển thị text, giữ nguyên màu sắc */
-section[id="bao-cao-hu-hong"] .data-table .btn,
-section[id="bao-cao-hu-hong"] .data-table button,
-section[id="bao-cao-hu-hong"] .data-table .btn-view,
-section[id="bao-cao-hu-hong"] .data-table .btn-sm,
-section[id="bao-cao-hu-hong"] tbody .btn,
-section[id="bao-cao-hu-hong"] tbody button,
-section[id="bao-cao-hu-hong"] tbody .btn-view,
-section[id="bao-cao-hu-hong"] tbody .btn-sm {
-    /* Chỉ style text, KHÔNG thay đổi màu sắc */
-    font-size: 16px !important;
-    font-weight: 600 !important;
-    padding: 10px 16px !important;
-    min-height: 40px !important;
-    min-width: 120px !important;
-    cursor: pointer !important;
-    text-decoration: none !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center !important;
-    white-space: nowrap !important;
-    overflow: visible !important;
-    line-height: 1.4 !important;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3) !important;
-    transition: all 0.3s ease !important;
-}
-
-/* Đảm bảo không có pseudo-elements che text */
-section[id="bao-cao-hu-hong"] .data-table .btn::before,
-section[id="bao-cao-hu-hong"] .data-table .btn::after,
-section[id="bao-cao-hu-hong"] .data-table button::before,
-section[id="bao-cao-hu-hong"] .data-table button::after,
-section[id="bao-cao-hu-hong"] tbody .btn::before,
-section[id="bao-cao-hu-hong"] tbody .btn::after,
-section[id="bao-cao-hu-hong"] tbody button::before,
-section[id="bao-cao-hu-hong"] tbody button::after {
-    display: none !important;
-    content: none !important;
-}
-
-/* Đảm bảo text content hiển thị */
-section[id="bao-cao-hu-hong"] .data-table .btn *,
-section[id="bao-cao-hu-hong"] .data-table button *,
-section[id="bao-cao-hu-hong"] tbody .btn *,
-section[id="bao-cao-hu-hong"] tbody button * {
-    color: inherit !important;
-    font-size: inherit !important;
-    display: inline !important;
-}
-
-/* Đảm bảo button container có đủ không gian */
-section[id="bao-cao-hu-hong"] .data-table td:last-child {
-    padding: 15px !important;
-    text-align: center !important;
-}
-
-/* Đảm bảo button container có đủ không gian */
-section[id="bao-cao-hu-hong"] .data-table .action-buttons,
-section[id="bao-cao-hu-hong"] .data-table td:last-child {
-    min-width: 180px !important;
-    text-align: center !important;
-    vertical-align: middle !important;
-}
-
-/* Override mọi style có thể che button text */
-section[id="bao-cao-hu-hong"] .data-table .btn,
-section[id="bao-cao-hu-hong"] .data-table button {
-    visibility: visible !important;
-    opacity: 1 !important;
-    z-index: 999 !important;
-    position: relative !important;
-    text-indent: 0 !important;
-    letter-spacing: normal !important;
-    word-spacing: normal !important;
-    text-transform: none !important;
-    font-family: Arial, sans-serif !important;
-}
-
-/* Đảm bảo text node hiển thị */
-section[id="bao-cao-hu-hong"] .data-table .btn,
-section[id="bao-cao-hu-hong"] .data-table button {
-    font-style: normal !important;
-    font-variant: normal !important;
-    text-decoration: none !important;
-    vertical-align: baseline !important;
-}
-
-/* Loading spinner */
-.loading-indicator {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-}
-
-.spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #007bff;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 15px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Detail section for báo cáo */
-.detail-section .detail-row {
-    display: flex;
-    margin-bottom: 15px;
-    padding: 10px 0;
-    border-bottom: 1px solid #f0f0f0;
-    align-items: flex-start;
-}
-
-.detail-section .detail-row:last-child {
-    border-bottom: none;
-}
-
-.detail-section .detail-row label {
+section:not(#danh-sach-thiet-bi) .bo-loc button.btn-primary,
+section:not(#danh-sach-thiet-bi) .bo-loc a.btn-secondary {
+    padding: 10px 20px;
+    border-radius: 8px;
     font-weight: 600;
-    color: #333;
-    min-width: 150px;
-    margin-right: 15px;
+    text-decoration: none;
+    align-self: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-.detail-section .detail-row span {
-    color: #666;
-    flex: 1;
-    word-wrap: break-word;
+section:not(#danh-sach-thiet-bi) .bo-loc button.btn-primary {
+    background: #3b82f6;
+    color: white;
 }
 
-/* Character count */
-.char-count {
-    text-align: right;
-    font-size: 12px;
-    color: #999;
-    margin-top: 5px;
+section:not(#danh-sach-thiet-bi) .bo-loc button.btn-primary:hover {
+    background: #2563eb;
 }
 
-/* Responsive */
+section:not(#danh-sach-thiet-bi) .bo-loc a.btn-secondary {
+    background: #6b7280;
+    color: white;
+    display: inline-block;
+}
+
+section:not(#danh-sach-thiet-bi) .bo-loc a.btn-secondary:hover {
+    background: #4b5563;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
 @media (max-width: 768px) {
-    .equipment-item-selection {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+    .nav {
+        gap: 15px;
     }
-    
-    .equipment-item-selection input[type="radio"] {
-        margin-right: 0;
-        margin-bottom: 8px;
+
+    .nav button {
+        width: 44px !important;
+        height: 44px !important;
     }
-    
-    .detail-section .detail-row {
-        flex-direction: column;
-        gap: 5px;
+
+    .nav button::before {
+        font-size: 24px !important;
     }
-    
-    .detail-section .detail-row label {
-        min-width: auto;
-        margin-right: 0;
+
+    .nav span#month-year,
+    .nav #month-year {
+        font-size: 18px !important;
+        min-width: 150px !important;
     }
-}
 
-/* =====================================================
-   HIỂN THỊ TEXT TRÊN BUTTONS - GIỮ NGUYÊN MÀU SẮC
-   ===================================================== */
+    .calendar {
+        gap: 4px;
+        padding: 8px;
+    }
 
-/* Chỉ style text, không thay đổi màu sắc của buttons */
-section[id="bao-cao-hu-hong"] .data-table tbody tr td button,
-section[id="bao-cao-hu-hong"] .data-table tbody tr td .btn,
-section[id="bao-cao-hu-hong"] table tbody tr td button,
-section[id="bao-cao-hu-hong"] table tbody tr td .btn {
-    /* Chỉ style text và layout */
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    font-family: Arial, Helvetica, sans-serif !important;
-    text-decoration: none !important;
-    text-align: center !important;
-    text-transform: none !important;
-    text-indent: 0 !important;
-    letter-spacing: 0.3px !important;
-    word-spacing: normal !important;
-    line-height: 1.3 !important;
-    white-space: nowrap !important;
-    
-    /* Size và spacing */
-    padding: 8px 12px !important;
-    min-width: 100px !important;
-    min-height: 32px !important;
-    
-    /* Display properties */
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative !important;
-    overflow: visible !important;
-    cursor: pointer !important;
-}
+    .day {
+        min-height: 80px;
+        padding: 6px;
+    }
 
-/* Đảm bảo không có pseudo-elements che text */
-section[id="bao-cao-hu-hong"] .data-table tbody tr td button::before,
-section[id="bao-cao-hu-hong"] .data-table tbody tr td button::after,
-section[id="bao-cao-hu-hong"] .data-table tbody tr td .btn::before,
-section[id="bao-cao-hu-hong"] .data-table tbody tr td .btn::after,
-section[id="bao-cao-hu-hong"] table tbody tr td button::before,
-section[id="bao-cao-hu-hong"] table tbody tr td button::after,
-section[id="bao-cao-hu-hong"] table tbody tr td .btn::before,
-section[id="bao-cao-hu-hong"] table tbody tr td .btn::after {
-    display: none !important;
-    content: "" !important;
-}
+    main table {
+        font-size: 13px;
+    }
 
-/* Đảm bảo text content hiển thị */
-section[id="bao-cao-hu-hong"] .data-table tbody tr td button *,
-section[id="bao-cao-hu-hong"] .data-table tbody tr td .btn *,
-section[id="bao-cao-hu-hong"] table tbody tr td button *,
-section[id="bao-cao-hu-hong"] table tbody tr td .btn * {
-    display: inline !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-/* =====================================================
-   ULTIMATE FIX: FORCE BUTTON TEXT DISPLAY
-   Selector cực mạnh nhất để override mọi style
-   ===================================================== */
+    main table td,
+    main table th {
+        padding: 10px 8px;
+    }
 
-/* Maximum specificity selector for button text */
-html body table.data-table tbody tr td .btn-mini,
-html body table.data-table tbody tr td .btn-view,
-html body table.data-table tbody tr td .btn-edit,
-html body table.data-table tbody tr td .btn-cancel,
-html body .data-table tbody tr td .btn-mini,
-html body .data-table tbody tr td .btn-view,
-html body .data-table tbody tr td .btn-edit,
-html body .data-table tbody tr td .btn-cancel,
-html body .action-buttons .btn-mini,
-html body .action-buttons .btn-view,
-html body .action-buttons .btn-edit,
-html body .action-buttons .btn-cancel {
-    /* Force text visibility */
-    color: white !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    font-family: Arial, Helvetica, sans-serif !important;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.7) !important;
-    text-align: center !important;
-    text-decoration: none !important;
-    text-transform: none !important;
-    text-indent: 0 !important;
-    letter-spacing: 0.5px !important;
-    word-spacing: normal !important;
-    line-height: 1.1 !important;
-    white-space: nowrap !important;
-    
-    /* Layout and display */
-    display: inline-block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative !important;
-    overflow: visible !important;
-    
-    /* Size and spacing */
-    padding: 5px 8px !important;
-    min-width: 45px !important;
-    min-height: 26px !important;
-    width: auto !important;
-    height: auto !important;
-    
-    /* Border and effects */
-    border-radius: 4px !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-    
-    /* Remove any interfering properties */
-    transform: none !important;
-    filter: none !important;
-    clip: none !important;
-    clip-path: none !important;
-    mask: none !important;
-    -webkit-mask: none !important;
-}
-
-/* Remove pseudo-elements that might hide text */
-html body table.data-table tbody tr td .btn-mini::before,
-html body table.data-table tbody tr td .btn-mini::after,
-html body table.data-table tbody tr td .btn-view::before,
-html body table.data-table tbody tr td .btn-view::after,
-html body table.data-table tbody tr td .btn-edit::before,
-html body table.data-table tbody tr td .btn-edit::after,
-html body table.data-table tbody tr td .btn-cancel::before,
-html body table.data-table tbody tr td .btn-cancel::after,
-html body .data-table tbody tr td .btn-mini::before,
-html body .data-table tbody tr td .btn-mini::after,
-html body .data-table tbody tr td .btn-view::before,
-html body .data-table tbody tr td .btn-view::after,
-html body .data-table tbody tr td .btn-edit::before,
-html body .data-table tbody tr td .btn-edit::after,
-html body .data-table tbody tr td .btn-cancel::before,
-html body .data-table tbody tr td .btn-cancel::after {
-    display: none !important;
-    content: "" !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    position: absolute !important;
-    left: -9999px !important;
-}
-
-/* Force text content visibility */
-html body table.data-table tbody tr td .btn-mini *,
-html body table.data-table tbody tr td .btn-view *,
-html body table.data-table tbody tr td .btn-edit *,
-html body table.data-table tbody tr td .btn-cancel *,
-html body .data-table tbody tr td .btn-mini *,
-html body .data-table tbody tr td .btn-view *,
-html body .data-table tbody tr td .btn-edit *,
-html body .data-table tbody tr td .btn-cancel * {
-    color: white !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    display: inline !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: static !important;
-}
-
-/* Hide FontAwesome icons specifically */
-html body .data-table .btn-mini i,
-html body .data-table .btn-view i,
-html body .data-table .btn-edit i,
-html body .data-table .btn-cancel i,
-html body .action-buttons .btn-mini i,
-html body .action-buttons .btn-view i,
-html body .action-buttons .btn-edit i,
-html body .action-buttons .btn-cancel i {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    position: absolute !important;
-    left: -9999px !important;
-}
-
-/* =====================================================
-   ACTION BUTTONS FOR BAO CAO HU HONG - WITH TEXT
-   ===================================================== */
-
-/* Base style for action buttons */
-.btn-action {
-    display: inline-block !important;
-    padding: 6px 12px !important;
-    margin: 0 2px !important;
-    border: none !important;
-    border-radius: 4px !important;
-    cursor: pointer !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    text-align: center !important;
-    text-decoration: none !important;
-    transition: all 0.3s ease !important;
-    color: white !important;
-    min-width: 50px !important;
-    position: relative !important;
-}
-
-/* Xem button - Blue */
-.btn-action.btn-view {
-    background: linear-gradient(135deg, #007bff, #0056b3) !important;
-    border: 1px solid #0056b3 !important;
-}
-
-.btn-action.btn-view:hover {
-    background: linear-gradient(135deg, #0056b3, #004085) !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
-}
-
-/* Sửa button - Orange */
-.btn-action.btn-edit {
-    background: linear-gradient(135deg, #fd7e14, #e55a00) !important;
-    border: 1px solid #e55a00 !important;
-}
-
-.btn-action.btn-edit:hover {
-    background: linear-gradient(135deg, #e55a00, #cc4900) !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(253,126,20,0.3);
-}
-
-/* Hủy button - Red */
-.btn-action.btn-cancel {
-    background: linear-gradient(135deg, #dc3545, #c82333) !important;
-    border: 1px solid #c82333 !important;
-}
-
-.btn-action.btn-cancel:hover {
-    background: linear-gradient(135deg, #c82333, #a71e2a) !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(220,53,69,0.3);
-}
-
-/* Disabled state */
-.btn-action:disabled,
-.btn-action.disabled {
-    background: #6c757d !important;
-    border-color: #6c757d !important;
-    cursor: not-allowed !important;
-    opacity: 0.6 !important;
-}
-
-.btn-action:disabled:hover,
-.btn-action.disabled:hover {
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-/* FOR LOAN MANAGEMENT BUTTONS */
-.data-table .btn-view::after {
-    content: "Xem" !important;
-    display: inline-block !important;
-    color: white !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.8) !important;
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    z-index: 999 !important;
-    pointer-events: none !important;
-}
-
-.data-table .btn-edit::after {
-    content: "Sửa" !important;
-    display: inline-block !important;
-    color: white !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.8) !important;
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    z-index: 999 !important;
-    pointer-events: none !important;
-}
-
-.data-table .btn-cancel::after {
-    content: "Hủy" !important;
-    display: inline-block !important;
-    color: white !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.8) !important;
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    z-index: 999 !important;
-    pointer-events: none !important;
-}
-
-/* Ensure all action buttons have relative positioning */
-#bao-cao-hu-hong .data-table .btn-view,
-#bao-cao-hu-hong .data-table .btn-sm,
-section[id="bao-cao-hu-hong"] .data-table .btn-view,
-section[id="bao-cao-hu-hong"] .data-table .btn-sm,
-.data-table .btn-view,
-.data-table .btn-edit,
-.data-table .btn-cancel {
-    position: relative !important;
-    overflow: visible !important;
+    .modal>.modal-content {
+        width: 100%;
+        padding: 20px;
+    }
 }

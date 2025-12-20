@@ -1,296 +1,312 @@
 <?php
-require_once __DIR__ . '/QT_Database.php';
-
 class CT_BaoCaoHuHongModel {
-    private $db;
-    private $conn;
+    private static $data = [];
+    private static $deletedIds = [];
     
-    public function __construct() {
-        $this->db = new Database();
-        $this->conn = $this->db->getConnection();
-    }
-    
-    // Lấy danh sách thiết bị đang mượn của giáo viên
-    public function layThietBiDangMuon($maND) {
-        try {
-            // Sử dụng cùng logic với CT_PhieuMuonModel
-            $sql = "SELECT DISTINCT 
-                        pm.maPhieu,
-                        pm.ngayMuon,
-                        pm.ngayTraDuKien,
-                        ctpm.maTB,
-                        tb.tenTB,
-                        tb.donVi,
-                        ctpm.soLuong
-                    FROM PhieuMuon pm
-                    JOIN ChiTietPhieuMuon ctpm ON pm.maPhieu = ctpm.maPhieu
-                    JOIN ThietBi tb ON ctpm.maTB = tb.maTB
-                    WHERE pm.maND = ? 
-                    AND (pm.trangThai = 'Đã duyệt' OR pm.trangThai = 'dang-muon' OR pm.trangThai = 'Đang mượn')
-                    AND (pm.ngayTraThucTe IS NULL OR pm.ngayTraThucTe = '')
-                    ORDER BY pm.ngayMuon DESC, tb.tenTB ASC";
+    public function layThietBiDangMuon() {
+        // Sử dụng model phiếu mượn để lấy dữ liệu
+        require_once __DIR__ . '/CT_PhieuMuonModel.php';
+        $phieuMuonModel = new CT_PhieuMuonModel();
+        
+        // Lấy danh sách phiếu mượn (bao gồm cả phiếu mẫu)
+        $danhSachPhieu = $phieuMuonModel->layDanhSach(1, 20); // Giả sử maND = 1
+        
+        error_log("=== DAMAGE REPORT EQUIPMENT DEBUG ===");
+        error_log("Found " . count($danhSachPhieu) . " phiếu mượn");
+        
+        $data = [];
+        foreach ($danhSachPhieu as $phieu) {
+            error_log("Processing phiếu: " . $phieu['ma'] . " - Status: " . $phieu['trangthai']);
             
-            $stmt = $this->conn->prepare($sql);
-            if (!$stmt) {
-                throw new Exception('Lỗi prepare statement: ' . $this->conn->error);
+            // CHỈ LẤY PHIẾU CÓ TRẠNG THÁI "ĐANG MƯỢN"
+            if ($phieu['trangthai'] !== 'Đang mượn') {
+                error_log("Skipping phiếu " . $phieu['ma'] . " - Status: " . $phieu['trangthai']);
+                continue;
             }
             
-            $stmt->bind_param("i", $maND);
-            if (!$stmt->execute()) {
-                throw new Exception('Lỗi execute statement: ' . $stmt->error);
-            }
+            // Parse thiết bị từ phiếu mượn
+            $thietBiText = $phieu['thietbi'];
+            error_log("Equipment text: " . $thietBiText);
             
-            $result = $stmt->get_result();
-            if (!$result) {
-                throw new Exception('Lỗi get result: ' . $this->conn->error);
-            }
-            
-            $data = [];
-            while ($row = $result->fetch_assoc()) {
-                $data[] = $row;
-            }
-            
-            // Nếu không có dữ liệu thật, trả về dữ liệu test
-            if (empty($data)) {
-                return [
-                    [
-                        'maPhieu' => 'PM-TEST-001',
-                        'ngayMuon' => date('Y-m-d'),
-                        'ngayTraDuKien' => date('Y-m-d', strtotime('+7 days')),
-                        'maTB' => 'TB-TEST-001',
-                        'tenTB' => 'Máy tính test',
-                        'donVi' => 'Chiếc',
-                        'soLuong' => 1
-                    ],
-                    [
-                        'maPhieu' => 'PM-TEST-002',
-                        'ngayMuon' => date('Y-m-d'),
-                        'ngayTraDuKien' => date('Y-m-d', strtotime('+5 days')),
-                        'maTB' => 'TB-TEST-002',
-                        'tenTB' => 'Máy chiếu test',
-                        'donVi' => 'Chiếc',
-                        'soLuong' => 1
-                    ]
-                ];
-            }
-            
-            return $data;
-            
-        } catch (Exception $e) {
-            // Nếu có lỗi, trả về dữ liệu test
-            return [
-                [
-                    'maPhieu' => 'PM-TEST-001',
-                    'ngayMuon' => date('Y-m-d'),
-                    'ngayTraDuKien' => date('Y-m-d', strtotime('+7 days')),
-                    'maTB' => 'TB-TEST-001',
-                    'tenTB' => 'Máy tính test (Lỗi DB)',
-                    'donVi' => 'Chiếc',
-                    'soLuong' => 1
-                ]
-            ];
-        }
-    }
-    
-    // Tạo báo cáo hư hỏng mới - lưu vào QT_Log
-    public function taoBaoCaoHuHong($data) {
-        try {
-            // Sử dụng QT_Log để ghi log
-            require_once __DIR__ . '/QT_Log.php';
-            $log = new Log();
-            
-            // Lấy maND từ session
-            $maND = $_SESSION['maND'] ?? 0;
-            
-            // Tạo chi tiết báo cáo
-            $chiTiet = [
-                'loai' => 'bao_cao_hu_hong',
-                'maPhieu' => $data['maPhieu'],
-                'maTB' => $data['maTB'],
-                'tenTB' => $this->layTenThietBi($data['maTB']),
-                'tinhTrang' => $data['tinhTrang'],
-                'noiDungBaoCao' => $data['noiDungBaoCao'],
-                'thoiGian' => date('Y-m-d H:i:s')
-            ];
-            
-            // Ghi log báo cáo hư hỏng
-            $result = $log->logBaoCaoHuHong($maND, $data['maTB'], $chiTiet);
-            
-            if ($result) {
-                // Lấy ID của log vừa tạo
-                $lastId = $this->conn->query("SELECT LAST_INSERT_ID() as id")->fetch_assoc()['id'];
-                return $lastId;
+            // Tách các thiết bị nếu có nhiều thiết bị
+            if (strpos($thietBiText, ',') !== false) {
+                // Nhiều thiết bị: "Máy tính Dell SL:1, Loa Bluetooth SL:1"
+                $thietBiParts = explode(',', $thietBiText);
+                foreach ($thietBiParts as $part) {
+                    $part = trim($part);
+                    if (preg_match('/(.+) SL:(\d+)/', $part, $matches)) {
+                        $tenTB = trim($matches[1]);
+                        $soLuong = $matches[2];
+                        $maTB = 'TB-' . substr(md5($tenTB), 0, 3);
+                        
+                        $data[] = [
+                            'maPhieu' => $phieu['ma'],
+                            'maTB' => $maTB,
+                            'tenTB' => $tenTB,
+                            'soLuong' => $soLuong,
+                            'thoiGianTao' => $phieu['ngaymuon'],
+                            'trangThai' => $phieu['trangthai']
+                        ];
+                        
+                        error_log("Added equipment: " . $tenTB . " from phiếu " . $phieu['ma']);
+                    }
+                }
             } else {
-                throw new Exception('Không thể lưu báo cáo vào log');
-            }
-            
-        } catch (Exception $e) {
-            throw new Exception('Lỗi taoBaoCaoHuHong: ' . $e->getMessage());
-        }
-    }
-    
-    // Đảm bảo cột chiTiet tồn tại
-    private function ensureChiTietColumn() {
-        try {
-            $checkColumn = $this->conn->query("SHOW COLUMNS FROM BangGhiLog LIKE 'chiTiet'");
-            if ($checkColumn->num_rows == 0) {
-                $this->conn->query("ALTER TABLE BangGhiLog ADD COLUMN chiTiet TEXT");
-            }
-        } catch (Exception $e) {
-            // Ignore error if column already exists or can't be added
-        }
-    }
-
-    
-    // Lấy danh sách báo cáo hư hỏng của giáo viên từ BangGhiLog
-    public function layDanhSachBaoCao($maND) {
-        try {
-            $sql = "SELECT 
-                        log.maLog as maBaoCao,
-                        log.thoiGian as ngayBaoCao,
-                        log.hanhDong,
-                        log.chiTiet,
-                        nd.hoTen
-                    FROM BangGhiLog log
-                    LEFT JOIN NguoiDung nd ON log.maND = nd.maND
-                    WHERE log.maND = ? 
-                    AND log.hanhDong LIKE '%báo cáo hư hỏng%'
-                    ORDER BY log.thoiGian DESC";
-            
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param("i", $maND);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            
-            $data = [];
-            while ($row = $result->fetch_assoc()) {
-                // Parse JSON chi tiết
-                $chiTiet = json_decode($row['chiTiet'], true);
-                
-                if ($chiTiet && isset($chiTiet['loai']) && $chiTiet['loai'] === 'bao_cao_hu_hong') {
+                // Một thiết bị: "Máy tính Dell SL:1"
+                if (preg_match('/(.+) SL:(\d+)/', $thietBiText, $matches)) {
+                    $tenTB = trim($matches[1]);
+                    $soLuong = $matches[2];
+                    $maTB = 'TB-' . substr(md5($tenTB), 0, 3);
+                    
                     $data[] = [
-                        'maBaoCao' => $row['maBaoCao'],
-                        'maPhieu' => $chiTiet['maPhieu'] ?? 'N/A',
-                        'maTB' => $chiTiet['maTB'] ?? 'N/A',
-                        'tenTB' => $this->layTenThietBi($chiTiet['maTB'] ?? ''),
-                        'tinhTrang' => $chiTiet['tinhTrang'] ?? 'N/A',
-                        'noiDungBaoCao' => $chiTiet['noiDungBaoCao'] ?? 'N/A',
-                        'ngayBaoCao' => $row['ngayBaoCao'],
-                        'trangThai' => 'dang-xu-ly', // Mặc định
-                        'ngayMuon' => $chiTiet['thoiGian'] ?? $row['ngayBaoCao'],
-                        'ngayTraDuKien' => 'N/A'
+                        'maPhieu' => $phieu['ma'],
+                        'maTB' => $maTB,
+                        'tenTB' => $tenTB,
+                        'soLuong' => $soLuong,
+                        'thoiGianTao' => $phieu['ngaymuon'],
+                        'trangThai' => $phieu['trangthai']
                     ];
+                    
+                    error_log("Added equipment: " . $tenTB . " from phiếu " . $phieu['ma']);
                 }
             }
-            
-            return $data;
-            
-        } catch (Exception $e) {
-            return []; // Trả về mảng rỗng nếu có lỗi
         }
-    }
-    
-    // Helper method để lấy tên thiết bị
-    private function layTenThietBi($maTB) {
-        if (empty($maTB)) return 'N/A';
         
-        try {
-            $sql = "SELECT tenTB FROM ThietBi WHERE maTB = ?";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param("s", $maTB);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            
-            if ($row = $result->fetch_assoc()) {
-                return $row['tenTB'];
-            }
-            
-            return $maTB; // Trả về mã TB nếu không tìm thấy tên
-            
-        } catch (Exception $e) {
-            return $maTB;
-        }
+        error_log("Total equipment for damage report: " . count($data));
+        
+        // Nếu không có dữ liệu thật, trả về test data
+        return !empty($data) ? $data : $this->getTestData();
     }
     
-    // Lấy chi tiết báo cáo hư hỏng từ BangGhiLog
-    public function layChiTietBaoCao($maLog) {
-        try {
-            $sql = "SELECT 
-                        log.*,
-                        nd.hoTen
-                    FROM BangGhiLog log
-                    LEFT JOIN NguoiDung nd ON log.maND = nd.maND
-                    WHERE log.maLog = ?";
+    public function taoBaoCao($data) {
+        // Validate required fields
+        if (empty($data['maTB']) || empty($data['tenTB']) || empty($data['tinhTrang']) || empty($data['noiDungBaoCao'])) {
+            throw new Exception('Thiếu thông tin bắt buộc');
+        }
+        
+        // Save to database using the same format as phiếu mượn
+        require_once __DIR__ . '/QT_Log.php';
+        $log = new Log();
+        
+        // Check session
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+        $maND = $_SESSION['maND'] ?? 1;
+        
+        error_log("=== SAVE DAMAGE REPORT DEBUG ===");
+        error_log("Session maND: " . $maND);
+        error_log("Input data: " . print_r($data, true));
+        
+        // Generate unique report code
+        $maBaoCao = 'BC' . date('ymd') . rand(100, 999);
+        
+        // Create compact format for database storage
+        $hanhDong = "BC:$maBaoCao|TB:{$data['tenTB']}|TT:" . substr($data['tinhTrang'], 0, 30) . "|ND:" . substr($data['noiDungBaoCao'], 0, 50);
+        
+        error_log("hanhDong: " . $hanhDong);
+        error_log("Length: " . strlen($hanhDong));
+        
+        $result = $log->ghiLog($maND, $hanhDong, "BaoCaoHuHong");
+        
+        error_log("Database save result: " . ($result ? 'SUCCESS' : 'FAILED'));
+        
+        if (!$result) {
+            throw new Exception('Lỗi lưu báo cáo vào database');
+        }
+        
+        return true;
+    }
+    
+    public function layDanhSach() {
+        $data = [];
+        
+        // Read from database first
+        require_once __DIR__ . '/QT_Database.php';
+        $db = new Database();
+        
+        if ($conn = $db->getConnection()) {
+            $sql = "SELECT maLog, hanhDong, thoiGian FROM BangGhiLog WHERE hanhDong LIKE 'BC:%' ORDER BY thoiGian DESC LIMIT 20";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->get_result();
             
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param("i", $maLog);
+            error_log("=== DAMAGE REPORT LIST DEBUG ===");
+            error_log("Found " . $result->num_rows . " damage reports in database");
+            
+            while ($row = $result->fetch_assoc()) {
+                error_log("Raw record: " . print_r($row, true));
+                $parsed = $this->parseBaoCao($row);
+                if ($parsed) {
+                    $data[] = $parsed;
+                    error_log("Parsed successfully: " . $parsed['maBaoCao']);
+                } else {
+                    error_log("Failed to parse record ID: " . $row['maLog']);
+                }
+            }
+        }
+        
+        error_log("Total parsed damage reports: " . count($data));
+        
+        // Only add test data if NO real data exists
+        if (empty($data) && !in_array(999, self::$deletedIds)) {
+            error_log("Adding test data because no real data found");
+            $data[] = [
+                'maBaoCao' => 999,
+                'maTB' => 'TB-001',
+                'tenTB' => 'Máy tính Dell',
+                'tinhTrang' => 'Màn hình bị vỡ, không hiển thị được',
+                'noiDungBaoCao' => 'Máy tính bị rơi làm vỡ màn hình, cần thay thế màn hình mới',
+                'ngayBaoCao' => date('Y-m-d H:i:s'),
+                'trangThai' => 'Đang xử lý'
+            ];
+        }
+        
+        // Don't merge with memory data if we have database data
+        $finalData = empty($data) ? array_merge($data, self::$data) : $data;
+        error_log("Final data count: " . count($finalData));
+        
+        return $finalData;
+    }
+    
+    public function layChiTiet($id) {
+        // First check database
+        require_once __DIR__ . '/QT_Database.php';
+        $db = new Database();
+        
+        if ($conn = $db->getConnection()) {
+            $sql = "SELECT maLog, hanhDong, thoiGian FROM BangGhiLog WHERE maLog = ? AND hanhDong LIKE 'BC:%'";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $id);
             $stmt->execute();
             $result = $stmt->get_result();
             
             if ($row = $result->fetch_assoc()) {
-                $chiTiet = json_decode($row['chiTiet'], true);
+                return $this->parseBaoCao($row);
+            }
+        }
+        
+        // Fallback to test data
+        if ($id == 999) {
+            return [
+                'maBaoCao' => 999,
+                'maTB' => 'TB-001',
+                'tenTB' => 'Máy tính Dell',
+                'tinhTrang' => 'Màn hình bị vỡ, không hiển thị được',
+                'noiDungBaoCao' => 'Máy tính bị rơi làm vỡ màn hình, cần thay thế màn hình mới',
+                'ngayBaoCao' => date('Y-m-d H:i:s'),
+                'trangThai' => 'Đang xử lý'
+            ];
+        }
+        
+        // Check memory data
+        foreach (self::$data as $item) {
+            if ($item['maBaoCao'] == $id) return $item;
+        }
+        
+        return null;
+    }
+    
+    private function parseBaoCao($row) {
+        $hanhDong = $row['hanhDong'];
+        
+        error_log("=== PARSE DAMAGE REPORT ===");
+        error_log("Raw hanhDong: " . $hanhDong);
+        
+        // Parse format: BC:BC251220123|TB:Máy tính Dell|TT:Màn hình bị vỡ|ND:Chi tiết hư hỏng
+        if (preg_match('/BC:(BC\w+)\|TB:(.+?)\|TT:(.+?)\|ND:(.+)/', $hanhDong, $matches)) {
+            $maBaoCao = $matches[1];
+            $tenTB = $matches[2];
+            $tinhTrang = $matches[3];
+            $noiDung = $matches[4];
+            
+            // Generate maTB from tenTB
+            $maTB = 'TB-' . substr(md5($tenTB), 0, 3);
+            
+            error_log("✅ Parsed damage report: " . $maBaoCao);
+            
+            return [
+                'maBaoCao' => $row['maLog'], // Use database ID for operations
+                'maTB' => $maTB,
+                'tenTB' => $tenTB,
+                'tinhTrang' => $tinhTrang,
+                'noiDungBaoCao' => $noiDung,
+                'ngayBaoCao' => $row['thoiGian'],
+                'trangThai' => 'Đang xử lý'
+            ];
+        }
+        
+        error_log("❌ Could not parse damage report format");
+        return null;
+    }
+    
+    public function capNhat($id, $data) {
+        require_once __DIR__ . '/QT_Database.php';
+        $db = new Database();
+        
+        if ($conn = $db->getConnection()) {
+            // Get current record
+            $stmt = $conn->prepare("SELECT hanhDong FROM BangGhiLog WHERE maLog = ? AND hanhDong LIKE 'BC:%'");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            if ($row = $result->fetch_assoc()) {
+                $hanhDong = $row['hanhDong'];
                 
-                if ($chiTiet && isset($chiTiet['loai']) && $chiTiet['loai'] === 'bao_cao_hu_hong') {
-                    return [
-                        'maBaoCao' => $row['maLog'],
-                        'maPhieu' => $chiTiet['maPhieu'] ?? 'N/A',
-                        'maTB' => $chiTiet['maTB'] ?? 'N/A',
-                        'tenTB' => $this->layTenThietBi($chiTiet['maTB'] ?? ''),
-                        'tinhTrang' => $chiTiet['tinhTrang'] ?? 'N/A',
-                        'noiDungBaoCao' => $chiTiet['noiDungBaoCao'] ?? 'N/A',
-                        'ngayBaoCao' => $row['thoiGian'],
-                        'trangThai' => 'dang-xu-ly',
-                        'maND' => $row['maND'],
-                        'hoTen' => $row['hoTen']
-                    ];
+                // Extract current data
+                if (preg_match('/BC:(BC\w+)\|TB:(.+?)\|TT:(.+?)\|ND:(.+)/', $hanhDong, $matches)) {
+                    $maBaoCao = $matches[1];
+                    $tenTB = $matches[2];
+                    
+                    // Create updated record
+                    $newHanhDong = "BC:$maBaoCao|TB:$tenTB|TT:" . substr($data['tinhTrang'], 0, 30) . "|ND:" . substr($data['noiDungBaoCao'], 0, 50);
+                    
+                    $updateStmt = $conn->prepare("UPDATE BangGhiLog SET hanhDong = ? WHERE maLog = ?");
+                    $updateStmt->bind_param("si", $newHanhDong, $id);
+                    return $updateStmt->execute();
                 }
             }
-            
-            return null;
-            
-        } catch (Exception $e) {
-            return null;
         }
+        
+        // Fallback to memory update
+        for ($i = 0; $i < count(self::$data); $i++) {
+            if (self::$data[$i]['maBaoCao'] == $id) {
+                self::$data[$i]['tinhTrang'] = $data['tinhTrang'];
+                self::$data[$i]['noiDungBaoCao'] = $data['noiDungBaoCao'];
+                self::$data[$i]['ngayCapNhat'] = date('Y-m-d H:i:s');
+                return true;
+            }
+        }
+        return false;
     }
     
-    // Cập nhật báo cáo hư hỏng
-    public function capNhatBaoCao($maBaoCao, $data) {
-        $sql = "UPDATE BaoCaoHuHong 
-                SET tinhTrang = ?, noiDungBaoCao = ?
-                WHERE maBaoCao = ?";
+    public function xoa($id) {
+        require_once __DIR__ . '/QT_Database.php';
+        $db = new Database();
         
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ssi", 
-            $data['tinhTrang'],
-            $data['noiDungBaoCao'],
-            $maBaoCao
-        );
+        if ($conn = $db->getConnection()) {
+            $stmt = $conn->prepare("DELETE FROM BangGhiLog WHERE maLog = ? AND hanhDong LIKE 'BC:%'");
+            $stmt->bind_param("i", $id);
+            if ($stmt->execute() && $stmt->affected_rows > 0) {
+                return true;
+            }
+        }
         
-        return $stmt->execute();
+        // Fallback to memory deletion
+        self::$data = array_filter(self::$data, fn($item) => $item['maBaoCao'] != $id);
+        self::$deletedIds[] = $id;
+        return true;
     }
     
-    // Xóa báo cáo hư hỏng
-    public function xoaBaoCao($maBaoCao) {
-        $sql = "DELETE FROM BaoCaoHuHong WHERE maBaoCao = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("i", $maBaoCao);
-        return $stmt->execute();
-    }
-    
-    // Kiểm tra quyền sở hữu báo cáo
-    public function kiemTraQuyenSoHuu($maBaoCao, $maND) {
-        $sql = "SELECT COUNT(*) as count
-                FROM BaoCaoHuHong bchh
-                JOIN PhieuMuon pm ON bchh.maPhieu = pm.maPhieu
-                WHERE bchh.maBaoCao = ? AND pm.maND = ?";
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ii", $maBaoCao, $maND);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        
-        return $row && $row['count'] > 0;
+    private function getTestData() {
+        // Test data phù hợp với phiếu mẫu từ trang phiếu mượn
+        return [
+            ['maPhieu' => 'PM251220001', 'maTB' => 'TB-001', 'tenTB' => 'Máy tính Dell', 'soLuong' => 1, 'trangThai' => 'Đang mượn'],
+            ['maPhieu' => 'PM251220002', 'maTB' => 'TB-002', 'tenTB' => 'Loa Bluetooth', 'soLuong' => 2, 'trangThai' => 'Đang mượn'],
+            ['maPhieu' => 'PM251220003', 'maTB' => 'TB-003', 'tenTB' => 'Máy tính Dell', 'soLuong' => 1, 'trangThai' => 'Đang mượn'],
+            ['maPhieu' => 'PM251220003', 'maTB' => 'TB-004', 'tenTB' => 'Loa Bluetooth', 'soLuong' => 1, 'trangThai' => 'Đang mượn']
+        ];
     }
 }
 ?>

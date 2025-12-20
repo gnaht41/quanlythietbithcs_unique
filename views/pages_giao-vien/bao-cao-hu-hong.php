@@ -1,472 +1,172 @@
-<section id="bao-cao-hu-hong" class="trang-an"
-    <?php echo ($active_tab != 'bao-cao-hu-hong') ? 'style="display:none;"' : ''; ?>>
-    <div class="header-section">
-        <h2>Báo cáo hư hỏng</h2>
-        <button id="btn-tao-bao-cao" class="btn btn-primary" style="z-index: 999; position: relative; pointer-events: auto;">
-            Tạo báo cáo hư hỏng
-        </button>
-    </div>
+<h2>Báo cáo hư hỏng</h2><button onclick="openCreate()" class="btn btn-primary">Tạo báo cáo</button>
+<table>
+    <tr>
+        <th>STT</th>
+        <th>Mã BC</th>
+        <th>Tên TB</th>
+        <th>Tình trạng</th>
+        <th>Ngày BC</th>
+        <th>Trạng thái</th>
+        <th>Thao tác</th>
+    </tr>
+    <tbody id="list"></tbody>
+</table>
 
-    <!-- Bảng danh sách báo cáo hư hỏng -->
-    <div class="table-container">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Mã thiết bị</th>
-                    <th>Tên thiết bị</th>
-                    <th>Tình trạng</th>
-                    <th>Ngày báo cáo</th>
-                    <th>Trạng thái</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody id="tbody-bao-cao">
-                <!-- Dữ liệu sẽ được load bằng JavaScript -->
-            </tbody>
-        </table>
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h3 id="title">Tạo báo cáo hư hỏng</h3>
+        <form onsubmit="save(event)">
+            <label>Chọn thiết bị:</label>
+            <div id="equipment-list"></div>
+            <label>Tình trạng hư hỏng:</label><textarea id="tinhtrang" placeholder="Mô tả tình trạng hư hỏng..."
+                required rows="3"></textarea>
+            <label>Nội dung chi tiết:</label><textarea id="noidung" placeholder="Mô tả chi tiết về hư hỏng..." required
+                rows="4"></textarea>
+            <div class="form-buttons"><button type="submit" class="btn btn-primary">Lưu báo cáo</button><button
+                    type="button" onclick="closeModal()" class="btn btn-danger">Hủy</button></div>
+        </form>
     </div>
+</div>
 
-    <!-- Loading indicator -->
-    <div id="loading-bao-cao" class="loading-indicator" style="display: none;">
-        <div class="spinner"></div>
-        <p>Đang tải dữ liệu...</p>
+<div id="modal-detail" class="modal">
+    <div class="modal-content">
+        <h3>Chi tiết</h3>
+        <div id="detail"></div><button onclick="closeModal('modal-detail')" class="btn btn-primary">Đóng</button>
     </div>
-</section>
+</div>
 
-<!-- Test Script -->
 <script>
-// Tự động detect base URL
-const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
-const apiUrl = baseUrl + '/controllers/BaoCaoAPI.php';
+const API = '../controllers/CT_BaoCaoAPI_Simple.php';
+let editId = null;
 
-console.log('Base URL:', baseUrl);
-console.log('API URL:', apiUrl);
-
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Test: DOM loaded for bao-cao-hu-hong');
-    
-    const button = document.getElementById('btn-tao-bao-cao');
-    console.log('Test: Button found:', button);
-    
-    if (button) {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Test: Button clicked directly!');
-            
-            // Hiển thị modal trực tiếp
-            const modal = document.getElementById('modal-bao-cao');
-            if (modal) {
-                modal.style.display = 'flex';
-                console.log('Test: Modal displayed');
-                
-                // Reset form
-                const form = document.getElementById('form-bao-cao');
-                if (form) {
-                    form.reset();
-                }
-                
-                // Set title
-                const title = document.getElementById('modal-bao-cao-title');
-                if (title) {
-                    title.textContent = 'Tạo báo cáo hư hỏng';
-                }
-                
-                // Load thiết bị đang mượn
-                const container = document.getElementById('danh-sach-thiet-bi-dang-muon');
-                if (container) {
-                    container.innerHTML = '<p class="text-muted">Đang tải danh sách thiết bị...</p>';
-                    
-                    // Gọi API để lấy thiết bị đang mượn
-                    fetch(apiUrl + '?action=lay-thiet-bi-dang-muon')
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success && data.data.length > 0) {
-                                let html = '';
-                                data.data.forEach((item, index) => {
-                                    const ngayMuon = new Date(item.ngayMuon).toLocaleDateString('vi-VN');
-                                    const ngayTraDuKien = new Date(item.ngayTraDuKien).toLocaleDateString('vi-VN');
-                                    
-                                    html += `
-                                        <div class="equipment-item-selection" style="border: 1px solid #ddd; padding: 10px; margin: 5px 0; cursor: pointer;">
-                                            <input type="radio" name="selectedEquipment" value="${item.maTB}" 
-                                                   data-ma-phieu="${item.maPhieu}" data-ten-tb="${item.tenTB}" style="margin-right: 10px;">
-                                            <div style="display: inline-block;">
-                                                <strong>${item.tenTB}</strong><br>
-                                                <small>Mã TB: ${item.maTB} | Số lượng: ${item.soLuong} ${item.donVi}</small><br>
-                                                <small>Phiếu: ${item.maPhieu} | Mượn: ${ngayMuon} | Trả dự kiến: ${ngayTraDuKien}</small>
-                                            </div>
-                                        </div>
-                                    `;
-                                });
-                                container.innerHTML = html;
-                                
-                                // Thêm event click cho các item
-                                container.querySelectorAll('.equipment-item-selection').forEach(item => {
-                                    item.addEventListener('click', function() {
-                                        const radio = this.querySelector('input[type="radio"]');
-                                        radio.checked = true;
-                                    });
-                                });
-                            } else {
-                                container.innerHTML = '<p class="text-muted">Không có thiết bị nào đang mượn</p>';
-                            }
-                        })
-                        .catch(error => {
-                            container.innerHTML = '<p class="text-muted">Lỗi kết nối: ' + error.message + '</p>';
-                        });
-                }
-                
-                // Load danh sách báo cáo hiện có
-                loadDanhSachBaoCao();
-                
-            } else {
-                console.log('Test: Modal not found');
-            }
-        });
-        console.log('Test: Direct event listener added');
-    }
-    
-    // Event listeners để đóng modal
-    const closeBtn = document.getElementById('close-modal-bao-cao');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
-            const modal = document.getElementById('modal-bao-cao');
-            if (modal) {
-                modal.style.display = 'none';
-            }
-        });
-    }
-    
-    const cancelBtn = document.getElementById('btn-huy-bao-cao');
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', function() {
-            const modal = document.getElementById('modal-bao-cao');
-            if (modal) {
-                modal.style.display = 'none';
-            }
-        });
-    }
-    
-    // Đóng modal khi click outside
-    const modal = document.getElementById('modal-bao-cao');
-    if (modal) {
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-    }
-    
-    // Xử lý submit form
-    const form = document.getElementById('form-bao-cao');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Lấy thiết bị được chọn
-            const selectedEquipment = document.querySelector('input[name="selectedEquipment"]:checked');
-            if (!selectedEquipment) {
-                alert('Vui lòng chọn thiết bị cần báo cáo');
-                return;
-            }
-            
-            // Lấy dữ liệu form
-            const tinhTrang = document.getElementById('tinhTrang').value.trim();
-            const noiDungBaoCao = document.getElementById('noiDungBaoCao').value.trim();
-            
-            if (!tinhTrang || !noiDungBaoCao) {
-                alert('Vui lòng điền đầy đủ thông tin');
-                return;
-            }
-            
-            // Gửi dữ liệu
-            const data = {
-                maPhieu: selectedEquipment.dataset.maPhieu,
-                maTB: selectedEquipment.value,
-                tinhTrang: tinhTrang,
-                noiDungBaoCao: noiDungBaoCao
-            };
-            
-            console.log('Sending data:', data);
-            
-            fetch('../controllers/BaoCaoAPI.php?action=tao-bao-cao', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                console.log('Response status:', response.status);
-                console.log('Response headers:', response.headers);
-                return response.text(); // Lấy text trước để debug
-            })
-            .then(text => {
-                console.log('Raw response:', text);
-                
-                try {
-                    const result = JSON.parse(text);
-                    if (result.success) {
-                        alert('Tạo báo cáo thành công!');
-                        modal.style.display = 'none';
-                        form.reset();
-                        loadDanhSachBaoCao();
-                    } else {
-                        alert('Lỗi: ' + result.message);
-                    }
-                } catch (e) {
-                    console.error('JSON parse error:', e);
-                    alert('Lỗi phản hồi từ server: ' + text.substring(0, 200));
-                    
-                    // Fallback: thử gửi bằng FormData
-                    console.log('Trying fallback with FormData...');
-                    const formData = new FormData();
-                    formData.append('json_data', JSON.stringify(data));
-                    
-                    fetch('../controllers/BaoCaoAPI.php?action=tao-bao-cao', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => response.text())
-                    .then(text => {
-                        console.log('Fallback response:', text);
-                        try {
-                            const result = JSON.parse(text);
-                            if (result.success) {
-                                alert('Tạo báo cáo thành công (fallback)!');
-                                modal.style.display = 'none';
-                                form.reset();
-                                loadDanhSachBaoCao();
-                            } else {
-                                alert('Lỗi fallback: ' + result.message);
-                            }
-                        } catch (e2) {
-                            alert('Lỗi nghiêm trọng: ' + text.substring(0, 100));
-                        }
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-                alert('Lỗi kết nối: ' + error.message);
-            });
-        });
-    }
-    
-    // Character count cho textarea
-    const tinhTrangTextarea = document.getElementById('tinhTrang');
-    const noiDungTextarea = document.getElementById('noiDungBaoCao');
-    
-    if (tinhTrangTextarea) {
-        tinhTrangTextarea.addEventListener('input', function() {
-            const charCount = this.nextElementSibling;
-            if (charCount && charCount.classList.contains('char-count')) {
-                charCount.textContent = `${this.value.length}/500 ký tự`;
-            }
-        });
-    }
-    
-    if (noiDungTextarea) {
-        noiDungTextarea.addEventListener('input', function() {
-            const charCount = this.nextElementSibling;
-            if (charCount && charCount.classList.contains('char-count')) {
-                charCount.textContent = `${this.value.length}/1000 ký tự`;
-            }
-        });
-    }
-    
-    // Function load danh sách báo cáo
-    function loadDanhSachBaoCao() {
-        const tbody = document.getElementById('tbody-bao-cao');
-        if (tbody) {
-            tbody.innerHTML = '<tr><td colspan="7">Đang tải dữ liệu...</td></tr>';
-            
-            fetch('../controllers/BaoCaoAPI.php?action=danh-sach-bao-cao')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        if (data.data.length > 0) {
-                            let html = '';
-                            data.data.forEach((item, index) => {
-                                const ngayBaoCao = new Date(item.ngayBaoCao).toLocaleDateString('vi-VN');
-                                const trangThaiClass = item.trangThai === 'da-xu-ly' ? 'success' : 
-                                                     item.trangThai === 'huy-bo' ? 'danger' : 'warning';
-                                
-                                html += `
-                                    <tr>
-                                        <td>${index + 1}</td>
-                                        <td>${item.maTB}</td>
-                                        <td>${item.tenTB}</td>
-                                        <td>${item.tinhTrang.substring(0, 50)}${item.tinhTrang.length > 50 ? '...' : ''}</td>
-                                        <td>${ngayBaoCao}</td>
-                                        <td><span class="badge badge-${trangThaiClass}">${item.trangThai}</span></td>
-                                        <td>
-                                            <button onclick="viewBaoCaoDetail(${item.maBaoCao})" class="btn btn-sm btn-view">
-                                                Xem chi tiết
-                                            </button>
-                                        </td>
-                                    </tr>
-                                `;
-                            });
-                            tbody.innerHTML = html;
-                        } else {
-                            tbody.innerHTML = '<tr><td colspan="7">Chưa có báo cáo nào</td></tr>';
-                        }
-                    } else {
-                        tbody.innerHTML = '<tr><td colspan="7">Lỗi: ' + data.message + '</td></tr>';
-                    }
-                })
-                .catch(error => {
-                    tbody.innerHTML = '<tr><td colspan="7">Lỗi kết nối: ' + error.message + '</td></tr>';
-                });
+function loadList() {
+    fetch(API + '?action=danh-sach-bao-cao&_=' + Date.now()).then(r => r.json()).then(data => {
+        const list = document.getElementById('list');
+        if (data.success && data.data.length) {
+            list.innerHTML = data.data.map((item, i) =>
+                `<tr><td>${i + 1}</td><td>BC-${item.maBaoCao}</td><td>${item.tenTB}</td><td>${item.tinhTrang.substring(0, 30)}...</td><td>${new Date(item.ngayBaoCao).toLocaleDateString('vi-VN')}</td><td><span class="status-text">${item.trangThai || 'Đang xử lý'}</span></td><td><button onclick="view(${item.maBaoCao})" class="btn btn-info">Xem</button> <button onclick="edit(${item.maBaoCao})" class="btn btn-warning">Sửa</button> <button onclick="del(${item.maBaoCao})" class="btn btn-danger">Xóa</button></td></tr>`
+            ).join('');
+        } else {
+            list.innerHTML = '<tr><td colspan="7">Chưa có báo cáo</td></tr>';
         }
+    });
+}
+
+function openCreate() {
+    editId = null;
+    document.getElementById('title').textContent = 'Tạo báo cáo hư hỏng';
+    document.getElementById('tinhtrang').value = '';
+    document.getElementById('noidung').value = '';
+    loadEquipment();
+    showModal('modal');
+}
+
+function loadEquipment() {
+    fetch(API + '?action=lay-thiet-bi-dang-muon&_=' + Date.now()).then(r => r.json()).then(data => {
+        const container = document.getElementById('equipment-list');
+        if (data.success && data.data.length) {
+            container.innerHTML = data.data.map(item =>
+                `<div class="equipment" onclick="selectEquipment(this)"><input type="radio" name="equipment" value="${item.maTB}" data-ten="${item.tenTB}" data-phieu="${item.maPhieu}"><strong>${item.tenTB}</strong> (${item.maTB}) - Phiếu: ${item.maPhieu}</div>`
+            ).join('');
+        } else {
+            container.innerHTML = '<div class="no-equipment">Không có thiết bị đang mượn</div>';
+        }
+    });
+}
+
+function selectEquipment(el) {
+    document.querySelectorAll('.equipment').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+}
+
+function save(e) {
+    e.preventDefault();
+    const selected = document.querySelector('input[name="equipment"]:checked');
+    if (!selected && !editId) {
+        alert('Vui lòng chọn thiết bị!');
+        return;
     }
-    
-    // Function xem chi tiết báo cáo
-    window.viewBaoCaoDetail = function(maBaoCao) {
-        console.log('Xem chi tiết báo cáo:', maBaoCao);
-        
-        // Gọi API để lấy chi tiết
-        fetch(apiUrl + '?action=chi-tiet-bao-cao&id=' + maBaoCao)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const item = data.data;
-                    
-                    // Điền dữ liệu vào modal
-                    document.getElementById('detail-ma-bao-cao').textContent = item.maBaoCao || 'N/A';
-                    document.getElementById('detail-ma-phieu-bao-cao').textContent = item.maPhieu || 'N/A';
-                    document.getElementById('detail-thiet-bi-bao-cao').textContent = `${item.tenTB} (${item.maTB})` || 'N/A';
-                    document.getElementById('detail-tinh-trang').textContent = item.tinhTrang || 'N/A';
-                    document.getElementById('detail-noi-dung-bao-cao').textContent = item.noiDungBaoCao || 'N/A';
-                    document.getElementById('detail-ngay-bao-cao').textContent = new Date(item.ngayBaoCao).toLocaleString('vi-VN') || 'N/A';
-                    document.getElementById('detail-trang-thai-bao-cao').innerHTML = `<span class="status-badge status-${item.trangThai}">${item.trangThai}</span>`;
-                    
-                    // Hiển thị modal
-                    document.getElementById('modal-chi-tiet-bao-cao').style.display = 'flex';
-                } else {
-                    alert('Lỗi: ' + data.message);
-                }
-            })
-            .catch(error => {
-                alert('Lỗi kết nối: ' + error.message);
-            });
+    const data = {
+        tinhTrang: document.getElementById('tinhtrang').value,
+        noiDungBaoCao: document.getElementById('noidung').value
     };
-    
-    // Event listeners cho modal chi tiết
-    const closeChiTietBtn = document.getElementById('close-modal-chi-tiet-bao-cao');
-    if (closeChiTietBtn) {
-        closeChiTietBtn.addEventListener('click', function() {
-            document.getElementById('modal-chi-tiet-bao-cao').style.display = 'none';
+    if (editId) {
+        data.maBaoCao = editId;
+    } else {
+        data.maTB = selected.value;
+        data.tenTB = selected.dataset.ten;
+        data.maPhieu = selected.dataset.phieu;
+    }
+    const url = API + '?action=' + (editId ? 'cap-nhat-bao-cao' : 'tao-bao-cao');
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then(r => r.json()).then(result => {
+        if (result.success) {
+            alert(result.message);
+            closeModal();
+            loadList();
+        } else {
+            alert('Lỗi: ' + result.message);
+        }
+    });
+}
+
+function view(id) {
+    fetch(API + '?action=chi-tiet-bao-cao&id=' + id).then(r => r.json()).then(data => {
+        if (data.success) {
+            const item = data.data;
+            document.getElementById('detail').innerHTML =
+                `<p><b>Mã báo cáo:</b> BC-${item.maBaoCao}</p><p><b>Mã thiết bị:</b> ${item.maTB}</p><p><b>Tên thiết bị:</b> ${item.tenTB}</p><p><b>Tình trạng hư hỏng:</b> ${item.tinhTrang}</p><p><b>Nội dung chi tiết:</b> ${item.noiDungBaoCao}</p><p><b>Ngày báo cáo:</b> ${new Date(item.ngayBaoCao).toLocaleString('vi-VN')}</p><p><b>Trạng thái:</b> <span class="status-text">${item.trangThai || 'Đang xử lý'}</span></p>`;
+            showModal('modal-detail');
+        }
+    });
+}
+
+function edit(id) {
+    fetch(API + '?action=chi-tiet-bao-cao&id=' + id).then(r => r.json()).then(data => {
+        if (data.success) {
+            const item = data.data;
+            editId = id;
+            document.getElementById('title').textContent = 'Sửa báo cáo hư hỏng';
+            document.getElementById('tinhtrang').value = item.tinhTrang;
+            document.getElementById('noidung').value = item.noiDungBaoCao;
+            document.getElementById('equipment-list').innerHTML =
+                `<div class="equipment selected"><input type="radio" name="equipment" value="${item.maTB}" data-ten="${item.tenTB}" checked><strong>${item.tenTB}</strong> (${item.maTB}) - Đang chỉnh sửa</div>`;
+            showModal('modal');
+        }
+    });
+}
+
+function del(id) {
+    if (confirm('Bạn có chắc chắn muốn xóa báo cáo này?')) {
+        fetch(API + '?action=xoa-bao-cao', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                maBaoCao: id
+            })
+        }).then(r => r.json()).then(data => {
+            alert(data.success ? 'Xóa báo cáo thành công!' : 'Lỗi: ' + data.message);
+            if (data.success) loadList();
         });
     }
-    
-    const dongChiTietBtn = document.getElementById('btn-dong-chi-tiet-bao-cao');
-    if (dongChiTietBtn) {
-        dongChiTietBtn.addEventListener('click', function() {
-            document.getElementById('modal-chi-tiet-bao-cao').style.display = 'none';
-        });
-    }
-    
-    // Đóng modal chi tiết khi click outside
-    const modalChiTiet = document.getElementById('modal-chi-tiet-bao-cao');
-    if (modalChiTiet) {
-        modalChiTiet.addEventListener('click', function(e) {
-            if (e.target === modalChiTiet) {
-                modalChiTiet.style.display = 'none';
-            }
-        });
-    }
-});
+}
+
+function showModal(id) {
+    document.getElementById(id).style.display = 'block';
+}
+
+function closeModal(id = 'modal') {
+    document.getElementById(id).style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', loadList);
+window.onclick = e => e.target.classList.contains('modal') && closeModal(e.target.id);
 </script>
-
-<!-- Modal tạo/sửa báo cáo hư hỏng -->
-<div id="modal-bao-cao" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 id="modal-bao-cao-title">Tạo báo cáo hư hỏng</h3>
-            <span id="close-modal-bao-cao" class="close">&times;</span>
-        </div>
-        <div class="modal-body">
-            <form id="form-bao-cao">
-                <div class="form-group">
-                    <label>Thiết bị đang mượn:</label>
-                    <div id="danh-sach-thiet-bi-dang-muon" class="equipment-selection">
-                        <p class="text-muted">Đang tải danh sách thiết bị...</p>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="tinhTrang">Tình trạng hư hỏng:</label>
-                    <textarea id="tinhTrang" name="tinhTrang" rows="3" maxlength="500" 
-                              placeholder="Mô tả tình trạng hư hỏng của thiết bị..." required></textarea>
-                    <div class="char-count">0/500 ký tự</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="noiDungBaoCao">Nội dung báo cáo:</label>
-                    <textarea id="noiDungBaoCao" name="noiDungBaoCao" rows="4" maxlength="1000" 
-                              placeholder="Mô tả chi tiết về sự cố, nguyên nhân có thể, đề xuất xử lý..." required></textarea>
-                    <div class="char-count">0/1000 ký tự</div>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">
-                        Lưu báo cáo
-                    </button>
-                    <button type="button" id="btn-huy-bao-cao" class="btn btn-secondary">
-                        Hủy bỏ
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Modal chi tiết báo cáo -->
-<div id="modal-chi-tiet-bao-cao" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>Chi tiết báo cáo hư hỏng</h3>
-            <span id="close-modal-chi-tiet-bao-cao" class="close">&times;</span>
-        </div>
-        <div class="modal-body">
-            <div class="detail-section">
-                <div class="detail-row">
-                    <label>Mã báo cáo:</label>
-                    <span id="detail-ma-bao-cao"></span>
-                </div>
-                <div class="detail-row">
-                    <label>Mã phiếu mượn:</label>
-                    <span id="detail-ma-phieu-bao-cao"></span>
-                </div>
-                <div class="detail-row">
-                    <label>Thiết bị:</label>
-                    <span id="detail-thiet-bi-bao-cao"></span>
-                </div>
-                <div class="detail-row">
-                    <label>Tình trạng:</label>
-                    <span id="detail-tinh-trang"></span>
-                </div>
-                <div class="detail-row">
-                    <label>Nội dung báo cáo:</label>
-                    <span id="detail-noi-dung-bao-cao"></span>
-                </div>
-                <div class="detail-row">
-                    <label>Ngày báo cáo:</label>
-                    <span id="detail-ngay-bao-cao"></span>
-                </div>
-                <div class="detail-row">
-                    <label>Trạng thái:</label>
-                    <span id="detail-trang-thai-bao-cao"></span>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" id="btn-dong-chi-tiet-bao-cao" class="btn btn-secondary">
-                Đóng
-            </button>
-        </div>
-    </div>
-</div>

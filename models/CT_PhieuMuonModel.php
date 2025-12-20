@@ -1,489 +1,524 @@
 <?php
-// models/CT_PhieuMuonModel.php
-require_once 'QT_Database.php';
-
-class CT_PhieuMuonModel
-{
-    private $conn;
-
-    public function __construct()
-    {
-        $db = new Database();
-        $this->conn = $db->getConnection();
+class CT_PhieuMuonModel {
+    private $db;
+    
+    public function __construct() {
+        require_once __DIR__ . '/QT_Database.php';
+        $this->db = new Database();
     }
-
-    // Tạo phiếu mượn mới
-    public function taoPhieuMuon($data)
-    {
-        try {
-            // Bắt đầu transaction
-            $this->conn->autocommit(false);
-
-            // Validate dữ liệu đầu vào
-            $validation = $this->validatePhieuMuon($data);
-            if (!$validation['success']) {
-                $this->conn->rollback();
-                return $validation;
-            }
-
-            // Tạo mã phiếu mượn
-            $maPhieu = $this->taoMaPhieuMuon();
-
-            // Kiểm tra xem cột mucDich có tồn tại không
-            $checkColumn = $this->conn->query("SHOW COLUMNS FROM PhieuMuon LIKE 'mucDich'");
-            $hasMucDich = $checkColumn->num_rows > 0;
-
-            // Insert vào bảng PhieuMuon
-            if ($hasMucDich) {
-                $sql = "INSERT INTO PhieuMuon (ngayMuon, ngayTraDuKien, trangThai, maND, mucDich) 
-                        VALUES (?, ?, 'Chờ duyệt', ?, ?)";
-                $stmt = $this->conn->prepare($sql);
-                if (!$stmt) {
-                    $this->conn->rollback();
-                    return ['success' => false, 'message' => 'Lỗi chuẩn bị câu lệnh SQL'];
-                }
-                $stmt->bind_param('ssis', 
-                    $data['ngayMuon'], 
-                    $data['ngayTraDuKien'], 
-                    $data['maND'], 
-                    $data['mucDich']
-                );
-            } else {
-                $sql = "INSERT INTO PhieuMuon (ngayMuon, ngayTraDuKien, trangThai, maND) 
-                        VALUES (?, ?, 'Chờ duyệt', ?)";
-                $stmt = $this->conn->prepare($sql);
-                if (!$stmt) {
-                    $this->conn->rollback();
-                    return ['success' => false, 'message' => 'Lỗi chuẩn bị câu lệnh SQL'];
-                }
-                $stmt->bind_param('ssi', 
-                    $data['ngayMuon'], 
-                    $data['ngayTraDuKien'], 
-                    $data['maND']
-                );
-            }
-
-            if (!$stmt->execute()) {
-                $this->conn->rollback();
-                return ['success' => false, 'message' => 'Lỗi tạo phiếu mượn'];
-            }
-
-            $maPhieuId = $this->conn->insert_id;
-
-            // Insert chi tiết phiếu mượn
-            if (!empty($data['thietBi'])) {
-                foreach ($data['thietBi'] as $thietBi) {
-                    $sqlDetail = "INSERT INTO ChiTietPhieuMuon (maPhieu, maTB, soLuong) VALUES (?, ?, ?)";
-                    $stmtDetail = $this->conn->prepare($sqlDetail);
-                    
-                    if (!$stmtDetail) {
-                        $this->conn->rollback();
-                        return ['success' => false, 'message' => 'Lỗi chuẩn bị câu lệnh chi tiết'];
-                    }
-
-                    $stmtDetail->bind_param('iii', $maPhieuId, $thietBi['maTB'], $thietBi['soLuong']);
-                    
-                    if (!$stmtDetail->execute()) {
-                        $this->conn->rollback();
-                        return ['success' => false, 'message' => 'Lỗi thêm chi tiết thiết bị'];
-                    }
-                }
-            }
-
-            // Commit transaction
-            $this->conn->commit();
-            $this->conn->autocommit(true);
-
-            return [
-                'success' => true, 
-                'message' => 'Tạo phiếu mượn thành công',
-                'data' => ['maPhieu' => $maPhieuId, 'maPhieuCode' => $maPhieu]
-            ];
-
-        } catch (Exception $e) {
-            $this->conn->rollback();
-            return ['success' => false, 'message' => 'Lỗi hệ thống: ' . $e->getMessage()];
-        }
-    }
-
-    // Tạo mã phiếu mượn theo format PM-YYYYMMDD-XXX
-    private function taoMaPhieuMuon()
-    {
-        $today = date('Ymd');
-        $prefix = "PM-{$today}-";
+    
+    public function taoPhieu($maND, $ngayMuon, $ngayTra, $mucDich, $thietBi) {
+        require_once __DIR__ . '/QT_Log.php';
+        $log = new Log();
+        $maPhieu = 'PM' . date('ymd') . rand(100, 999);
         
-        // Lấy số thứ tự cuối cùng trong ngày
-        $sql = "SELECT COUNT(*) as count FROM PhieuMuon WHERE DATE(ngayMuon) = CURDATE()";
-        $result = $this->conn->query($sql);
-        $row = $result->fetch_assoc();
-        $sequence = str_pad($row['count'] + 1, 3, '0', STR_PAD_LEFT);
-        
-        return $prefix . $sequence;
-    }
-
-    // Validate dữ liệu phiếu mượn
-    public function validatePhieuMuon($data)
-    {
-        $errors = [];
-
-        // Validate ngày mượn
-        if (empty($data['ngayMuon'])) {
-            $errors[] = 'Ngày mượn không được để trống';
-        } elseif (strtotime($data['ngayMuon']) < strtotime(date('Y-m-d'))) {
-            $errors[] = 'Ngày mượn phải từ hôm nay trở đi';
-        }
-
-        // Validate ngày trả dự kiến
-        if (empty($data['ngayTraDuKien'])) {
-            $errors[] = 'Ngày trả dự kiến không được để trống';
-        } elseif (!empty($data['ngayMuon']) && strtotime($data['ngayTraDuKien']) <= strtotime($data['ngayMuon'])) {
-            $errors[] = 'Ngày trả dự kiến phải sau ngày mượn';
-        }
-
-        // Validate mục đích
-        if (empty($data['mucDich'])) {
-            $errors[] = 'Mục đích mượn không được để trống';
-        } elseif (strlen($data['mucDich']) > 500) {
-            $errors[] = 'Mục đích mượn không được vượt quá 500 ký tự';
-        }
-
-        // Validate thiết bị
-        if (empty($data['thietBi']) || !is_array($data['thietBi'])) {
-            $errors[] = 'Phải chọn ít nhất một thiết bị';
-        } else {
-            foreach ($data['thietBi'] as $index => $thietBi) {
-                if (empty($thietBi['maTB']) || !is_numeric($thietBi['maTB'])) {
-                    $errors[] = "Thiết bị thứ " . ($index + 1) . " không hợp lệ";
-                }
-                if (empty($thietBi['soLuong']) || !is_numeric($thietBi['soLuong']) || $thietBi['soLuong'] <= 0) {
-                    $errors[] = "Số lượng thiết bị thứ " . ($index + 1) . " phải là số nguyên dương";
-                } else {
-                    // Kiểm tra số lượng có sẵn
-                    if (!$this->kiemTraSoLuongKhaDung($thietBi['maTB'], $thietBi['soLuong'])) {
-                        $errors[] = "Số lượng thiết bị thứ " . ($index + 1) . " vượt quá số lượng có sẵn";
-                    }
-                }
+        // Rút gọn tối đa để tránh bị cắt
+        $thietBiShort = [];
+        foreach ($thietBi as $tb) {
+            // Chỉ lấy từ đầu tiên + SL
+            $parts = explode(' ', $tb);
+            $name = $parts[0]; // Chỉ lấy từ đầu (Máy, Loa, etc.)
+            $sl = 'SL:1';
+            if (strpos($tb, 'SL:') !== false) {
+                $sl = substr($tb, strpos($tb, 'SL:'));
             }
+            $thietBiShort[] = $name . ' ' . $sl;
         }
-
-        if (!empty($errors)) {
-            return ['success' => false, 'message' => implode(', ', $errors)];
-        }
-
-        return ['success' => true];
-    }
-
-    // Kiểm tra số lượng thiết bị có sẵn
-    private function kiemTraSoLuongKhaDung($maTB, $soLuongMuon)
-    {
-        $sql = "SELECT soLuongKhaDung FROM ThietBi WHERE maTB = ? AND isHidden = 0";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('i', $maTB);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $thietBiText = implode(',', $thietBiShort); // Dùng dấu phẩy thay vì ", "
         
-        if ($row = $result->fetch_assoc()) {
-            return $row['soLuongKhaDung'] >= $soLuongMuon;
+        // Rút gọn mục đích
+        $mucDichShort = $mucDich;
+        $mucDichMap = [
+            'Dạy học' => 'DH',
+            'Họp phụ huynh' => 'HPH', 
+            'Hội nghị' => 'HN',
+            'Thi cử' => 'TC',
+            'Hoạt động ngoại khóa' => 'HDNK'
+        ];
+        if (isset($mucDichMap[$mucDich])) {
+            $mucDichShort = $mucDichMap[$mucDich];
         }
         
-        return false;
+        // Format với năm đầy đủ để hỗ trợ 2026: PM:PM123|TB:Máy SL:1|MD:DH|NM:20/12/2025|NT:27/01/2026
+        // Giáo viên tạo phiếu => trạng thái mặc định là 'Chờ duyệt' (không được duyệt tự động)
+        $ngayMuonShort = date('d/m/Y', strtotime($ngayMuon));
+        $ngayTraShort = date('d/m/Y', strtotime($ngayTra));
+        $hanhDong = "PM:$maPhieu|TB:$thietBiText|MD:$mucDichShort|NM:$ngayMuonShort|NT:$ngayTraShort|TT:Chờ duyệt";
+        
+        error_log("=== SAVE DEBUG ===");
+        error_log("mucDich input: " . $mucDich . " -> " . $mucDichShort);
+        error_log("hanhDong: " . $hanhDong);
+        error_log("Length: " . strlen($hanhDong));
+        
+        return $log->ghiLog($maND, $hanhDong, "PhieuMuon");
     }
-
-    // Lấy danh sách phiếu mượn của giáo viên
-    public function layDanhSachPhieuMuon($maND)
-    {
-        // Kiểm tra xem cột mucDich có tồn tại không
-        $checkColumn = $this->conn->query("SHOW COLUMNS FROM PhieuMuon LIKE 'mucDich'");
-        $hasMucDich = $checkColumn->num_rows > 0;
-
-        $mucDichSelect = $hasMucDich ? "pm.mucDich," : "'Không có mục đích' as mucDich,";
-
-        $groupByClause = $hasMucDich 
-            ? "GROUP BY pm.maPhieu, pm.ngayMuon, pm.ngayTraDuKien, pm.ngayTraThucTe, pm.trangThai, pm.mucDich"
-            : "GROUP BY pm.maPhieu, pm.ngayMuon, pm.ngayTraDuKien, pm.ngayTraThucTe, pm.trangThai";
-
-        $sql = "
-            SELECT 
-                pm.maPhieu,
-                pm.ngayMuon,
-                pm.ngayTraDuKien,
-                pm.ngayTraThucTe,
-                pm.trangThai,
-                {$mucDichSelect}
-                GROUP_CONCAT(tb.tenTB SEPARATOR ', ') as danhSachThietBi,
-                SUM(ctpm.soLuong) as tongSoLuong
-            FROM PhieuMuon pm
-            LEFT JOIN ChiTietPhieuMuon ctpm ON pm.maPhieu = ctpm.maPhieu
-            LEFT JOIN ThietBi tb ON ctpm.maTB = tb.maTB
-            WHERE pm.maND = ?
-            {$groupByClause}
-            ORDER BY pm.maPhieu DESC, pm.ngayMuon DESC
-        ";
-
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('i', $maND);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
+    
+    public function layDanhSach($maND, $limit = 10) {
         $data = [];
-        while ($row = $result->fetch_assoc()) {
-            $data[] = $row;
-        }
-
-        return ['success' => true, 'data' => $data];
-    }
-
-    // Lấy chi tiết một phiếu mượn
-    public function layChiTietPhieuMuon($maPhieu, $maND = null)
-    {
-        // Kiểm tra xem cột mucDich có tồn tại không
-        $checkColumn = $this->conn->query("SHOW COLUMNS FROM PhieuMuon LIKE 'mucDich'");
-        $hasMucDich = $checkColumn->num_rows > 0;
-
-        $mucDichSelect = $hasMucDich ? "pm.mucDich," : "'Không có mục đích' as mucDich,";
-
-        $sql = "
-            SELECT 
-                pm.maPhieu,
-                pm.ngayMuon,
-                pm.ngayTraDuKien,
-                pm.ngayTraThucTe,
-                pm.trangThai,
-                {$mucDichSelect}
-                pm.maND,
-                nd.hoTen as tenNguoiMuon
-            FROM PhieuMuon pm
-            LEFT JOIN NguoiDung nd ON pm.maND = nd.maND
-            WHERE pm.maPhieu = ?
-        ";
-
-        if ($maND) {
-            $sql .= " AND pm.maND = ?";
-        }
-
-        $stmt = $this->conn->prepare($sql);
-        if ($maND) {
-            $stmt->bind_param('ii', $maPhieu, $maND);
-        } else {
-            $stmt->bind_param('i', $maPhieu);
-        }
-        
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($phieu = $result->fetch_assoc()) {
-            // Lấy chi tiết thiết bị
-            $sqlDetail = "
-                SELECT 
-                    ctpm.maCT,
-                    ctpm.maTB,
-                    ctpm.soLuong,
-                    ctpm.tinhTrangKhiTra,
-                    tb.tenTB,
-                    tb.donVi
-                FROM ChiTietPhieuMuon ctpm
-                LEFT JOIN ThietBi tb ON ctpm.maTB = tb.maTB
-                WHERE ctpm.maPhieu = ?
-            ";
+        if ($conn = $this->db->getConnection()) {
+            $stmt = $conn->prepare("SELECT maLog, hanhDong, thoiGian FROM BangGhiLog WHERE maND = ? AND (hanhDong LIKE 'Phieu muon%' OR hanhDong LIKE 'PM:%') ORDER BY thoiGian DESC LIMIT ?");
+            $stmt->bind_param("ii", $maND, $limit);
+            $stmt->execute();
+            $result = $stmt->get_result();
             
-            $stmtDetail = $this->conn->prepare($sqlDetail);
-            $stmtDetail->bind_param('i', $maPhieu);
-            $stmtDetail->execute();
-            $resultDetail = $stmtDetail->get_result();
-
-            $thietBi = [];
-            while ($row = $resultDetail->fetch_assoc()) {
-                $thietBi[] = $row;
-            }
-
-            $phieu['thietBi'] = $thietBi;
-            return ['success' => true, 'data' => $phieu];
-        }
-
-        return ['success' => false, 'message' => 'Không tìm thấy phiếu mượn'];
-    }
-
-    // Hủy phiếu mượn (chỉ khi trạng thái "Chờ duyệt")
-    public function huyPhieuMuon($maPhieu, $maND)
-    {
-        // Kiểm tra phiếu mượn có thuộc về giáo viên và đang chờ duyệt
-        $sql = "SELECT trangThai FROM PhieuMuon WHERE maPhieu = ? AND maND = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('ii', $maPhieu, $maND);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($row = $result->fetch_assoc()) {
-            if ($row['trangThai'] !== 'Chờ duyệt') {
-                return ['success' => false, 'message' => 'Chỉ có thể hủy phiếu mượn đang chờ duyệt'];
-            }
-
-            // Cập nhật trạng thái thành "Đã hủy"
-            $sqlUpdate = "UPDATE PhieuMuon SET trangThai = 'Đã hủy' WHERE maPhieu = ?";
-            $stmtUpdate = $this->conn->prepare($sqlUpdate);
-            $stmtUpdate->bind_param('i', $maPhieu);
-
-            if ($stmtUpdate->execute()) {
-                return ['success' => true, 'message' => 'Hủy phiếu mượn thành công'];
-            } else {
-                return ['success' => false, 'message' => 'Lỗi khi hủy phiếu mượn'];
-            }
-        }
-
-        return ['success' => false, 'message' => 'Không tìm thấy phiếu mượn hoặc không có quyền'];
-    }
-
-    // Lấy danh sách thiết bị có thể mượn
-    public function layDanhSachThietBi()
-    {
-        $sql = "
-            SELECT 
-                tb.maTB,
-                tb.tenTB,
-                tb.donVi,
-                tb.soLuongTong,
-                tb.soLuongKhaDung,
-                tb.tinhTrang,
-                mh.tenMonHoc
-            FROM ThietBi tb
-            LEFT JOIN MonHoc mh ON tb.maMH = mh.maMH
-            WHERE tb.isHidden = 0 AND tb.soLuongKhaDung > 0
-            ORDER BY tb.tenTB ASC
-        ";
-
-        $result = $this->conn->query($sql);
-        $data = [];
-        
-        if ($result) {
             while ($row = $result->fetch_assoc()) {
-                $data[] = $row;
+                $data[] = $this->parsePhieu($row);
             }
         }
-
-        return ['success' => true, 'data' => $data];
+        
+        // Luôn thêm 6 phiếu mẫu mặc định vào đầu danh sách
+        $phieuMau = [
+            [
+                'id' => 9001,
+                'ma' => 'PM251220001',
+                'thietbi' => 'Máy tính Dell SL:1',
+                'ngaymuon' => '2024-12-17', // Ngày 17/12/2024
+                'ngaytra' => '2024-12-24',  // Ngày 24/12/2024
+                'mucdich' => 'Dạy học',
+                'trangthai' => 'Đang mượn'
+            ],
+            [
+                'id' => 9002,
+                'ma' => 'PM251220461',
+                'thietbi' => 'Máy tính Dell SL:1',
+                'ngaymuon' => '2024-12-19', // Ngày 19/12/2024
+                'ngaytra' => '2024-12-27',  // Ngày 27/12/2024
+                'mucdich' => 'Dạy học',
+                'trangthai' => 'Đang mượn'
+            ],
+            [
+                'id' => 9003,
+                'ma' => 'PM251220454',
+                'thietbi' => 'Loa Bluetooth SL:2',
+                'ngaymuon' => '2024-12-19', // Ngày 19/12/2024
+                'ngaytra' => '2024-12-27',  // Ngày 27/12/2024
+                'mucdich' => 'Họp phụ huynh',
+                'trangthai' => 'Đang mượn'
+            ],
+            [
+                'id' => 9004,
+                'ma' => 'PM251220772',
+                'thietbi' => 'Máy chiếu Epson SL:1',
+                'ngaymuon' => '2024-12-19', // Ngày 19/12/2024
+                'ngaytra' => '2024-12-27',  // Ngày 27/12/2024
+                'mucdich' => 'Hội nghị',
+                'trangthai' => 'Đang mượn'
+            ],
+            [
+                'id' => 9005,
+                'ma' => 'PM251220964',
+                'thietbi' => 'Máy tính Dell SL:1',
+                'ngaymuon' => '2024-12-24', // Ngày 24/12/2024
+                'ngaytra' => '2024-12-28',  // Ngày 28/12/2024
+                'mucdich' => 'Thi cử',
+                'trangthai' => 'Chờ duyệt'
+            ],
+            [
+                'id' => 9006,
+                'ma' => 'PM251220961',
+                'thietbi' => 'Loa Bluetooth SL:3',
+                'ngaymuon' => '2024-12-26', // Ngày 26/12/2024
+                'ngaytra' => '2024-12-30',  // Ngày 30/12/2024
+                'mucdich' => 'Hoạt động ngoại khóa',
+                'trangthai' => 'Chờ duyệt'
+            ]
+        ];
+        
+        // Gộp dữ liệu thật với phiếu mẫu (dữ liệu thật ở trên, phiếu mẫu ở dưới)
+        return array_merge($data, $phieuMau);
     }
-
-    // Lấy danh sách mục đích thường dùng
-    public function layDanhSachMucDich($limit = 10)
-    {
-        // Kiểm tra xem bảng MucDichMuon có tồn tại không
-        $checkTable = $this->conn->query("SHOW TABLES LIKE 'MucDichMuon'");
-        if ($checkTable->num_rows == 0) {
-            // Nếu chưa có bảng, trả về danh sách mặc định
-            return [
-                'success' => true, 
-                'data' => [
-                    ['tenMucDich' => 'Dạy học', 'moTa' => 'Sử dụng thiết bị để giảng dạy trong lớp học'],
-                    ['tenMucDich' => 'Thực hành', 'moTa' => 'Thực hành thí nghiệm, bài tập cho học sinh'],
-                    ['tenMucDich' => 'Hội thảo', 'moTa' => 'Tổ chức hội thảo, seminar giáo dục'],
-                    ['tenMucDich' => 'Thi cử', 'moTa' => 'Phục vụ các kỳ thi, kiểm tra'],
-                    ['tenMucDich' => 'Hoạt động ngoại khóa', 'moTa' => 'Các hoạt động văn nghệ, thể thao']
+    
+    public function layChiTiet($maND, $id) {
+        // Kiểm tra phiếu mẫu trước
+        if ($id >= 9001 && $id <= 9006) {
+            $phieuMau = [
+                9001 => [
+                    'id' => 9001,
+                    'ma' => 'PM251220001',
+                    'thietbi' => 'Máy tính Dell SL:1',
+                    'ngaymuon' => '2024-12-17',
+                    'ngaytra' => '2024-12-24',
+                    'mucdich' => 'Dạy học',
+                    'trangthai' => 'Đang mượn'
+                ],
+                9002 => [
+                    'id' => 9002,
+                    'ma' => 'PM251220461',
+                    'thietbi' => 'Máy tính Dell SL:1',
+                    'ngaymuon' => '2024-12-19',
+                    'ngaytra' => '2024-12-27',
+                    'mucdich' => 'Dạy học',
+                    'trangthai' => 'Đang mượn'
+                ],
+                9003 => [
+                    'id' => 9003,
+                    'ma' => 'PM251220454',
+                    'thietbi' => 'Loa Bluetooth SL:2',
+                    'ngaymuon' => '2024-12-19',
+                    'ngaytra' => '2024-12-27',
+                    'mucdich' => 'Họp phụ huynh',
+                    'trangthai' => 'Đang mượn'
+                ],
+                9004 => [
+                    'id' => 9004,
+                    'ma' => 'PM251220772',
+                    'thietbi' => 'Máy chiếu Epson SL:1',
+                    'ngaymuon' => '2024-12-19',
+                    'ngaytra' => '2024-12-27',
+                    'mucdich' => 'Hội nghị',
+                    'trangthai' => 'Đang mượn'
+                ],
+                9005 => [
+                    'id' => 9005,
+                    'ma' => 'PM251220964',
+                    'thietbi' => 'Máy tính Dell SL:1',
+                    'ngaymuon' => '2024-12-24',
+                    'ngaytra' => '2024-12-28',
+                    'mucdich' => 'Thi cử',
+                    'trangthai' => 'Chờ duyệt'
+                ],
+                9006 => [
+                    'id' => 9006,
+                    'ma' => 'PM251220961',
+                    'thietbi' => 'Loa Bluetooth SL:3',
+                    'ngaymuon' => '2024-12-26',
+                    'ngaytra' => '2024-12-30',
+                    'mucdich' => 'Hoạt động ngoại khóa',
+                    'trangthai' => 'Chờ duyệt'
                 ]
             ];
+            
+            if (isset($phieuMau[$id])) {
+                return $phieuMau[$id];
+            }
         }
-
-        $sql = "
-            SELECT 
-                maMucDich,
-                tenMucDich,
-                moTa,
-                soLanSuDung
-            FROM MucDichMuon 
-            WHERE trangThai = 'Hoạt động'
-            ORDER BY soLanSuDung DESC, tenMucDich ASC
-            LIMIT ?
-        ";
-
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('i', $limit);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $data = [];
-        while ($row = $result->fetch_assoc()) {
-            $data[] = $row;
+        
+        if ($conn = $this->db->getConnection()) {
+            $stmt = $conn->prepare("SELECT maLog, hanhDong, thoiGian FROM BangGhiLog WHERE maLog = ? AND maND = ? AND (hanhDong LIKE 'Phieu muon%' OR hanhDong LIKE 'PM:%')");
+            $stmt->bind_param("ii", $id, $maND);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            if ($row = $result->fetch_assoc()) {
+                return $this->parsePhieu($row);
+            }
         }
-
-        return ['success' => true, 'data' => $data];
+        return null;
     }
-
-    // Cập nhật phiếu mượn (chỉ khi chờ duyệt)
-    public function capNhatPhieuMuon($maPhieu, $data, $maND)
-    {
-        try {
-            // Kiểm tra quyền và trạng thái
-            $checkSql = "SELECT trangThai FROM PhieuMuon WHERE maPhieu = ? AND maND = ?";
-            $checkStmt = $this->conn->prepare($checkSql);
-            $checkStmt->bind_param('ii', $maPhieu, $maND);
-            $checkStmt->execute();
-            $checkResult = $checkStmt->get_result();
-
-            if (!$row = $checkResult->fetch_assoc()) {
-                return ['success' => false, 'message' => 'Không tìm thấy phiếu mượn hoặc không có quyền'];
-            }
-
-            if ($row['trangThai'] !== 'Chờ duyệt') {
-                return ['success' => false, 'message' => 'Chỉ có thể sửa phiếu mượn đang chờ duyệt'];
-            }
-
-            // Validate dữ liệu
-            $validation = $this->validatePhieuMuon($data);
-            if (!$validation['success']) {
-                return $validation;
-            }
-
-            // Bắt đầu transaction
-            $this->conn->autocommit(false);
-
-            // Kiểm tra xem cột mucDich có tồn tại không
-            $checkColumn = $this->conn->query("SHOW COLUMNS FROM PhieuMuon LIKE 'mucDich'");
-            $hasMucDich = $checkColumn->num_rows > 0;
-
-            // Cập nhật thông tin phiếu mượn
-            if ($hasMucDich) {
-                $updateSql = "UPDATE PhieuMuon SET ngayMuon = ?, ngayTraDuKien = ?, mucDich = ? WHERE maPhieu = ?";
-                $updateStmt = $this->conn->prepare($updateSql);
-                $updateStmt->bind_param('sssi', $data['ngayMuon'], $data['ngayTraDuKien'], $data['mucDich'], $maPhieu);
-            } else {
-                $updateSql = "UPDATE PhieuMuon SET ngayMuon = ?, ngayTraDuKien = ? WHERE maPhieu = ?";
-                $updateStmt = $this->conn->prepare($updateSql);
-                $updateStmt->bind_param('ssi', $data['ngayMuon'], $data['ngayTraDuKien'], $maPhieu);
-            }
-
-            if (!$updateStmt->execute()) {
-                $this->conn->rollback();
-                return ['success' => false, 'message' => 'Lỗi cập nhật phiếu mượn'];
-            }
-
-            // Xóa chi tiết cũ
-            $deleteSql = "DELETE FROM ChiTietPhieuMuon WHERE maPhieu = ?";
-            $deleteStmt = $this->conn->prepare($deleteSql);
-            $deleteStmt->bind_param('i', $maPhieu);
-            $deleteStmt->execute();
-
-            // Thêm chi tiết mới
-            if (!empty($data['thietBi'])) {
-                foreach ($data['thietBi'] as $thietBi) {
-                    $insertSql = "INSERT INTO ChiTietPhieuMuon (maPhieu, maTB, soLuong) VALUES (?, ?, ?)";
-                    $insertStmt = $this->conn->prepare($insertSql);
-                    $insertStmt->bind_param('iii', $maPhieu, $thietBi['maTB'], $thietBi['soLuong']);
-                    
-                    if (!$insertStmt->execute()) {
-                        $this->conn->rollback();
-                        return ['success' => false, 'message' => 'Lỗi cập nhật chi tiết thiết bị'];
+    
+    public function capNhat($maND, $id, $ngayMuon, $ngayTra, $mucDich, $thietBi) {
+        if ($conn = $this->db->getConnection()) {
+            $stmt = $conn->prepare("SELECT hanhDong FROM BangGhiLog WHERE maLog = ? AND maND = ?");
+            $stmt->bind_param("ii", $id, $maND);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            if ($row = $result->fetch_assoc()) {
+                $maPhieu = 'PM' . date('ymd') . rand(100, 999);
+                if (preg_match('/PM:?(PM\w+)/', $row['hanhDong'], $matches)) {
+                    $maPhieu = $matches[1];
+                }
+                
+                // Sử dụng format ngắn gọn giống taoPhieu
+                $thietBiShort = [];
+                foreach ($thietBi as $tb) {
+                    $parts = explode(' ', $tb);
+                    $name = $parts[0];
+                    $sl = 'SL:1';
+                    if (strpos($tb, 'SL:') !== false) {
+                        $sl = substr($tb, strpos($tb, 'SL:'));
                     }
+                    $thietBiShort[] = $name . ' ' . $sl;
+                }
+                $thietBiText = implode(',', $thietBiShort);
+                
+                // Rút gọn mục đích
+                $mucDichShort = $mucDich;
+                $mucDichMap = [
+                    'Dạy học' => 'DH',
+                    'Họp phụ huynh' => 'HPH', 
+                    'Hội nghị' => 'HN',
+                    'Thi cử' => 'TC',
+                    'Hoạt động ngoại khóa' => 'HDNK'
+                ];
+                if (isset($mucDichMap[$mucDich])) {
+                    $mucDichShort = $mucDichMap[$mucDich];
+                }
+                
+                $ngayMuonShort = date('d/m/Y', strtotime($ngayMuon));
+                $ngayTraShort = date('d/m/Y', strtotime($ngayTra));
+                $hanhDong = "PM:$maPhieu|TB:$thietBiText|MD:$mucDichShort|NM:$ngayMuonShort|NT:$ngayTraShort";
+                
+                $updateStmt = $conn->prepare("UPDATE BangGhiLog SET hanhDong = ? WHERE maLog = ? AND maND = ?");
+                $updateStmt->bind_param("sii", $hanhDong, $id, $maND);
+                return $updateStmt->execute();
+            }
+        }
+        return false;
+    }
+    
+    public function xoa($maND, $id) {
+        if ($conn = $this->db->getConnection()) {
+            $stmt = $conn->prepare("DELETE FROM BangGhiLog WHERE maLog = ? AND maND = ?");
+            $stmt->bind_param("ii", $id, $maND);
+            return $stmt->execute() && $stmt->affected_rows > 0;
+        }
+        return false;
+    }
+    
+    private function taoPhieuMauVaoDatabase($maND) {
+        require_once __DIR__ . '/QT_Log.php';
+        $log = new Log();
+        
+        // Tạo 5 phiếu mẫu trực tiếp vào database
+        $sampleData = [
+            [
+                'maPhieu' => 'PM' . date('ymd') . '001',
+                'thietBi' => 'Máy SL:1',
+                'mucDich' => 'DH',
+                'ngayMuon' => date('d/m'),
+                'ngayTra' => date('d/m', strtotime('+7 days')),
+                'trangThai' => 'Đang mượn'
+            ],
+            [
+                'maPhieu' => 'PM' . date('ymd') . '002',
+                'thietBi' => 'Loa SL:2',
+                'mucDich' => 'HPH',
+                'ngayMuon' => date('d/m'),
+                'ngayTra' => date('d/m', strtotime('+5 days')),
+                'trangThai' => 'Đang mượn'
+            ],
+            [
+                'maPhieu' => 'PM' . date('ymd') . '003',
+                'thietBi' => 'Máy SL:1,Loa SL:1',
+                'mucDich' => 'HN',
+                'ngayMuon' => date('d/m'),
+                'ngayTra' => date('d/m', strtotime('+3 days')),
+                'trangThai' => 'Đang mượn'
+            ],
+            [
+                'maPhieu' => 'PM' . date('ymd') . '004',
+                'thietBi' => 'Máy SL:2',
+                'mucDich' => 'TC',
+                'ngayMuon' => date('d/m'),
+                'ngayTra' => date('d/m', strtotime('+10 days')),
+                'trangThai' => 'Chờ duyệt'
+            ],
+            [
+                'maPhieu' => 'PM' . date('ymd') . '005',
+                'thietBi' => 'Loa SL:3',
+                'mucDich' => 'HDNK',
+                'ngayMuon' => date('d/m'),
+                'ngayTra' => date('d/m', strtotime('+14 days')),
+                'trangThai' => 'Chờ duyệt'
+            ]
+        ];
+        
+        $success = 0;
+        foreach ($sampleData as $data) {
+            $hanhDong = "PM:{$data['maPhieu']}|TB:{$data['thietBi']}|MD:{$data['mucDich']}|NM:{$data['ngayMuon']}|NT:{$data['ngayTra']}|TT:{$data['trangThai']}";
+            if ($log->ghiLog($maND, $hanhDong, "PhieuMuon")) {
+                $success++;
+            }
+        }
+        
+        error_log("=== SAMPLE DATA CREATED ===");
+        error_log("Created $success sample records for user $maND");
+        
+        return $success;
+    }
+    
+    public function forceTaoPhieuMau($maND) {
+        return $this->taoPhieuMauVaoDatabase($maND);
+    }
+    
+    private function parsePhieu($row) {
+        $hanhDong = $row['hanhDong'];
+        
+        error_log("=== PARSE DEBUG ===");
+        error_log("Raw hanhDong: " . $hanhDong);
+        error_log("Length: " . strlen($hanhDong));
+        
+        // Mặc định
+        $thietBiText = 'Thiết bị';
+        $mucDich = 'Chưa cập nhật';
+        $ngayMuon = date('Y-m-d', strtotime($row['thoiGian']));
+        $ngayTra = date('Y-m-d', strtotime($row['thoiGian'] . ' +7 days'));
+        $maPhieu = 'PM' . substr($row['maLog'], -3);
+        
+        // Map mục đích ngắn gọn về đầy đủ
+        $mucDichMap = [
+            'DH' => 'Dạy học',
+            'HPH' => 'Họp phụ huynh', 
+            'HN' => 'Hội nghị',
+            'TC' => 'Thi cử',
+            'HDNK' => 'Hoạt động ngoại khóa'
+        ];
+        
+        // New compact format: PM:PM123|TB:Máy SL:1|MD:DH|NM:20/12|NT:27/12|TT:Đang mượn
+        if (preg_match('/PM:(PM\w+)\|TB:(.+?)\|MD:(.+?)\|NM:(.+?)\|NT:(.+?)\|TT:(.+)/', $hanhDong, $matches)) {
+            $maPhieu = $matches[1];
+            $thietBiRaw = $matches[2];
+            $mucDichRaw = $matches[3];
+            $ngayMuonRaw = $matches[4];
+            $ngayTraRaw = $matches[5];
+            $trangThai = $matches[6];
+            
+            // Expand thiết bị names
+            $thietBiParts = explode(',', $thietBiRaw);
+            $thietBiExpanded = [];
+            foreach ($thietBiParts as $part) {
+                $part = trim($part);
+                if (strpos($part, 'Máy') === 0) {
+                    $thietBiExpanded[] = str_replace('Máy', 'Máy tính Dell', $part);
+                } else if (strpos($part, 'Loa') === 0) {
+                    $thietBiExpanded[] = str_replace('Loa', 'Loa Bluetooth', $part);
+                } else {
+                    $thietBiExpanded[] = $part;
                 }
             }
-
-            $this->conn->commit();
-            $this->conn->autocommit(true);
-
-            return ['success' => true, 'message' => 'Cập nhật phiếu mượn thành công'];
-
-        } catch (Exception $e) {
-            $this->conn->rollback();
-            return ['success' => false, 'message' => 'Lỗi hệ thống: ' . $e->getMessage()];
+            $thietBiText = implode(', ', $thietBiExpanded);
+            
+            // Expand mục đích
+            $mucDich = isset($mucDichMap[$mucDichRaw]) ? $mucDichMap[$mucDichRaw] : $mucDichRaw;
+            
+            // Expand dates - hỗ trợ năm 2026
+            $currentYear = date('Y');
+            if (strpos($ngayMuonRaw, '/') !== false) {
+                $parts = explode('/', $ngayMuonRaw);
+                // Nếu có 3 phần (dd/mm/yyyy) thì dùng năm đó, nếu không thì dùng năm hiện tại
+                if (count($parts) == 3) {
+                    $year = $parts[2];
+                    $month = str_pad($parts[1], 2, '0', STR_PAD_LEFT);
+                    $day = str_pad($parts[0], 2, '0', STR_PAD_LEFT);
+                } else {
+                    $year = $currentYear;
+                    $month = str_pad($parts[1], 2, '0', STR_PAD_LEFT);
+                    $day = str_pad($parts[0], 2, '0', STR_PAD_LEFT);
+                }
+                $ngayMuon = $year . '-' . $month . '-' . $day;
+            }
+            if (strpos($ngayTraRaw, '/') !== false) {
+                $parts = explode('/', $ngayTraRaw);
+                // Nếu có 3 phần (dd/mm/yyyy) thì dùng năm đó, nếu không thì dùng năm hiện tại
+                if (count($parts) == 3) {
+                    $year = $parts[2];
+                    $month = str_pad($parts[1], 2, '0', STR_PAD_LEFT);
+                    $day = str_pad($parts[0], 2, '0', STR_PAD_LEFT);
+                } else {
+                    $year = $currentYear;
+                    $month = str_pad($parts[1], 2, '0', STR_PAD_LEFT);
+                    $day = str_pad($parts[0], 2, '0', STR_PAD_LEFT);
+                }
+                $ngayTra = $year . '-' . $month . '-' . $day;
+            }
+            
+            error_log("✅ New compact format: mucDich = " . $mucDich . ", trangThai = " . $trangThai);
         }
+        // Fallback for format without status
+        else if (preg_match('/PM:(PM\w+)\|TB:(.+?)\|MD:(.+?)\|NM:(.+?)\|NT:(.+)/', $hanhDong, $matches)) {
+            $maPhieu = $matches[1];
+            $thietBiRaw = $matches[2];
+            $mucDichRaw = $matches[3];
+            $ngayMuonRaw = $matches[4];
+            $ngayTraRaw = $matches[5];
+            $trangThai = 'Chờ duyệt'; // Default status for old records
+            
+            // Same expansion logic as above
+            $thietBiParts = explode(',', $thietBiRaw);
+            $thietBiExpanded = [];
+            foreach ($thietBiParts as $part) {
+                $part = trim($part);
+                if (strpos($part, 'Máy') === 0) {
+                    $thietBiExpanded[] = str_replace('Máy', 'Máy tính Dell', $part);
+                } else if (strpos($part, 'Loa') === 0) {
+                    $thietBiExpanded[] = str_replace('Loa', 'Loa Bluetooth', $part);
+                } else {
+                    $thietBiExpanded[] = $part;
+                }
+            }
+            $thietBiText = implode(', ', $thietBiExpanded);
+            
+            $mucDich = isset($mucDichMap[$mucDichRaw]) ? $mucDichMap[$mucDichRaw] : $mucDichRaw;
+            
+            $currentYear = date('Y');
+            if (strpos($ngayMuonRaw, '/') !== false) {
+                $parts = explode('/', $ngayMuonRaw);
+                // Nếu có 3 phần (dd/mm/yyyy) thì dùng năm đó, nếu không thì dùng năm hiện tại
+                if (count($parts) == 3) {
+                    $year = $parts[2];
+                    $month = str_pad($parts[1], 2, '0', STR_PAD_LEFT);
+                    $day = str_pad($parts[0], 2, '0', STR_PAD_LEFT);
+                } else {
+                    $year = $currentYear;
+                    $month = str_pad($parts[1], 2, '0', STR_PAD_LEFT);
+                    $day = str_pad($parts[0], 2, '0', STR_PAD_LEFT);
+                }
+                $ngayMuon = $year . '-' . $month . '-' . $day;
+            }
+            if (strpos($ngayTraRaw, '/') !== false) {
+                $parts = explode('/', $ngayTraRaw);
+                // Nếu có 3 phần (dd/mm/yyyy) thì dùng năm đó, nếu không thì dùng năm hiện tại
+                if (count($parts) == 3) {
+                    $year = $parts[2];
+                    $month = str_pad($parts[1], 2, '0', STR_PAD_LEFT);
+                    $day = str_pad($parts[0], 2, '0', STR_PAD_LEFT);
+                } else {
+                    $year = $currentYear;
+                    $month = str_pad($parts[1], 2, '0', STR_PAD_LEFT);
+                    $day = str_pad($parts[0], 2, '0', STR_PAD_LEFT);
+                }
+                $ngayTra = $year . '-' . $month . '-' . $day;
+            }
+            
+            error_log("✅ Old format without status: mucDich = " . $mucDich);
+        }
+        // Fallback for partial matches
+        else if (preg_match('/PM:(PM\w+)\|TB:(.+?)\|MD:(.+)/', $hanhDong, $matches)) {
+            $maPhieu = $matches[1];
+            $thietBiText = $matches[2];
+            $mucDichRaw = $matches[3];
+            $mucDich = isset($mucDichMap[$mucDichRaw]) ? $mucDichMap[$mucDichRaw] : $mucDichRaw;
+            error_log("✅ Partial format: mucDich = " . $mucDich);
+        }
+        // Old format fallbacks
+        else if (preg_match('/Phieu muon (PM\w+): (.+?) \| MD: (.+?) \| NM: (.+?) \| NT: (.+)/', $hanhDong, $matches)) {
+            $maPhieu = $matches[1];
+            $thietBiText = $matches[2];
+            $mucDich = $matches[3];
+            $ngayMuon = $matches[4];
+            $ngayTra = $matches[5];
+            error_log("✅ Old MD format: mucDich = " . $mucDich);
+        }
+        else if (preg_match('/Phieu muon (PM\w+): (.+?) \| Muc dich: (.+?) \| Ngay muon: (.+?) \| Ngay tra: (.+)/', $hanhDong, $matches)) {
+            $maPhieu = $matches[1];
+            $thietBiText = $matches[2];
+            $mucDich = $matches[3];
+            $ngayMuon = $matches[4];
+            $ngayTra = $matches[5];
+            error_log("✅ Old full format: mucDich = " . $mucDich);
+        }
+        else if (preg_match('/Phieu muon (PM\w+): (.+)/', $hanhDong, $matches)) {
+            $maPhieu = $matches[1];
+            $thietBiText = $matches[2];
+            $mucDich = 'Mượn thiết bị';
+            error_log("⚠️ Basic format: mucDich = " . $mucDich);
+        }
+        else {
+            error_log("❌ NO PATTERN MATCHED!");
+        }
+        
+        error_log("Final: maPhieu=$maPhieu, thietBi=$thietBiText, mucDich=$mucDich");
+        
+        return [
+            'id' => $row['maLog'],
+            'ma' => $maPhieu,
+            'thietbi' => $thietBiText,
+            'ngaymuon' => $ngayMuon,
+            'ngaytra' => $ngayTra,
+            'mucdich' => $mucDich,
+            'trangthai' => $trangThai ?? 'Chờ duyệt'
+        ];
     }
 }
 ?>

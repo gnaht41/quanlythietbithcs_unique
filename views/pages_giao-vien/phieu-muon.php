@@ -1,169 +1,336 @@
-<section id="phieu-muon" class="trang-an"
-    <?php echo ($active_tab != 'phieu-muon') ? 'style="display:none;"' : ''; ?>>
-    <div class="header-section">
-        <h2>Quản lý phiếu mượn</h2>
-        <button id="btn-tao-phieu-muon" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Tạo phiếu mượn
-        </button>
-    </div>
+<h2>Phiếu mượn</h2><button onclick="openCreate()" class="btn btn-primary">Tạo mới</button>
+<table>
+    <tr>
+        <th>STT</th>
+        <th>Mã</th>
+        <th>Thiết bị</th>
+        <th>SL</th>
+        <th>Mục đích</th>
+        <th>Ngày mượn</th>
+        <th>Ngày trả</th>
+        <th>Trạng thái</th>
+        <th>Thao tác</th>
+    </tr>
+    <tbody id="list"></tbody>
+</table>
 
-    <!-- Bộ lọc -->
-    <div class="filter-section">
-        <div class="filter-group">
-            <label for="filter-trang-thai">Trạng thái:</label>
-            <select id="filter-trang-thai">
-                <option value="">Tất cả</option>
-                <option value="cho-duyet">Chờ duyệt</option>
-                <option value="da-duyet">Đã duyệt</option>
-                <option value="da-huy">Đã hủy</option>
-                <option value="tu-choi">Từ chối</option>
-                <option value="dang-muon">Đang mượn</option>
-                <option value="da-tra">Đã trả</option>
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h3 id="modal-title">Tạo phiếu mượn</h3>
+        <form onsubmit="save(event)">
+            <label>Ngày mượn:</label><input type="date" id="ngaymuon" required>
+            <label>Ngày trả:</label><input type="date" id="ngaytra" required>
+            <label>Mục đích:</label><select id="mucdich" required>
+                <option value="">Chọn mục đích</option>
+                <option value="Dạy học">Dạy học</option>
+                <option value="Họp phụ huynh">Họp phụ huynh</option>
+                <option value="Hội nghị">Hội nghị</option>
+                <option value="Thi cử">Thi cử</option>
+                <option value="Hoạt động ngoại khóa">Hoạt động ngoại khóa</option>
             </select>
-        </div>
-        <button id="btn-xoa-loc" class="btn btn-outline">Xóa bộ lọc</button>
+            <label>Thiết bị:</label>
+            <div id="equipment-list">
+                <div class="equipment"><input type="checkbox" onchange="toggleEquipment(this,'Máy tính Dell','TB-001')">
+                    Máy tính Dell (TB-001) - SL: <input type="number" min="1" max="5" value="1"
+                        onclick="event.stopPropagation()" onchange="updateSelected()"></div>
+                <div class="equipment"><input type="checkbox"
+                        onchange="toggleEquipment(this,'Máy chiếu Epson','TB-002')"> Máy chiếu Epson (TB-002) - SL:
+                    <input type="number" min="1" max="3" value="1" onclick="event.stopPropagation()"
+                        onchange="updateSelected()">
+                </div>
+                <div class="equipment"><input type="checkbox" onchange="toggleEquipment(this,'Loa Bluetooth','TB-003')">
+                    Loa Bluetooth (TB-003) - SL: <input type="number" min="1" max="10" value="1"
+                        onclick="event.stopPropagation()" onchange="updateSelected()"></div>
+            </div><textarea id="selected-equipment" rows="2" readonly placeholder="Thiết bị đã chọn..."></textarea>
+            <label>Địa điểm:</label><input type="text" id="diadiem" placeholder="Phòng học, hội trường..." required>
+            <label>Ghi chú:</label><textarea id="ghichu" rows="2" placeholder="Ghi chú thêm (nếu có)"></textarea>
+            <button type="submit" class="btn btn-primary" style="margin-right: 10px;">Lưu</button><button type="button"
+                onclick="closeModal()" class="btn btn-danger">Hủy</button>
+        </form>
     </div>
+</div>
 
-    <!-- Bảng danh sách phiếu mượn -->
-    <div class="table-container">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Mã phiếu</th>
-                    <th>Thiết bị</th>
-                    <th>Ngày mượn</th>
-                    <th>Ngày trả dự kiến</th>
-                    <th>Mục đích</th>
-                    <th>Số lượng</th>
-                    <th>Trạng thái</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody id="tbody-phieu-muon">
-                <!-- Dữ liệu sẽ được load bằng JavaScript -->
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Loading indicator -->
-    <div id="loading-phieu-muon" class="loading-indicator" style="display: none;">
-        <div class="spinner"></div>
-        <p>Đang tải dữ liệu...</p>
-    </div>
-</section>
-
-<!-- Modal tạo/sửa phiếu mượn -->
-<div id="modal-phieu-muon" class="modal">
+<div id="modal-detail" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h3 id="modal-title">Tạo phiếu mượn</h3>
-            <span id="close-modal" class="close">&times;</span>
-        </div>
-        <div class="modal-body">
-            <form id="form-phieu-muon">
-                <div class="form-group">
-                    <label for="ngayMuon">Ngày mượn:</label>
-                    <input type="date" id="ngayMuon" name="ngayMuon" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="ngayTraDuKien">Ngày trả dự kiến:</label>
-                    <input type="date" id="ngayTraDuKien" name="ngayTraDuKien" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="mucDich">Mục đích mượn:</label>
-                    <div class="purpose-input-container">
-                        <textarea id="mucDich" name="mucDich" rows="3" maxlength="500" 
-                                  placeholder="Nhập mục đích mượn thiết bị..." required></textarea>
-                        <div class="char-count">0/500 ký tự</div>
-                        <div id="purpose-suggestions" class="purpose-suggestions"></div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Thiết bị mượn:</label>
-                    <button type="button" id="btn-them-thiet-bi" class="btn btn-outline">
-                        <i class="fas fa-plus"></i> Thêm thiết bị
-                    </button>
-                    <div id="danh-sach-thiet-bi-chon" class="selected-equipment">
-                        <p class="text-muted">Chưa chọn thiết bị nào</p>
-                    </div>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Lưu phiếu</button>
-                    <button type="button" id="btn-huy" class="btn btn-secondary">Hủy</button>
-                </div>
-            </form>
-        </div>
+        <h3>Chi tiết phiếu</h3>
+        <div id="detail-content"></div><button onclick="closeModal('modal-detail')"
+            class="btn btn-primary">Đóng</button>
     </div>
 </div>
 
-<!-- Modal chọn thiết bị -->
-<div id="modal-chon-thiet-bi" class="modal">
-    <div class="modal-content large">
-        <div class="modal-header">
-            <h3>Chọn thiết bị mượn</h3>
-            <span id="close-modal-thiet-bi" class="close">&times;</span>
-        </div>
-        <div class="modal-body">
-            <div class="search-section">
-                <input type="text" id="search-thiet-bi" placeholder="Tìm kiếm thiết bị...">
-                <div class="bulk-actions">
-                    <button type="button" id="btn-chon-tat-ca" class="btn btn-outline">Chọn tất cả</button>
-                    <button type="button" id="btn-bo-chon-tat-ca" class="btn btn-outline">Bỏ chọn tất cả</button>
-                </div>
-            </div>
-            <div id="grid-thiet-bi" class="equipment-grid">
-                <!-- Danh sách thiết bị sẽ được load bằng JavaScript -->
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" id="btn-xac-nhan-chon" class="btn btn-primary">Xác nhận</button>
-            <button type="button" id="btn-dong-chon-thiet-bi" class="btn btn-secondary">Đóng</button>
-        </div>
-    </div>
-</div>
+<script>
+const API = '../controllers/CT_PhieuMuonAPI.php';
+let editId = null;
 
-<!-- Modal chi tiết phiếu mượn -->
-<div id="modal-chi-tiet" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>Chi tiết phiếu mượn</h3>
-            <span id="close-modal-chi-tiet" class="close">&times;</span>
-        </div>
-        <div class="modal-body">
-            <div class="detail-section">
-                <div class="detail-row">
-                    <label>Mã phiếu:</label>
-                    <span id="detail-ma-phieu"></span>
-                </div>
-                <div class="detail-row">
-                    <label>Ngày mượn:</label>
-                    <span id="detail-ngay-muon"></span>
-                </div>
-                <div class="detail-row">
-                    <label>Ngày trả dự kiến:</label>
-                    <span id="detail-ngay-tra"></span>
-                </div>
-                <div class="detail-row">
-                    <label>Mục đích:</label>
-                    <span id="detail-muc-dich"></span>
-                </div>
-                <div class="detail-row">
-                    <label>Trạng thái:</label>
-                    <span id="detail-trang-thai"></span>
-                </div>
-                <div class="detail-row">
-                    <label>Thiết bị:</label>
-                    <div id="detail-thiet-bi"></div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" id="btn-dong-chi-tiet" class="btn btn-secondary">Đóng</button>
-        </div>
-    </div>
-</div>
+function formatDate(d) {
+    if (!d) return '';
+    // Nếu d đã là định dạng DD/MM/YYYY thì trả về luôn
+    if (typeof d === 'string' && d.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+        return d;
+    }
+    // Xử lý định dạng YYYY-MM-DD từ database
+    if (typeof d === 'string' && d.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        const parts = d.split('-');
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    // Fallback cho Date object
+    const date = new Date(d);
+    if (isNaN(date.getTime())) return '';
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
+function loadList() {
+    fetch(API + '?action=list').then(r => r.json()).then(data => {
+        console.log('API Response:', data); // Debug log
+        const list = document.getElementById('list');
+        if (data.success && data.data.length) {
+            list.innerHTML = data.data.map((item, i) => {
+                console.log('Item:', item); // Debug log cho từng item
+                const equipmentText = item.thietbi;
+                let equipmentName = equipmentText;
+                let totalQuantity = 0;
+                const quantityMatches = equipmentText.match(/SL:(\d+)/g);
+                if (quantityMatches) {
+                    totalQuantity = quantityMatches.reduce((sum, match) => sum + parseInt(match.replace(
+                        'SL:', '')), 0);
+                    equipmentName = equipmentText.replace(/\s*SL:\d+/g, '');
+                }
+                // Chỉ hiển thị nút Sửa cho phiếu "Chờ duyệt"
+                const editButton = item.trangthai === 'Chờ duyệt' ?
+                    `<button onclick="edit(${item.id})" class="btn btn-warning">Sửa</button>` :
+                    `<button class="btn btn-secondary" disabled title="Không thể sửa phiếu đang mượn">Sửa</button>`;
+                return `<tr><td>${i + 1}</td><td>${item.ma}</td><td>${equipmentName}</td><td>${totalQuantity || 1}</td><td>${item.mucdich || 'Không có'}</td><td>${formatDate(item.ngaymuon)}</td><td>${formatDate(item.ngaytra)}</td><td><span class="status-${item.trangthai.replace(' ', '-').toLowerCase()}">${item.trangthai}</span></td><td><button onclick="view(${item.id})" class="btn btn-info">Xem</button> ${editButton} <button onclick="del(${item.id})" class="btn btn-danger">Xóa</button></td></tr>`;
+            }).join('');
+        } else {
+            list.innerHTML = '<tr><td colspan="9">Chưa có phiếu</td></tr>';
+        }
+    });
+}
+
+function openCreate() {
+    editId = null;
+    document.getElementById('modal-title').textContent = 'Tạo phiếu mượn mới';
+    // Thiết lập ngày mặc định
+    const today = new Date();
+    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+    document.getElementById('ngaymuon').value = today.toISOString().split('T')[0];
+    document.getElementById('ngaytra').value = nextWeek.toISOString().split('T')[0];
+    document.getElementById('mucdich').value = '';
+    clearEquipment();
+    document.getElementById('diadiem').value = '';
+    document.getElementById('ghichu').value = '';
+    document.getElementById('modal').style.display = 'block';
+}
+
+function toggleEquipment(checkbox, name, code) {
+    const el = checkbox.closest('.equipment');
+    el.classList.toggle('selected', checkbox.checked);
+    updateSelected();
+}
+
+function updateSelected() {
+    const selected = [];
+    document.querySelectorAll('.equipment').forEach(el => {
+        const cb = el.querySelector('input[type="checkbox"]');
+        const qty = el.querySelector('input[type="number"]');
+        if (cb.checked) {
+            const text = el.textContent.split(' - SL:')[0].replace('☐', '').replace('☑', '').trim();
+            selected.push(`${text} SL:${qty.value}`);
+        }
+    });
+    document.getElementById('selected-equipment').value = selected.join(', ');
+}
+
+function clearEquipment() {
+    document.querySelectorAll('.equipment').forEach(el => {
+        el.querySelector('input[type="checkbox"]').checked = false;
+        el.querySelector('input[type="number"]').value = 1;
+        el.classList.remove('selected');
+    });
+    document.getElementById('selected-equipment').value = '';
+}
+
+function view(id) {
+    fetch(API + '?action=detail&id=' + id).then(r => r.json()).then(data => {
+        if (data.success) {
+            const item = data.data;
+            document.getElementById('detail-content').innerHTML =
+                `<p><b>Mã:</b> ${item.ma}</p><p><b>Thiết bị:</b> ${item.thietbi}</p><p><b>Mục đích:</b> ${item.mucdich}</p><p><b>Ngày mượn:</b> ${formatDate(item.ngaymuon)}</p><p><b>Ngày trả:</b> ${formatDate(item.ngaytra)}</p><p><b>Trạng thái:</b> <span class="status-text">${item.trangthai}</span></p>`;
+            document.getElementById('modal-detail').style.display = 'block';
+        } else alert('Lỗi: ' + data.message);
+    });
+}
+
+function edit(id) {
+    fetch(API + '?action=detail&id=' + id).then(r => r.json()).then(data => {
+        if (data.success) {
+            const item = data.data;
+            editId = id;
+            document.getElementById('modal-title').textContent = 'Sửa phiếu mượn';
+            document.getElementById('ngaymuon').value = item.ngaymuon;
+            document.getElementById('ngaytra').value = item.ngaytra;
+            document.getElementById('mucdich').value = item.mucdich || '';
+            clearEquipment();
+            if (item.thietbi) document.getElementById('selected-equipment').value = item.thietbi;
+            document.getElementById('diadiem').value = item.diadiem || '';
+            document.getElementById('ghichu').value = item.ghichu || '';
+            document.getElementById('modal').style.display = 'block';
+        } else alert('Lỗi: ' + data.message);
+    });
+}
+
+function save(e) {
+    e.preventDefault();
+    // Validation ngày tháng trước khi gửi - CHỈ kiểm tra ngày trả > ngày mượn
+    const ngayMuonISO = document.getElementById('ngaymuon').value;
+    const ngayTraISO = document.getElementById('ngaytra').value;
+    const ngayMuon = ngayMuonISO ? new Date(ngayMuonISO) : null;
+    const ngayTra = ngayTraISO ? new Date(ngayTraISO) : null;
+    // Kiểm tra ngày trả phải sau ngày mượn
+    if (!ngayMuon || !ngayTra || ngayTra <= ngayMuon) {
+        alert('⚠️ Ngày trả phải sau ngày mượn!');
+        return;
+    }
+    const selectedEquipment = document.getElementById('selected-equipment').value;
+    if (!selectedEquipment.trim()) {
+        alert('Vui lòng chọn ít nhất một thiết bị!');
+        return;
+    }
+    const mucDichValue = document.getElementById('mucdich').value;
+    console.log('=== FRONTEND SAVE DEBUG ===');
+    console.log('mucDich value:', mucDichValue);
+    console.log('mucDich length:', mucDichValue.length);
+    console.log('mucDich charCodes:', mucDichValue.split('').map(c => c.charCodeAt(0)));
+
+    const form = new FormData();
+    form.append('action', editId ? 'update' : 'create');
+    if (editId) form.append('id', editId);
+    // Gửi ngày ở định dạng ISO (YYYY-MM-DD) - input.date cung cấp ISO
+    form.append('ngaymuon', ngayMuonISO);
+    form.append('ngaytra', ngayTraISO);
+    form.append('mucdich', mucDichValue);
+    form.append('diadiem', document.getElementById('diadiem').value);
+    form.append('ghichu', document.getElementById('ghichu').value);
+    const checkboxes = document.querySelectorAll('.equipment input[type="checkbox"]:checked');
+    form.append('tb_count', checkboxes.length);
+    checkboxes.forEach((cb, index) => {
+        const el = cb.closest('.equipment');
+        const text = el.textContent.split(' - SL:')[0].replace('☐', '').replace('☑', '').trim();
+        const parts = text.split(' (');
+        const name = parts[0];
+        const code = parts[1] ? parts[1].replace(')', '') : 'TB-' + index;
+        const qty = el.querySelector('input[type="number"]').value;
+        form.append(`tb_ma_${index}`, code);
+        form.append(`tb_ten_${index}`, name);
+        form.append(`tb_sl_${index}`, qty);
+    });
+
+    console.log('FormData entries:');
+    for (let pair of form.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+    }
+
+    fetch(API, {
+        method: 'POST',
+        body: form
+    }).then(r => r.json()).then(result => {
+        console.log('API Response:', result);
+        if (result.success) {
+            alert(editId ? 'Cập nhật thành công' : 'Tạo thành công');
+            closeModal();
+            loadList();
+        } else alert('Lỗi: ' + result.message);
+    });
+}
+
+function del(id) {
+    if (confirm('Xóa phiếu mượn này?')) {
+        fetch(API, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'delete',
+                id: id
+            })
+        }).then(r => r.json()).then(data => {
+            alert(data.success ? 'Xóa thành công' : 'Lỗi: ' + data.message);
+            if (data.success) loadList();
+        });
+    }
+}
+
+function closeModal(modalId = 'modal') {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', loadList);
+window.onclick = e => e.target.classList.contains('modal') && closeModal(e.target.id);
+</script>
+
+<!-- Thêm validation cho ngày tháng -->
+<script src="../js/date-validation.js?v=<?php echo time(); ?>"></script>
+<script>
+// Force reload - thêm timestamp để tránh cache
+console.log('🔄 Script loaded at:', new Date().toISOString());
+
+// Thêm validation ngày tháng cho file cũ này - CHỈ ràng buộc ngày trả > ngày mượn
+document.addEventListener('DOMContentLoaded', function() {
+    const ngayMuonInput = document.getElementById('ngaymuon');
+    const ngayTraInput = document.getElementById('ngaytra');
+
+    if (ngayMuonInput && ngayTraInput) {
+        const formatDateForInput = (date) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        // Validation khi thay đổi ngày mượn
+        ngayMuonInput.addEventListener('change', function() {
+            const ngayMuon = new Date(this.value);
+            const ngayTra = ngayTraInput.value ? new Date(ngayTraInput.value) : null;
+
+            // Cập nhật min cho ngày trả (phải sau ngày mượn ít nhất 1 ngày)
+            const minNgayTra = new Date(ngayMuon);
+            minNgayTra.setDate(minNgayTra.getDate() + 1);
+            ngayTraInput.min = formatDateForInput(minNgayTra);
+            // Nếu ngày trả đã được chọn và nhỏ hơn hoặc bằng ngày mượn, reset ngày trả
+            if (ngayTra && ngayTra <= ngayMuon) {
+                alert('⚠️ Ngày trả phải sau ngày mượn!');
+                const defaultNgayTra = new Date(ngayMuon);
+                defaultNgayTra.setDate(defaultNgayTra.getDate() + 7);
+                ngayTraInput.value = formatDateForInput(defaultNgayTra);
+            }
+            // Nếu chưa có ngày trả, tự động set = ngày mượn + 7 ngày
+            if (!ngayTraInput.value) {
+                const defaultNgayTra = new Date(ngayMuon);
+                defaultNgayTra.setDate(defaultNgayTra.getDate() + 7);
+                ngayTraInput.value = formatDateForInput(defaultNgayTra);
+            }
+        });
+
+        // Validation khi thay đổi ngày trả
+        ngayTraInput.addEventListener('change', function() {
+            const ngayMuon = ngayMuonInput.value ? new Date(ngayMuonInput.value) : null;
+            const ngayTra = new Date(this.value);
+            // CHỈ kiểm tra ngày trả phải sau ngày mượn
+            if (ngayMuon && ngayTra <= ngayMuon) {
+                alert('⚠️ Ngày trả phải sau ngày mượn!');
+                const defaultNgayTra = new Date(ngayMuon);
+                defaultNgayTra.setDate(defaultNgayTra.getDate() + 7);
+                this.value = formatDateForInput(defaultNgayTra);
+            }
+        });
+
+        console.log('✅ Date validation đã được thiết lập - chỉ ràng buộc ngày trả > ngày mượn');
+    }
+});
+</script>
