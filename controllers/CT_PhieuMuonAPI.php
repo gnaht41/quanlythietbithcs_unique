@@ -1,6 +1,6 @@
 <?php
 session_start();
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/CT_ApiHelper.php';
 require_once __DIR__ . '/../models/CT_PhieuMuonModel.php';
@@ -16,21 +16,14 @@ try {
             $ngayTra = $_POST['ngaytra'] ?? '';
             $mucDich = $_POST['mucdich'] ?? '';
             $tbCount = (int)($_POST['tb_count'] ?? 0);
-            
-            // Enhanced debug logging
-            error_log("=== API CREATE DEBUG ===");
-            error_log("mucDich received: '" . $mucDich . "'");
-            error_log("mucDich length: " . strlen($mucDich));
-            error_log("mucDich ASCII: " . implode(',', array_map('ord', str_split($mucDich))));
-            error_log("All POST data: " . print_r($_POST, true));
-            
+
             if (!$ngayMuon || !$ngayTra || !$mucDich || $tbCount == 0) {
                 throw new Exception("Thiếu thông tin bắt buộc");
             }
-            
+
             $tbText = CT_ApiHelper::parseThietBi($tbCount);
             if (empty($tbText)) throw new Exception('Không có thiết bị');
-            
+
             if ($model->taoPhieu($maND, $ngayMuon, $ngayTra, $mucDich, $tbText)) {
                 CT_ApiHelper::success('Tạo phiếu thành công!');
             } else {
@@ -46,7 +39,7 @@ try {
         case 'detail':
             $id = $_GET['id'] ?? 0;
             if (!$id) CT_ApiHelper::error('Thiếu ID phiếu');
-            
+
             $data = $model->layChiTiet($maND, $id);
             if ($data) {
                 CT_ApiHelper::success('OK', $data);
@@ -61,12 +54,12 @@ try {
             $ngayTra = $_POST['ngaytra'] ?? '';
             $mucDich = $_POST['mucdich'] ?? '';
             $tbCount = (int)($_POST['tb_count'] ?? 0);
-            
+
             if (!$id || !$ngayMuon || !$ngayTra || !$mucDich || $tbCount == 0) {
                 throw new Exception("Thiếu thông tin bắt buộc");
             }
-            
-            // Kiểm tra trạng thái phiếu trước khi sửa
+
+            // Kiểm tra trạng thái phiếu
             $phieu = $model->layChiTiet($maND, $id);
             if (!$phieu) {
                 throw new Exception("Không tìm thấy phiếu");
@@ -74,10 +67,10 @@ try {
             if ($phieu['trangthai'] === 'Đang mượn') {
                 throw new Exception("Không thể sửa phiếu đang mượn");
             }
-            
+
             $tbText = CT_ApiHelper::parseThietBi($tbCount);
             if (empty($tbText)) throw new Exception('Không có thiết bị');
-            
+
             if ($model->capNhat($maND, $id, $ngayMuon, $ngayTra, $mucDich, $tbText)) {
                 CT_ApiHelper::success('Cập nhật phiếu thành công!');
             } else {
@@ -87,11 +80,11 @@ try {
 
         case 'delete':
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') throw new Exception('Phương thức không hợp lệ');
-            
+
             $input = json_decode(file_get_contents('php://input'), true);
             $id = $input['id'] ?? 0;
             if (!$id) throw new Exception('Thiếu ID phiếu');
-            
+
             if ($model->xoa($maND, $id)) {
                 CT_ApiHelper::success("Đã xóa phiếu ID:$id");
             } else {
@@ -99,16 +92,9 @@ try {
             }
             break;
 
-        case 'force-create-sample':
-            $count = $model->forceTaoPhieuMau($maND);
-            CT_ApiHelper::success("Đã tạo $count phiếu mẫu cho user $maND");
-            break;
-
         default:
             CT_ApiHelper::success('OK');
     }
-
 } catch (Exception $e) {
     CT_ApiHelper::error($e->getMessage());
 }
-?>

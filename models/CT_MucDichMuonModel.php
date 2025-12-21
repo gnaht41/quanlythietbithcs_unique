@@ -12,128 +12,46 @@ class CT_MucDichMuonModel
         $this->conn = $db->getConnection();
     }
 
-    // Lấy danh sách mục đích thường dùng
+    // Lấy danh sách mục đích thường dùng (hardcoded cho đơn giản)
     public function layDanhSachMucDich($limit = 10)
     {
-        $sql = "
-            SELECT 
-                maMucDich,
-                tenMucDich,
-                moTa,
-                soLanSuDung
-            FROM MucDichMuon 
-            WHERE trangThai = 'Hoạt động'
-            ORDER BY soLanSuDung DESC, tenMucDich ASC
-            LIMIT ?
-        ";
+        $data = [
+            ['maMucDich' => 1, 'tenMucDich' => 'Dạy học', 'moTa' => 'Sử dụng cho hoạt động giảng dạy', 'soLanSuDung' => 0],
+            ['maMucDich' => 2, 'tenMucDich' => 'Họp phụ huynh', 'moTa' => 'Sử dụng trong các buổi họp phụ huynh', 'soLanSuDung' => 0],
+            ['maMucDich' => 3, 'tenMucDich' => 'Hội nghị', 'moTa' => 'Sử dụng trong các hội nghị, họp', 'soLanSuDung' => 0],
+            ['maMucDich' => 4, 'tenMucDich' => 'Thi cử', 'moTa' => 'Sử dụng trong các kỳ thi, kiểm tra', 'soLanSuDung' => 0],
+            ['maMucDich' => 5, 'tenMucDich' => 'Hoạt động ngoại khóa', 'moTa' => 'Sử dụng cho hoạt động ngoại khóa', 'soLanSuDung' => 0]
+        ];
 
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('i', $limit);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $data = [];
-        while ($row = $result->fetch_assoc()) {
-            $data[] = $row;
-        }
-
-        return ['success' => true, 'data' => $data];
+        return ['success' => true, 'data' => array_slice($data, 0, $limit)];
     }
 
     // Tìm kiếm mục đích theo từ khóa
     public function timKiemMucDich($keyword, $limit = 5)
     {
-        $keyword = '%' . $keyword . '%';
-        $sql = "
-            SELECT 
-                maMucDich,
-                tenMucDich,
-                moTa,
-                soLanSuDung
-            FROM MucDichMuon 
-            WHERE trangThai = 'Hoạt động' 
-            AND (tenMucDich LIKE ? OR moTa LIKE ?)
-            ORDER BY soLanSuDung DESC, tenMucDich ASC
-            LIMIT ?
-        ";
+        $allData = $this->layDanhSachMucDich(100)['data'];
+        $filtered = array_filter($allData, function ($item) use ($keyword) {
+            return stripos($item['tenMucDich'], $keyword) !== false ||
+                stripos($item['moTa'], $keyword) !== false;
+        });
 
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('ssi', $keyword, $keyword, $limit);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $data = [];
-        while ($row = $result->fetch_assoc()) {
-            $data[] = $row;
-        }
-
-        return ['success' => true, 'data' => $data];
+        return ['success' => true, 'data' => array_slice($filtered, 0, $limit)];
     }
 
-    // Thêm mục đích mới (nếu chưa tồn tại)
+    // Các phương thức khác có thể bỏ qua vì không cần thiết cho hệ thống hiện tại
     public function themMucDichMoi($tenMucDich, $moTa = '')
     {
-        // Kiểm tra xem mục đích đã tồn tại chưa
-        $checkSql = "SELECT maMucDich FROM MucDichMuon WHERE tenMucDich = ?";
-        $checkStmt = $this->conn->prepare($checkSql);
-        $checkStmt->bind_param('s', $tenMucDich);
-        $checkStmt->execute();
-        $checkResult = $checkStmt->get_result();
-
-        if ($checkResult->num_rows > 0) {
-            return ['success' => false, 'message' => 'Mục đích này đã tồn tại'];
-        }
-
-        // Thêm mục đích mới
-        $insertSql = "INSERT INTO MucDichMuon (tenMucDich, moTa) VALUES (?, ?)";
-        $insertStmt = $this->conn->prepare($insertSql);
-        $insertStmt->bind_param('ss', $tenMucDich, $moTa);
-
-        if ($insertStmt->execute()) {
-            return [
-                'success' => true, 
-                'message' => 'Thêm mục đích thành công',
-                'data' => ['maMucDich' => $this->conn->insert_id]
-            ];
-        }
-
-        return ['success' => false, 'message' => 'Lỗi khi thêm mục đích'];
+        return ['success' => false, 'message' => 'Chức năng này chưa được hỗ trợ'];
     }
 
-    // Cập nhật số lần sử dụng
     public function capNhatSoLanSuDung($tenMucDich)
     {
-        $sql = "UPDATE MucDichMuon SET soLanSuDung = soLanSuDung + 1 WHERE tenMucDich = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('s', $tenMucDich);
-        return $stmt->execute();
+        // Không cần cập nhật vì dùng danh sách cố định
+        return true;
     }
 
-    // Lấy thống kê mục đích được sử dụng nhiều nhất
     public function layThongKeMucDich($limit = 5)
     {
-        $sql = "
-            SELECT 
-                tenMucDich,
-                soLanSuDung,
-                ROUND((soLanSuDung * 100.0 / (SELECT SUM(soLanSuDung) FROM MucDichMuon WHERE trangThai = 'Hoạt động')), 1) as tiLe
-            FROM MucDichMuon 
-            WHERE trangThai = 'Hoạt động' AND soLanSuDung > 0
-            ORDER BY soLanSuDung DESC
-            LIMIT ?
-        ";
-
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('i', $limit);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $data = [];
-        while ($row = $result->fetch_assoc()) {
-            $data[] = $row;
-        }
-
-        return ['success' => true, 'data' => $data];
+        return ['success' => true, 'data' => []];
     }
 }
-?>
