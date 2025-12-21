@@ -1,17 +1,21 @@
 <?php
-class CT_PhieuMuonModel {
+class CT_PhieuMuonModel
+{
     private $db;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         require_once __DIR__ . '/QT_Database.php';
         $this->db = new Database();
     }
-    
-    public function taoPhieu($maND, $ngayMuon, $ngayTra, $mucDich, $thietBi) {
+
+    public function taoPhieu($maND, $ngayMuon, $ngayTra, $mucDich, $thietBi)
+    {
         require_once __DIR__ . '/QT_Log.php';
+
         $log = new Log();
         $maPhieu = 'PM' . date('ymd') . rand(100, 999);
-        
+
         // Rút gọn tối đa để tránh bị cắt
         $thietBiShort = [];
         foreach ($thietBi as $tb) {
@@ -25,12 +29,12 @@ class CT_PhieuMuonModel {
             $thietBiShort[] = $name . ' ' . $sl;
         }
         $thietBiText = implode(',', $thietBiShort); // Dùng dấu phẩy thay vì ", "
-        
+
         // Rút gọn mục đích
         $mucDichShort = $mucDich;
         $mucDichMap = [
             'Dạy học' => 'DH',
-            'Họp phụ huynh' => 'HPH', 
+            'Họp phụ huynh' => 'HPH',
             'Hội nghị' => 'HN',
             'Thi cử' => 'TC',
             'Hoạt động ngoại khóa' => 'HDNK'
@@ -38,34 +42,35 @@ class CT_PhieuMuonModel {
         if (isset($mucDichMap[$mucDich])) {
             $mucDichShort = $mucDichMap[$mucDich];
         }
-        
+
         // Format với năm đầy đủ để hỗ trợ 2026: PM:PM123|TB:Máy SL:1|MD:DH|NM:20/12/2025|NT:27/01/2026
         // Giáo viên tạo phiếu => trạng thái mặc định là 'Chờ duyệt' (không được duyệt tự động)
         $ngayMuonShort = date('d/m/Y', strtotime($ngayMuon));
         $ngayTraShort = date('d/m/Y', strtotime($ngayTra));
         $hanhDong = "PM:$maPhieu|TB:$thietBiText|MD:$mucDichShort|NM:$ngayMuonShort|NT:$ngayTraShort|TT:Chờ duyệt";
-        
+
         error_log("=== SAVE DEBUG ===");
         error_log("mucDich input: " . $mucDich . " -> " . $mucDichShort);
         error_log("hanhDong: " . $hanhDong);
         error_log("Length: " . strlen($hanhDong));
-        
+
         return $log->ghiLog($maND, $hanhDong, "PhieuMuon");
     }
-    
-    public function layDanhSach($maND, $limit = 10) {
+
+    public function layDanhSach($maND, $limit = 10)
+    {
         $data = [];
         if ($conn = $this->db->getConnection()) {
             $stmt = $conn->prepare("SELECT maLog, hanhDong, thoiGian FROM BangGhiLog WHERE maND = ? AND (hanhDong LIKE 'Phieu muon%' OR hanhDong LIKE 'PM:%') ORDER BY thoiGian DESC LIMIT ?");
             $stmt->bind_param("ii", $maND, $limit);
             $stmt->execute();
             $result = $stmt->get_result();
-            
+
             while ($row = $result->fetch_assoc()) {
                 $data[] = $this->parsePhieu($row);
             }
         }
-        
+
         // Luôn thêm 6 phiếu mẫu mặc định vào đầu danh sách
         $phieuMau = [
             [
@@ -123,12 +128,13 @@ class CT_PhieuMuonModel {
                 'trangthai' => 'Chờ duyệt'
             ]
         ];
-        
+
         // Gộp dữ liệu thật với phiếu mẫu (dữ liệu thật ở trên, phiếu mẫu ở dưới)
         return array_merge($data, $phieuMau);
     }
-    
-    public function layChiTiet($maND, $id) {
+
+    public function layChiTiet($maND, $id)
+    {
         // Kiểm tra phiếu mẫu trước
         if ($id >= 9001 && $id <= 9006) {
             $phieuMau = [
@@ -187,38 +193,39 @@ class CT_PhieuMuonModel {
                     'trangthai' => 'Chờ duyệt'
                 ]
             ];
-            
+
             if (isset($phieuMau[$id])) {
                 return $phieuMau[$id];
             }
         }
-        
+
         if ($conn = $this->db->getConnection()) {
             $stmt = $conn->prepare("SELECT maLog, hanhDong, thoiGian FROM BangGhiLog WHERE maLog = ? AND maND = ? AND (hanhDong LIKE 'Phieu muon%' OR hanhDong LIKE 'PM:%')");
             $stmt->bind_param("ii", $id, $maND);
             $stmt->execute();
             $result = $stmt->get_result();
-            
+
             if ($row = $result->fetch_assoc()) {
                 return $this->parsePhieu($row);
             }
         }
         return null;
     }
-    
-    public function capNhat($maND, $id, $ngayMuon, $ngayTra, $mucDich, $thietBi) {
+
+    public function capNhat($maND, $id, $ngayMuon, $ngayTra, $mucDich, $thietBi)
+    {
         if ($conn = $this->db->getConnection()) {
             $stmt = $conn->prepare("SELECT hanhDong FROM BangGhiLog WHERE maLog = ? AND maND = ?");
             $stmt->bind_param("ii", $id, $maND);
             $stmt->execute();
             $result = $stmt->get_result();
-            
+
             if ($row = $result->fetch_assoc()) {
                 $maPhieu = 'PM' . date('ymd') . rand(100, 999);
                 if (preg_match('/PM:?(PM\w+)/', $row['hanhDong'], $matches)) {
                     $maPhieu = $matches[1];
                 }
-                
+
                 // Sử dụng format ngắn gọn giống taoPhieu
                 $thietBiShort = [];
                 foreach ($thietBi as $tb) {
@@ -231,12 +238,12 @@ class CT_PhieuMuonModel {
                     $thietBiShort[] = $name . ' ' . $sl;
                 }
                 $thietBiText = implode(',', $thietBiShort);
-                
+
                 // Rút gọn mục đích
                 $mucDichShort = $mucDich;
                 $mucDichMap = [
                     'Dạy học' => 'DH',
-                    'Họp phụ huynh' => 'HPH', 
+                    'Họp phụ huynh' => 'HPH',
                     'Hội nghị' => 'HN',
                     'Thi cử' => 'TC',
                     'Hoạt động ngoại khóa' => 'HDNK'
@@ -244,11 +251,11 @@ class CT_PhieuMuonModel {
                 if (isset($mucDichMap[$mucDich])) {
                     $mucDichShort = $mucDichMap[$mucDich];
                 }
-                
+
                 $ngayMuonShort = date('d/m/Y', strtotime($ngayMuon));
                 $ngayTraShort = date('d/m/Y', strtotime($ngayTra));
                 $hanhDong = "PM:$maPhieu|TB:$thietBiText|MD:$mucDichShort|NM:$ngayMuonShort|NT:$ngayTraShort";
-                
+
                 $updateStmt = $conn->prepare("UPDATE BangGhiLog SET hanhDong = ? WHERE maLog = ? AND maND = ?");
                 $updateStmt->bind_param("sii", $hanhDong, $id, $maND);
                 return $updateStmt->execute();
@@ -256,8 +263,9 @@ class CT_PhieuMuonModel {
         }
         return false;
     }
-    
-    public function xoa($maND, $id) {
+
+    public function xoa($maND, $id)
+    {
         if ($conn = $this->db->getConnection()) {
             $stmt = $conn->prepare("DELETE FROM BangGhiLog WHERE maLog = ? AND maND = ?");
             $stmt->bind_param("ii", $id, $maND);
@@ -265,11 +273,12 @@ class CT_PhieuMuonModel {
         }
         return false;
     }
-    
-    private function taoPhieuMauVaoDatabase($maND) {
+
+    private function taoPhieuMauVaoDatabase($maND)
+    {
         require_once __DIR__ . '/QT_Log.php';
         $log = new Log();
-        
+
         // Tạo 5 phiếu mẫu trực tiếp vào database
         $sampleData = [
             [
@@ -313,7 +322,7 @@ class CT_PhieuMuonModel {
                 'trangThai' => 'Chờ duyệt'
             ]
         ];
-        
+
         $success = 0;
         foreach ($sampleData as $data) {
             $hanhDong = "PM:{$data['maPhieu']}|TB:{$data['thietBi']}|MD:{$data['mucDich']}|NM:{$data['ngayMuon']}|NT:{$data['ngayTra']}|TT:{$data['trangThai']}";
@@ -321,40 +330,42 @@ class CT_PhieuMuonModel {
                 $success++;
             }
         }
-        
+
         error_log("=== SAMPLE DATA CREATED ===");
         error_log("Created $success sample records for user $maND");
-        
+
         return $success;
     }
-    
-    public function forceTaoPhieuMau($maND) {
+
+    public function forceTaoPhieuMau($maND)
+    {
         return $this->taoPhieuMauVaoDatabase($maND);
     }
-    
-    private function parsePhieu($row) {
+
+    private function parsePhieu($row)
+    {
         $hanhDong = $row['hanhDong'];
-        
+
         error_log("=== PARSE DEBUG ===");
         error_log("Raw hanhDong: " . $hanhDong);
         error_log("Length: " . strlen($hanhDong));
-        
+
         // Mặc định
         $thietBiText = 'Thiết bị';
         $mucDich = 'Chưa cập nhật';
         $ngayMuon = date('Y-m-d', strtotime($row['thoiGian']));
         $ngayTra = date('Y-m-d', strtotime($row['thoiGian'] . ' +7 days'));
         $maPhieu = 'PM' . substr($row['maLog'], -3);
-        
+
         // Map mục đích ngắn gọn về đầy đủ
         $mucDichMap = [
             'DH' => 'Dạy học',
-            'HPH' => 'Họp phụ huynh', 
+            'HPH' => 'Họp phụ huynh',
             'HN' => 'Hội nghị',
             'TC' => 'Thi cử',
             'HDNK' => 'Hoạt động ngoại khóa'
         ];
-        
+
         // New compact format: PM:PM123|TB:Máy SL:1|MD:DH|NM:20/12|NT:27/12|TT:Đang mượn
         if (preg_match('/PM:(PM\w+)\|TB:(.+?)\|MD:(.+?)\|NM:(.+?)\|NT:(.+?)\|TT:(.+)/', $hanhDong, $matches)) {
             $maPhieu = $matches[1];
@@ -363,7 +374,7 @@ class CT_PhieuMuonModel {
             $ngayMuonRaw = $matches[4];
             $ngayTraRaw = $matches[5];
             $trangThai = $matches[6];
-            
+
             // Expand thiết bị names
             $thietBiParts = explode(',', $thietBiRaw);
             $thietBiExpanded = [];
@@ -378,10 +389,10 @@ class CT_PhieuMuonModel {
                 }
             }
             $thietBiText = implode(', ', $thietBiExpanded);
-            
+
             // Expand mục đích
             $mucDich = isset($mucDichMap[$mucDichRaw]) ? $mucDichMap[$mucDichRaw] : $mucDichRaw;
-            
+
             // Expand dates - hỗ trợ năm 2026
             $currentYear = date('Y');
             if (strpos($ngayMuonRaw, '/') !== false) {
@@ -412,7 +423,7 @@ class CT_PhieuMuonModel {
                 }
                 $ngayTra = $year . '-' . $month . '-' . $day;
             }
-            
+
             error_log("✅ New compact format: mucDich = " . $mucDich . ", trangThai = " . $trangThai);
         }
         // Fallback for format without status
@@ -423,7 +434,7 @@ class CT_PhieuMuonModel {
             $ngayMuonRaw = $matches[4];
             $ngayTraRaw = $matches[5];
             $trangThai = 'Chờ duyệt'; // Default status for old records
-            
+
             // Same expansion logic as above
             $thietBiParts = explode(',', $thietBiRaw);
             $thietBiExpanded = [];
@@ -438,9 +449,9 @@ class CT_PhieuMuonModel {
                 }
             }
             $thietBiText = implode(', ', $thietBiExpanded);
-            
+
             $mucDich = isset($mucDichMap[$mucDichRaw]) ? $mucDichMap[$mucDichRaw] : $mucDichRaw;
-            
+
             $currentYear = date('Y');
             if (strpos($ngayMuonRaw, '/') !== false) {
                 $parts = explode('/', $ngayMuonRaw);
@@ -470,7 +481,7 @@ class CT_PhieuMuonModel {
                 }
                 $ngayTra = $year . '-' . $month . '-' . $day;
             }
-            
+
             error_log("✅ Old format without status: mucDich = " . $mucDich);
         }
         // Fallback for partial matches
@@ -489,27 +500,24 @@ class CT_PhieuMuonModel {
             $ngayMuon = $matches[4];
             $ngayTra = $matches[5];
             error_log("✅ Old MD format: mucDich = " . $mucDich);
-        }
-        else if (preg_match('/Phieu muon (PM\w+): (.+?) \| Muc dich: (.+?) \| Ngay muon: (.+?) \| Ngay tra: (.+)/', $hanhDong, $matches)) {
+        } else if (preg_match('/Phieu muon (PM\w+): (.+?) \| Muc dich: (.+?) \| Ngay muon: (.+?) \| Ngay tra: (.+)/', $hanhDong, $matches)) {
             $maPhieu = $matches[1];
             $thietBiText = $matches[2];
             $mucDich = $matches[3];
             $ngayMuon = $matches[4];
             $ngayTra = $matches[5];
             error_log("✅ Old full format: mucDich = " . $mucDich);
-        }
-        else if (preg_match('/Phieu muon (PM\w+): (.+)/', $hanhDong, $matches)) {
+        } else if (preg_match('/Phieu muon (PM\w+): (.+)/', $hanhDong, $matches)) {
             $maPhieu = $matches[1];
             $thietBiText = $matches[2];
             $mucDich = 'Mượn thiết bị';
             error_log("⚠️ Basic format: mucDich = " . $mucDich);
-        }
-        else {
+        } else {
             error_log("❌ NO PATTERN MATCHED!");
         }
-        
+
         error_log("Final: maPhieu=$maPhieu, thietBi=$thietBiText, mucDich=$mucDich");
-        
+
         return [
             'id' => $row['maLog'],
             'ma' => $maPhieu,
@@ -521,4 +529,3 @@ class CT_PhieuMuonModel {
         ];
     }
 }
-?>

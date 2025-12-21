@@ -48,8 +48,7 @@ class AuthController
                 $userData['maND'],
                 'LOGIN',
                 'TaiKhoan',
-                $userData['maND'],
-                'Đăng nhập thành công'
+                $userData['maND']
             );
 
             if (isset($this->role_pages[$maVT])) {
@@ -72,8 +71,7 @@ class AuthController
                 $_SESSION['maND'],
                 'LOGOUT',
                 'TaiKhoan',
-                $_SESSION['maND'],
-                'Đăng xuất hệ thống'
+                $_SESSION['maND']
             );
         }
 

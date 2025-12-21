@@ -214,6 +214,7 @@ main {
         opacity: 0;
         transform: translateY(4px);
     }
+
     to {
         opacity: 1;
         transform: none;
@@ -358,10 +359,6 @@ td {
     text-align: left;
 }
 
-thead th {
-    background: #f8fafc;
-    font-weight: 600;
-}
 
 /* ===== Modal ===== */
 
@@ -375,11 +372,13 @@ thead th {
     z-index: 99;
 }
 
-.open { /* .modal */ 
+.open {
+    /* .modal */
     display: flex !important;
 }
 
-/* body */ .no-scroll {
+/* body */
+.no-scroll {
     overflow: hidden;
 }
 
@@ -517,8 +516,9 @@ thead th {
     gap: 10px;
     justify-content: flex-end;
 }
+
 /* model */
-.mat-khau{
+.mat-khau {
     width: 300px !important;
 }
 

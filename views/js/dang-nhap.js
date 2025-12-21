@@ -1,4 +1,4 @@
-// views/js/dang-nhap.js (Chỉ giữ lại phần UI)
+// views/js/dang-nhap.js
 (function () {
     const $ = s => document.querySelector(s);
 

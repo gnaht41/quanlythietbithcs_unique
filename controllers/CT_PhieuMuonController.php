@@ -19,7 +19,7 @@ class CT_PhieuMuonController
         // Bật error reporting để debug
         error_reporting(E_ALL);
         ini_set('display_errors', 0); // Không hiển thị lỗi trực tiếp
-        
+
         // Kiểm tra đăng nhập
         if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             $this->sendResponse(false, 'Vui lòng đăng nhập để tiếp tục');
@@ -110,7 +110,7 @@ class CT_PhieuMuonController
     {
         // Lấy dữ liệu từ POST
         $input = json_decode(file_get_contents('php://input'), true);
-        
+
         if (!$input) {
             $input = $_POST;
         }
@@ -119,11 +119,13 @@ class CT_PhieuMuonController
         error_log("Dữ liệu tạo phiếu mượn: " . json_encode($input));
 
         // Validate dữ liệu đầu vào
-        if (empty($input['ngayMuon']) || empty($input['ngayTraDuKien']) || 
-            empty($input['mucDich']) || empty($input['thietBi'])) {
+        if (
+            empty($input['ngayMuon']) || empty($input['ngayTraDuKien']) ||
+            empty($input['mucDich']) || empty($input['thietBi'])
+        ) {
             error_log("Validation failed - Missing data: " . json_encode([
                 'ngayMuon' => $input['ngayMuon'] ?? 'missing',
-                'ngayTraDuKien' => $input['ngayTraDuKien'] ?? 'missing', 
+                'ngayTraDuKien' => $input['ngayTraDuKien'] ?? 'missing',
                 'mucDich' => $input['mucDich'] ?? 'missing',
                 'thietBi' => isset($input['thietBi']) ? 'present' : 'missing'
             ]));
@@ -139,16 +141,16 @@ class CT_PhieuMuonController
 
         // Gọi model để tạo phiếu mượn
         $result = $this->model->taoPhieuMuon($input);
-        
+
         // Debug: Log kết quả từ model
         error_log("Kết quả từ model: " . json_encode($result));
-        
+
         // Ghi log nếu tạo phiếu thành công
         if ($result['success'] && isset($result['data']['maPhieu'])) {
             try {
                 require_once __DIR__ . '/../models/QT_Log.php';
                 $log = new Log();
-                
+
                 $chiTiet = [
                     'ngayMuon' => $input['ngayMuon'],
                     'ngayTraDuKien' => $input['ngayTraDuKien'],
@@ -156,13 +158,13 @@ class CT_PhieuMuonController
                     'soLuongThietBi' => count($input['thietBi']),
                     'danhSachThietBi' => array_column($input['thietBi'], 'maTB')
                 ];
-                
+
                 $log->logTaoPhieuMuon($_SESSION['maND'], $result['data']['maPhieu'], $chiTiet);
             } catch (Exception $e) {
                 error_log("Lỗi ghi log tạo phiếu mượn: " . $e->getMessage());
             }
         }
-        
+
         $this->sendResponse($result['success'], $result['message'], $result['data'] ?? null);
     }
 
@@ -171,17 +173,17 @@ class CT_PhieuMuonController
     {
         $maND = $_SESSION['maND'];
         $result = $this->model->layDanhSachPhieuMuon($maND);
-        
+
         // Debug: Log dữ liệu trả về
         error_log("Dữ liệu phiếu mượn: " . json_encode($result['data']));
-        
+
         // Debug: Kiểm tra từng item có mucDich không
         if ($result['data']) {
             foreach ($result['data'] as $item) {
                 error_log("Phiếu {$item['maPhieu']}: mucDich = " . ($item['mucDich'] ?? 'NULL'));
             }
         }
-        
+
         $this->sendResponse($result['success'], 'Lấy danh sách thành công', $result['data']);
     }
 
@@ -189,7 +191,7 @@ class CT_PhieuMuonController
     private function layChiTietPhieuMuon()
     {
         $maPhieu = $_GET['maPhieu'] ?? '';
-        
+
         if (empty($maPhieu) || !is_numeric($maPhieu)) {
             $this->sendResponse(false, 'Mã phiếu mượn không hợp lệ');
             return;
@@ -197,7 +199,7 @@ class CT_PhieuMuonController
 
         $maND = $_SESSION['maND'];
         $result = $this->model->layChiTietPhieuMuon($maPhieu, $maND);
-        
+
         if ($result['success']) {
             $this->sendResponse(true, 'Lấy chi tiết thành công', $result['data']);
         } else {
@@ -209,7 +211,7 @@ class CT_PhieuMuonController
     private function capNhatPhieuMuon()
     {
         $maPhieu = $_GET['maPhieu'] ?? $_POST['maPhieu'] ?? '';
-        
+
         if (empty($maPhieu) || !is_numeric($maPhieu)) {
             $this->sendResponse(false, 'Mã phiếu mượn không hợp lệ');
             return;
@@ -217,14 +219,16 @@ class CT_PhieuMuonController
 
         // Lấy dữ liệu từ POST
         $input = json_decode(file_get_contents('php://input'), true);
-        
+
         if (!$input) {
             $input = $_POST;
         }
 
         // Validate dữ liệu đầu vào
-        if (empty($input['ngayMuon']) || empty($input['ngayTraDuKien']) || 
-            empty($input['mucDich']) || empty($input['thietBi'])) {
+        if (
+            empty($input['ngayMuon']) || empty($input['ngayTraDuKien']) ||
+            empty($input['mucDich']) || empty($input['thietBi'])
+        ) {
             $this->sendResponse(false, 'Thiếu thông tin bắt buộc');
             return;
         }
@@ -238,7 +242,7 @@ class CT_PhieuMuonController
     private function huyPhieuMuon()
     {
         $maPhieu = $_GET['maPhieu'] ?? $_POST['maPhieu'] ?? '';
-        
+
         if (empty($maPhieu) || !is_numeric($maPhieu)) {
             $this->sendResponse(false, 'Mã phiếu mượn không hợp lệ');
             return;
@@ -268,7 +272,7 @@ class CT_PhieuMuonController
     private function sendResponse($success, $message, $data = null)
     {
         header('Content-Type: application/json; charset=utf-8');
-        
+
         $response = [
             'success' => $success,
             'message' => $message
@@ -294,4 +298,3 @@ class CT_PhieuMuonController
 if (basename($_SERVER['PHP_SELF']) === 'CT_PhieuMuonController.php') {
     CT_PhieuMuonController::processRequest();
 }
-?>

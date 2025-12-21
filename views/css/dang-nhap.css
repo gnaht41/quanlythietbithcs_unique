@@ -1,133 +1,81 @@
-/* Base */
+/* views/css/dang-nhap.css */
+/* Basic reset */
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
-:root {
-    --primary: #1a2a44;
-    --focus: #60a5fa;
-    --ok: #27ae60;
-    --danger: #e74c3c;
-    --muted: #64748b;
-    --bg1: #f0f4f8;
-    /* Slightly adjusted background */
-    --bg2: #dde7f5;
-    --input-bg: #f8fafc;
-}
-
 body {
-    margin: 0;
-    font-family: 'Inter', Arial, sans-serif;
-    /* Apply gradient background to the whole body */
-    background: linear-gradient(135deg, var(--bg1), var(--bg2));
-    min-height: 100vh;
-    display: flex;
-    /* Use flexbox to center content */
-    align-items: center;
-    /* Center vertically */
-    justify-content: center;
-    /* Center horizontally */
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f7fc;
     color: #333;
-    padding: 20px;
-    /* Add padding for smaller screens */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
-/* Shell is now just a container, remove grid */
 .shell {
     width: 100%;
-    max-width: 450px;
-    /* Max width for the login box area */
+    max-width: 400px;
+    padding: 1rem;
 }
 
-/* Remove brand-panel styles or comment them out */
-/*
-.brand-panel { ... }
-.brand .logo { ... }
-.brand .tagline { ... }
-.bullets { ... }
-.bullets li { ... }
-.footer-note { ... }
-*/
-
-/* Adjust login-panel for centering */
 .login-panel {
-    width: 100%;
-    padding: 0;
-    /* Remove padding, card will handle it */
-}
-
-.card {
-    background: #fff;
+    background: white;
     border-radius: 12px;
-    /* Slightly larger radius */
-    border-top: 5px solid var(--primary);
-    /* Keep top border */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    /* Slightly stronger shadow */
-    padding: 35px 30px;
-    /* Adjust padding */
-    width: 100%;
-    /* Card takes full width */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
 }
 
-/* Styling for Brand Header inside the card */
 .brand-header {
     text-align: center;
-    margin-bottom: 25px;
-    /* Space below header */
-    color: var(--primary);
+    margin-bottom: 2rem;
 }
 
-.brand-header .logo {
+.logo {
+    font-size: 1.5rem;
     font-weight: 700;
-    font-size: 20px;
-    margin-bottom: 5px;
+    color: #1a73e8;
 }
 
-.brand-header .tagline {
-    font-size: 14px;
-    color: var(--muted);
+.tagline {
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 0.5rem;
 }
 
 h1 {
-    color: var(--primary);
-    margin: 0 0 25px;
-    font-size: 22px;
-    /* Adjusted size */
-    text-align: center;
+    font-size: 1.25rem;
     font-weight: 600;
-    /* Slightly less bold */
+    text-align: center;
+    margin-bottom: 1.5rem;
 }
 
 .field {
-    margin-bottom: 18px;
+    margin-bottom: 1rem;
 }
 
 label {
     display: block;
+    font-size: 0.875rem;
     font-weight: 600;
-    color: #334155;
-    margin-bottom: 6px;
-    font-size: 14px;
+    margin-bottom: 0.5rem;
 }
 
-input[type="text"],
-input[type="password"] {
+input {
     width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #d1d9e6;
-    /* Adjusted border color */
-    border-radius: 8px;
-    font-size: 15px;
-    outline: none;
-    background-color: var(--input-bg);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus {
-    border-color: var(--focus);
-    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+input:focus {
+    border-color: #1a73e8;
+    outline: none;
 }
 
 .password-wrap {
@@ -136,118 +84,59 @@ input[type="password"]:focus {
 
 .toggle-pass {
     position: absolute;
+    right: 0.75rem;
     top: 50%;
-    right: 12px;
     transform: translateY(-50%);
-    border: none;
     background: none;
+    border: none;
     cursor: pointer;
-    color: #64748b;
-    padding: 5px;
+    color: #666;
 }
 
-.toggle-pass:hover {
-    color: var(--primary);
-}
-
-.toggle-pass svg {
-    display: block;
-    width: 20px;
-    height: 20px;
+.caps-hint {
+    font-size: 0.75rem;
+    color: #e74c3c;
+    margin-top: 0.25rem;
 }
 
 .btn-primary {
     width: 100%;
-    padding: 13px;
-    background: var(--ok);
+    padding: 0.75rem;
+    background-color: #1a73e8;
+    color: white;
     border: none;
-    border-radius: 8px;
-    color: #fff;
+    border-radius: 6px;
+    font-size: 1rem;
     font-weight: 600;
-    font-size: 16px;
     cursor: pointer;
-    margin-top: 15px;
-    /* Increased space above button */
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    transition: background-color 0.2s;
 }
 
 .btn-primary:hover {
-    background-color: #219d55;
-}
-
-.btn-primary:active {
-    transform: translateY(1px);
+    background-color: #0d5bdd;
 }
 
 .error {
-    background: #fef2f2;
-    color: #b91c1c;
-    border: 1px solid #fecaca;
-    border-radius: 8px;
-    padding: 12px;
-    margin-top: 15px;
-    font-size: 14px;
+    font-size: 0.875rem;
+    color: #e74c3c;
     text-align: center;
-}
-
-.caps-hint {
-    margin-top: 8px;
-    font-size: 13px;
-    color: #b45309;
-    background: #fffbeb;
-    padding: 8px 10px;
-    border-radius: 6px;
-    border: 1px solid #fef3c7;
+    margin-top: 1rem;
 }
 
 .sub {
-    margin-top: 20px;
-    color: var(--muted);
-    font-size: 14px;
+    font-size: 0.875rem;
     text-align: center;
+    margin-top: 1rem;
 }
 
-a {
-    color: var(--focus);
+.sub a {
+    color: #1a73e8;
     text-decoration: none;
 }
 
-a:hover {
-    text-decoration: underline;
-}
-
-/* Footer note inside the card */
 .footer-note-card {
-    font-size: 12px;
-    color: #93a6c6;
+    font-size: 0.75rem;
+    color: #999;
     text-align: center;
-    margin-top: 25px;
-    /* Space above footer */
-    padding-top: 15px;
-    /* Space within footer */
-    border-top: 1px solid #e2e8f0;
-    /* Separator line */
-}
-
-/* Ensure JS Shake Animation works */
-@keyframes shake {
-    0% {
-        transform: translateX(0)
-    }
-
-    25% {
-        transform: translateX(-4px)
-    }
-
-    50% {
-        transform: translateX(4px)
-    }
-
-    75% {
-        transform: translateX(-2px)
-    }
-
-    100% {
-        transform: translateX(0)
-    }
+    margin-top: 2rem;
 }

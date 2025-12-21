@@ -13,18 +13,18 @@
         </thead>
         <tbody>
             <?php if (!empty($logs)): ?>
-                <?php foreach ($logs as $log): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($log['thoiGian']) ?></td>
-                        <td><?= htmlspecialchars($log['hoTen'] ?? 'Hệ thống') ?></td>
-                        <td><?= htmlspecialchars($log['hanhDong']) ?></td>
-                        <td><?= htmlspecialchars($log['doiTuong']) ?></td>
-                    </tr>
-                <?php endforeach; ?>
+            <?php foreach ($logs as $log): ?>
+            <tr>
+                <td><?= htmlspecialchars($log['thoiGian']) ?></td>
+                <td><?= htmlspecialchars($log['hoTen'] ?? 'Hệ thống') ?></td>
+                <td><?= htmlspecialchars($log['hanhDong']) ?></td>
+                <td><?= htmlspecialchars($log['doiTuong']) ?></td>
+            </tr>
+            <?php endforeach; ?>
             <?php else: ?>
-                <tr>
-                    <td colspan="4">Chưa có dữ liệu nhật ký</td>
-                </tr>
+            <tr>
+                <td colspan="4">Chưa có dữ liệu nhật ký</td>
+            </tr>
             <?php endif; ?>
         </tbody>
     </table>
