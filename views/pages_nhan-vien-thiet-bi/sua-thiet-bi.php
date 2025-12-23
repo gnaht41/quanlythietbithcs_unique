@@ -1,23 +1,39 @@
 <?php
 // ===============================
-// FILE: views/sua-thiet-bi.php
+// FILE: views/sua-thiet-bi.php (ĐÃ SỬA LỖI UNDEFINED VARIABLE)
 // ===============================
 
 require_once __DIR__ . '/../../models/VV_QLThietBi.php';
-require_once __DIR__ . '/../../controllers/VV_QLThietBi.php';
+require_once __DIR__ . '/../../models/QT_Log.php';
 
 $thietBiModel = new ThietBiModel();
-$thietBiController = new ThietBiController();
+$logModel     = new Log();
 
 // -------------------------------
-// LẤY maTB (ƯU TIÊN POST, SAU ĐÓ GET)
+// KHỞI ĐỘNG SESSION AN TOÀN
+// -------------------------------
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// BẮT BUỘC ĐĂNG NHẬP
+if (!isset($_SESSION['maND'])) {
+    header("Location: dang-nhap.php"); // Thay bằng trang login thực tế
+    exit();
+}
+$maNguoiDung = $_SESSION['maND'];
+
+// -------------------------------
+// KHỞI TẠO CÁC BIẾN CẦN THIẾT ĐỂ TRÁNH WARNING
+// -------------------------------
+$error_msg = '';   // ← QUAN TRỌNG: Phải có dòng này
+$device    = null; // ← Và dòng này
+
+// -------------------------------
+// LẤY maTB TỪ POST HOẶC GET
 // -------------------------------
 $maTB = $_POST['maTB'] ?? $_GET['maTB'] ?? null;
 $maTB = $maTB ? (int)$maTB : null;
-
-$error_msg   = '';
-$success_msg = '';
-$device      = null;
 
 // -------------------------------
 // LẤY THÔNG TIN THIẾT BỊ
@@ -32,14 +48,14 @@ if ($maTB) {
 }
 
 // -------------------------------
-// DANH SÁCH DỮ LIỆU PHỤ
+// DANH SÁCH DỮ LIỆU HỖ TRỢ
 // -------------------------------
 $listMonHoc    = $thietBiModel->getMonHoc();
 $listTinhTrang = ['Tốt', 'Hư nhẹ', 'Hư nặng', 'Đang sửa'];
 $listLop       = ['6', '7', '8', '9'];
 
 // -------------------------------
-// XỬ LÝ SUBMIT FORM
+// XỬ LÝ FORM: CẬP NHẬT + GHI LOG
 // -------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $device) {
 
@@ -51,17 +67,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $device) {
     $lop            = $_POST['lop'] ?? null;
     $tinhTrang      = $_POST['tinhTrang'] ?? '';
 
-    // -------------------------------
     // VALIDATE
-    // -------------------------------
     if (
         $tenTB === '' ||
         $maMH === '' ||
         $soLuongTong < 0 ||
         $soLuongKhaDung < 0 ||
-        $soLuongKhaDung > $soLuongTong
+        $soLuongKhaDung > $soLuongTong ||
+        $tinhTrang === ''
     ) {
-        $error_msg = "Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.";
+        $error_msg = "Dữ liệu không hợp lệ. Vui lòng kiểm tra lại các trường bắt buộc.";
     } else {
 
         $result = $thietBiModel->updateDevice(
@@ -76,11 +91,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $device) {
             false
         );
 
-
         if ($result) {
+            // GHI LOG
+            $logModel->ghiLog(
+                $maNguoiDung,
+                'UPDATE',
+                'ThietBi',
+                $maTB
+            );
+
             echo "<script>
-                alert('Cập nhật thiết bị thành công!');
-                window.location.href='?tab=quan-ly-thiet-bi';
+                alert('Cập nhật thiết bị \"$tenTB\" thành công!');
+                window.location.href = '?tab=quan-ly-thiet-bi';
             </script>";
             exit;
         } else {
@@ -95,37 +117,147 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $device) {
 <!-- =============================== -->
 
 <style>
-section#sua-thiet-bi {
-    padding: 30px;
-    background: #fff;
-    border-radius: 12px;
-    max-width: 700px;
+/* ===============================
+   SỬA THIẾT BỊ – UI MODERN
+   Namespace: stb-
+   =============================== */
+
+#sua-thiet-bi {
+    max-width: 820px;
     margin: 30px auto;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    font-family: Arial, sans-serif;
+    background: linear-gradient(180deg,#ffffff,#f9fafb);
+    padding: 35px 40px;
+    border-radius: 18px;
+    box-shadow: 0 20px 40px rgba(0,0,0,.08);
+    font-family: 'Segoe UI', Tahoma, sans-serif;
 }
-h2 { text-align:center; margin-bottom:25px }
-label { font-weight:600 }
-input, select {
-    width:100%; padding:10px;
-    border-radius:6px; border:1px solid #ddd;
+
+/* TITLE */
+#sua-thiet-bi h2 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 30px;
+    position: relative;
 }
-.row { display:flex; gap:15px }
-.row > div { flex:1 }
-.mb-2 { margin-bottom:18px }
-.btn-primary {
-    background:#007bff; color:#fff;
-    padding:10px 25px; border:none;
-    border-radius:6px; cursor:pointer;
+#sua-thiet-bi h2::after {
+    content: "";
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg,#2563eb,#1d4ed8);
+    display: block;
+    margin: 10px auto 0;
+    border-radius: 4px;
 }
-.btn-secondary {
-    background:#6c757d; color:#fff;
-    padding:10px 25px; border-radius:6px;
-    text-decoration:none;
+
+/* ALERT */
+#sua-thiet-bi .alert {
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
 }
-.alert { padding:12px; border-radius:6px; margin-bottom:15px }
-.alert-danger { background:#f8d7da; color:#721c24 }
+#sua-thiet-bi .alert-danger {
+    background: #fee2e2;
+    color: #991b1b;
+    border-left: 5px solid #dc2626;
+}
+
+/* FORM */
+#sua-thiet-bi form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+}
+
+/* LABEL */
+#sua-thiet-bi label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 6px;
+    display: block;
+}
+
+/* INPUT + SELECT */
+#sua-thiet-bi input,
+#sua-thiet-bi select {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    transition: all .25s ease;
+    background: #fff;
+}
+
+#sua-thiet-bi input:focus,
+#sua-thiet-bi select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.2);
+}
+
+/* TWO COLUMN ROW */
+#sua-thiet-bi .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+/* BUTTONS */
+#sua-thiet-bi .btn-primary {
+    background: linear-gradient(135deg,#2563eb,#1d4ed8);
+    color: #fff;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(37,99,235,.35);
+    transition: all .25s ease;
+}
+
+#sua-thiet-bi .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(37,99,235,.45);
+}
+
+#sua-thiet-bi .btn-secondary {
+    background: #9ca3af;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    margin-left: 10px;
+    transition: all .25s ease;
+}
+
+#sua-thiet-bi .btn-secondary:hover {
+    background: #6b7280;
+}
+
+/* ACTION AREA */
+#sua-thiet-bi .stb-actions {
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    #sua-thiet-bi {
+        padding: 25px 20px;
+    }
+    #sua-thiet-bi .row {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
+
 
 <section id="sua-thiet-bi">
     <h2>Sửa thông tin thiết bị</h2>
@@ -135,9 +267,7 @@ input, select {
     <?php endif; ?>
 
     <?php if ($device): ?>
-        <form method="POST" class="form-sua-thiet-bi">
-
-            <!-- GIỮ maTB -->
+        <form method="POST">
             <input type="hidden" name="maTB" value="<?= $maTB ?>">
 
             <div class="mb-2">
@@ -150,8 +280,7 @@ input, select {
                 <select name="maMH" required>
                     <option value="">-- Chọn môn --</option>
                     <?php foreach ($listMonHoc as $mh): ?>
-                        <option value="<?= $mh['maMH'] ?>"
-                            <?= $device['maMH'] == $mh['maMH'] ? 'selected' : '' ?>>
+                        <option value="<?= $mh['maMH'] ?>" <?= $device['maMH'] == $mh['maMH'] ? 'selected' : '' ?>>
                             <?= htmlspecialchars($mh['tenMonHoc']) ?>
                         </option>
                     <?php endforeach; ?>
@@ -160,7 +289,7 @@ input, select {
 
             <div class="mb-2">
                 <label>Đơn vị</label>
-                <input type="text" name="donVi" value="<?= htmlspecialchars($device['donVi']) ?>">
+                <input type="text" name="donVi" value="<?= htmlspecialchars($device['donVi'] ?? '') ?>">
             </div>
 
             <div class="row">
@@ -179,7 +308,7 @@ input, select {
                 <select name="lop">
                     <option value="">-- Không áp dụng --</option>
                     <?php foreach ($listLop as $l): ?>
-                        <option value="<?= $l ?>" <?= $device['lop'] == $l ? 'selected' : '' ?>>
+                        <option value="<?= $l ?>" <?= ($device['lop'] ?? '') == $l ? 'selected' : '' ?>>
                             Lớp <?= $l ?>
                         </option>
                     <?php endforeach; ?>
@@ -198,10 +327,12 @@ input, select {
                 </select>
             </div>
 
-            <div style="text-align:center;margin-top:25px">
+            <div style="text-align:center; margin-top:25px">
                 <button class="btn-primary">Lưu thay đổi</button>
                 <a href="?tab=quan-ly-thiet-bi" class="btn-secondary">Hủy</a>
             </div>
         </form>
+    <?php else: ?>
+        <div class="alert alert-danger">Không thể tải thông tin thiết bị để chỉnh sửa.</div>
     <?php endif; ?>
 </section>

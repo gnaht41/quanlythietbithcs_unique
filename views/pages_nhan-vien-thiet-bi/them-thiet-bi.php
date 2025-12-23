@@ -72,103 +72,163 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <style>
-section#them-thiet-bi {
-    padding: 30px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    max-width: 700px;
-    margin: 30px auto;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    font-family: Arial, Helvetica, sans-serif;
+/* ===============================
+   THÊM THIẾT BỊ – UI MODERN
+   Namespace: ttb-
+   =============================== */
+
+#them-thiet-bi {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 40px 45px;
+    background: linear-gradient(180deg,#ffffff,#f8fafc);
+    border-radius: 20px;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.08);
+    font-family: 'Segoe UI', Tahoma, sans-serif;
 }
 
-section#them-thiet-bi h2 {
+/* TITLE */
+#them-thiet-bi h2 {
     text-align: center;
-    margin-bottom: 25px;
-    font-size: 26px;
-    color: #333;
+    font-size: 30px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 35px;
+    position: relative;
 }
 
-.form-them-thiet-bi label {
+#them-thiet-bi h2::after {
+    content: "";
+    width: 90px;
+    height: 4px;
+    background: linear-gradient(90deg,#22c55e,#16a34a);
     display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: #444;
+    margin: 12px auto 0;
+    border-radius: 4px;
 }
 
+/* ALERT */
+#them-thiet-bi .alert-danger {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 15px 18px;
+    border-radius: 12px;
+    border-left: 5px solid #dc2626;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+/* FORM */
+.form-them-thiet-bi {
+    display: grid;
+    gap: 20px;
+}
+
+/* LABEL */
+.form-them-thiet-bi label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 6px;
+    display: block;
+}
+
+/* INPUT & SELECT */
 .form-them-thiet-bi input,
 .form-them-thiet-bi select {
     width: 100%;
-    padding: 10px 12px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    font-size: 15px;
-    box-sizing: border-box;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    background: #fff;
+    transition: all .25s ease;
+}
+
+.form-them-thiet-bi input::placeholder {
+    color: #9ca3af;
 }
 
 .form-them-thiet-bi input:focus,
 .form-them-thiet-bi select:focus {
-    border-color: #007bff;
     outline: none;
-    box-shadow: 0 0 5px rgba(0,123,255,0.3);
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34,197,94,.25);
 }
 
-.row {
-    display: flex;
-    gap: 20px;
+/* ROW 2 CỘT */
+.form-them-thiet-bi .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
 }
 
-.row .mb-2 {
-    flex: 1;
+/* SMALL TEXT */
+.form-them-thiet-bi small {
+    display: block;
+    margin-top: 6px;
+    font-size: 12.5px;
+    color: #6b7280;
 }
 
-.mb-2 {
-    margin-bottom: 20px;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 11px 28px;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-    color: white;
-    padding: 11px 28px;
-    border-radius: 6px;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-}
-
-.btn-secondary:hover {
-    background-color: #545b62;
-}
-
-.alert-danger {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    padding: 12px 15px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-    font-size: 15px;
-}
-
-.text-center {
+/* BUTTON ZONE */
+.form-them-thiet-bi .text-center {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 35px;
+}
+
+/* PRIMARY BUTTON */
+.form-them-thiet-bi .btn-primary {
+    background: linear-gradient(135deg,#22c55e,#16a34a);
+    color: #fff;
+    padding: 13px 32px;
+    border-radius: 14px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(34,197,94,.4);
+    transition: all .25s ease;
+}
+
+.form-them-thiet-bi .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(34,197,94,.5);
+}
+
+/* SECONDARY BUTTON */
+.form-them-thiet-bi .btn-secondary {
+    background: #9ca3af;
+    color: #fff;
+    padding: 13px 32px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 12px;
+    transition: all .25s ease;
+}
+
+.form-them-thiet-bi .btn-secondary:hover {
+    background: #6b7280;
+}
+
+/* REQUIRED STAR */
+.form-them-thiet-bi span {
+    font-weight: bold;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    #them-thiet-bi {
+        padding: 28px 22px;
+    }
+    .form-them-thiet-bi .row {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
+  
 
 <section id="them-thiet-bi">
     <h2>Thêm thiết bị mới</h2>
