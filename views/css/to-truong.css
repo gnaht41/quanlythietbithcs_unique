@@ -1,0 +1,252 @@
+/* ====================== KẾ HOẠCH MUA SẮM - PHIÊN BẢN ĐƠN GIẢN & ĐẸP ====================== */
+
+.thong-bao-trong {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 1.1rem;
+    margin: 60px 0;
+    font-style: italic;
+}
+
+/* Danh sách phiếu */
+.ds-phieu {
+    margin-top: 24px;
+    display: grid;
+    gap: 16px;
+}
+
+/* Card phiếu - đơn giản, sạch sẽ */
+.phieu-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.phieu-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border-color: #cbd5e1;
+}
+
+/* Thông tin phiếu */
+.phieu-info strong {
+    font-size: 1.2rem;
+    color: #1e40af;
+    font-weight: 600;
+}
+
+.phieu-info small {
+    display: block;
+    color: #64748b;
+    margin-top: 5px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Trạng thái - nhẹ nhàng, rõ ràng */
+.phieu-trangthai .trang-thai {
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.trang-thai.chờ-duyệt {
+    background: #fffbeb;
+    color: #92400e;
+}
+
+.trang-thai.đã-duyệt {
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.trang-thai.từ-chối {
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+/* Nút hành động */
+.phieu-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.btn-primary {
+    background: #3b82f6;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.btn-primary:hover {
+    background: #2563eb;
+}
+
+.btn-secondary {
+    background: #f8fafc;
+    color: #475569;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: 1px solid #cbd5e1;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.btn-secondary:hover {
+    background: #f1f5f9;
+}
+
+.btn-xoa {
+    background: #ef4444;
+    color: white;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.95rem;
+}
+
+.btn-xoa:hover {
+    background: #dc2626;
+}
+
+/* Modal - sạch sẽ, tối giản */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.noi-dung-modal {
+    background: white;
+    width: 740px;
+    max-width: 95%;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    position: relative;
+}
+
+.dong-x {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-size: 26px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.dong-x:hover {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.noi-dung-modal h3 {
+    font-size: 1.4rem;
+    color: #1e293b;
+    text-align: center;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+/* Bảng chi tiết - đơn giản */
+#bang-chi-tiet {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+}
+
+#bang-chi-tiet th {
+    background: #f8fafc;
+    padding: 14px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #334155;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+#bang-chi-tiet td {
+    padding: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+#bang-chi-tiet select,
+#bang-chi-tiet input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+}
+
+#bang-chi-tiet select:focus,
+#bang-chi-tiet input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Nút trong modal */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+}
+
+/* Responsive - mobile */
+@media (max-width: 768px) {
+    .phieu-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .phieu-trangthai,
+    .phieu-actions {
+        align-self: flex-end;
+    }
+
+    .noi-dung-modal {
+        padding: 20px;
+    }
+
+    .modal-actions {
+        justify-content: center;
+        width: 100%;
+    }
+}
